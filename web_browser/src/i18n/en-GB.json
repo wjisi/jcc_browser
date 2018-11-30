@@ -1,0 +1,11 @@
+{
+  "homeTitle": "Weidex Blockchain Explorer",
+  "login": "Login",
+  "search": "GO",
+  "searchPlaceholder": "Serach by Address/Txhash/Block",
+  "indexPage": "HOME",
+  "blockchain": "BLOCKCHAIN",
+  "tokens": "TOKENS",
+  "moreInfo": "MORE",
+  "block": "BLOCK"
+}
