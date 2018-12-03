@@ -1,6 +1,5 @@
 <template>
   <div id="home">
-<<<<<<< HEAD
     <!-- Left side -->
     <div class="homeleft">
 
@@ -23,13 +22,6 @@
         </div>
         </div>
       </div>
-=======
-    HOME
-    <i class="iconfont icon-property"></i>
-    <i class="iconfont icon-wallet"></i>
-    <div>
-      {{this.$t("message.block")}}
->>>>>>> f17669e43586a977900af7064e668f0d597e9eeb
     </div>
 
   </div>
@@ -71,7 +63,6 @@
 <script>
 export default {
   name: "home",
-<<<<<<< HEAD
    data () {
     return {
      smalllist: [{
@@ -90,10 +81,6 @@ export default {
        listnum: [1, 2, 3, 4, 5, 6],
        listnum1: [1, 2, 3, 4, 5, 6]
     };
-=======
-  data() {
-    return {};
->>>>>>> f17669e43586a977900af7064e668f0d597e9eeb
   }
 };
 </script>
