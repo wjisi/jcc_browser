@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <!-- Left side -->
     <div class="homeleft">
 
      <div class="leftcontenttop">
@@ -25,6 +26,7 @@
 
   </div>
 
+    <!-- Right side -->
     <div class="homeright">
 
      <div class="leftcontenttop">
@@ -92,20 +94,20 @@ export default {
 }
 .homeleft{float: left;}
 .homeright{float: right;}
-.homeright,.homeleft{width: 46%;height: 700px;text-align: left;  overflow: auto;border: 1px  solid  #FFF;position: relative}
-.leftcontenttop{height: 50px;background: #FFFFFF;line-height:50px;}
+.homeright,.homeleft{width: 45%;height: 700px;text-align: left;  overflow: auto;border: 1px  solid  #FFF;position: relative;}
+.leftcontenttop{height: 50px;background: #FFFFFF;line-height:50px;position: fixed;width: 40%;}
 .left{height: 50px;line-height: 50px;padding-left: 8px;float: left;}
 .right{height: 30px;line-height: 30px;float: right;border: 1px  solid  #FFF;margin: 8px;padding: 0 8px}
 
 
-/* 左边每个小list */
-.listsmallleft{height: 120px;border: 1px solid #ccc;padding: 8px;padding: 8px}
+/* Left style */
+.listsmallleft{height: 120px;border: 1px solid #ccc;padding: 8px;padding: 5px;padding-top: 55px;}
 .listleft{background: #8f8a8a;width: 120px;height: 74px;float: left}
 .listright{padding-left: 130px;}
 .listright  div{font-size: 15px;padding-bottom: 7px;}
 
-/* 右边每个小list */
-.listsmallright{height: 120px;border: 1px solid #ccc;padding: 8px;border-left: 2px  #1b926a solid}
+/* Left style */
+.listsmallright{height: 120px;border: 1px solid #ccc;padding: 8px;border-left: 2px  #1b926a solid;padding-top: 55px;}
 .iconleft{height: 100%;float: left;margin-top: 14px;}
 .textright li{list-style-type: none;text-align: left;margin: 0px}
 .textright li  span{color: #b5c9c0;font-size: 15px}
