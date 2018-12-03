@@ -27,7 +27,7 @@
              <span :class="`jcc-${item.label}-icon`"></span>
             <div style="display:inline-block;min-width:60px;margin-left:15px;">{{item.name}}</div>
           </div>
-          <div slot="reference" style="width:100px;color:#0f3988;position:relative;top:25px;cursor:pointer;">
+          <div slot="reference" style="width:100px;color:#0f3988;position:relative;top:25px;left:10px;cursor:pointer;">
             <i class="iconfont icon-zixunzhongxinicon" style="font-size:13.5px;float:left;position:relative;top:2.5px;"></i>
             <span style="padding-left:4px;float:left;">{{languageList[currentLanguage].name}}</span>
           </div>
@@ -74,11 +74,15 @@ export default {
     navClick(to) {
       this.currentView = to;
       this.$router.push(`/${to}`);
-      console.log(this.currentView + "||" + to);
     },
     confirmSearch() {
       if (this.searchContent === "") {
-        this.$message.error("请输入搜索内容");
+        this.$message({
+          type: "error",
+          message: "请输入搜索内容",
+          duration: 1600,
+          showClose: true
+        });
         return;
       }
       alert("跳转搜索结果页");
@@ -103,7 +107,7 @@ export default {
   min-height: 88px;
   justify-content: space-between;
   padding: 0 30px;
-  border-bottom: 3px solid #ccc;
+  border-bottom: 2px solid #eeeeee;
 }
 .headLogo {
   width: 20%;
@@ -131,9 +135,9 @@ export default {
     width: 320px;
     height: 28px;
     text-indent: 5px;
-    outline: none;
+    // outline: none;
     font-size: 14px;
-    border: 1px solid #737479;
+    border: 1px solid #c2c2c2;
     border-right: none;
   }
   .serachButton {
@@ -164,19 +168,20 @@ export default {
     min-width: 100px;
     position: relative;
     top: 3px;
-    border-bottom: 3px solid #ccc;
+    border-bottom: 2px solid #eeeeee;
     color: #5f5f5f;
     cursor: pointer;
-    // &:hover {
-    //   color: rgba(39, 101, 218, 0.8);
-    //   border-bottom: 3px solid #2765dacc;
-    // }
+    &:hover {
+      color: rgba(39, 101, 218, 0.8);
+      border-bottom: 2px solid #2765dacc;
+    }
+  }
+  .selectNav {
+    color: rgba(39, 101, 218, 0.8);
+    border-bottom: 2px solid #2765dacc;
   }
 }
-.selectNav {
-  color: rgba(39, 101, 218, 0.8);
-  border-bottom: 3px solid #2765dacc;
-}
+
 .languageContent {
   position: relative;
   display: flex;

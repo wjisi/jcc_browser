@@ -1,6 +1,6 @@
 <template>
   <div id="tokens">
-    TOKENS 内容
+    TOKENS
   </div>
 </template>
 

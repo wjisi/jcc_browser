@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    HOME内容
+    HOME
     <i class="iconfont icon-property"></i>
     <i class="iconfont icon-wallet"></i>
     <div>
@@ -13,9 +13,7 @@
 export default {
   name: "home",
   data() {
-    return {
-      msg: "Welcome to weidex browser"
-    };
+    return {};
   }
 };
 </script>

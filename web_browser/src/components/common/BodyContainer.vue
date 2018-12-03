@@ -12,6 +12,6 @@ export default {};
 #container {
   min-height: 500px;
   margin: 0 45px;
-  background-color: #f7f7f7;
+  background-color: #f8f8f8;
 }
 </style>
