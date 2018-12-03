@@ -7,5 +7,9 @@
   "blockchain": "区块链",
   "tokens": "代币",
   "moreInfo": "更多信息",
-  "block": "区块"
+  "block": "区块",
+  "transaction": "交易",
+  "viewall":"查看全部",
+  "miners":"由旷工",
+  "sendout":"发送方"
 }

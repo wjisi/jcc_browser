@@ -7,5 +7,9 @@
   "blockchain": "BLOCKCHAIN",
   "tokens": "TOKENS",
   "moreInfo": "MORE",
-  "block": "BLOCK"
+  "block": "BLOCK",
+  "transaction": "trans",
+  "viewall":"VIEWALL",
+  "miners": "MINERS",
+   "sendout":"SENDOUT"
 }
