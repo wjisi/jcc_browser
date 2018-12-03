@@ -1,6 +1,6 @@
 <template>
   <div id="blockchain">
-    BLOCKCHAIN 内容
+    BLOCKCHAIN
   </div>
 </template>
 
@@ -18,7 +18,6 @@ export default {
 <style scoped>
 #blockchain {
   width: 100%;
-  height: 100%;
   margin-top: 100px;
 }
 </style>
