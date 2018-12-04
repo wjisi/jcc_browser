@@ -1,9 +1,9 @@
 <template>
   <div id="home">
-    <!-- Left side -->
-    <div class="homeleft">
-
-     <div class="leftcontenttop">
+    <!-- Left style -->
+   <Ul class="homeleft">
+     <!-- Left head style -->
+    <li class="leftcontenttop">
        <div class="left">
          <i class="iconfont icon-property"></i>
          {{this.$t("message.block")}}
@@ -11,9 +11,9 @@
        <div class="right">
          {{this.$t("message.viewall")}}
        </div>
-    </div>
-
-    <div class="leftcontentbottom" v-for="item  of  listnum" :key="item">
+    </li>
+         <!-- Left list style -->
+    <li class="leftcontentbottom" v-for="item  of  listnum" :key="item">
       <div class="listsmallleft">
         <div class="listleft"></div>
         <div class="listright" style="text-align: left">
@@ -22,14 +22,13 @@
         </div>
         </div>
       </div>
-    </div>
+    </li>
+   </Ul>
 
-  </div>
-
-    <!-- Right side -->
-    <div class="homeright">
-
-     <div class="leftcontenttop">
+       <!-- Right style -->
+   <ul class="homeright">
+        <!-- Right head style -->
+    <li class="leftcontenttop">
        <div class="left">
          <i class="iconfont icon-property"></i>
          {{this.$t("message.block")}}
@@ -37,9 +36,9 @@
        <div class="right">
          {{this.$t("message.viewall")}}
        </div>
-    </div>
-
-    <div class="leftcontentbottom"  v-for="item  of  listnum1"  :key="item">
+           </li>
+        <!-- Right list style -->
+    <li class="leftcontentbottom"   v-for="item  of  listnum1" :key="item">
       <div class="listsmallright">
         <div class="iconleft">
           <i class="iconfont icon-property"></i>
@@ -53,9 +52,8 @@
           </Ul>
         </div>
       </div>
-    </div>
-
-   </div>
+    </li>
+   </ul>
 
   </div>
 </template>
@@ -90,23 +88,24 @@ export default {
   width: 100%;
   height: 100%;
   margin-top: 100px;
-  background: #FFF
+  background: #FFF;
 }
+li{list-style-type: none;}
 .homeleft{float: left;}
-.homeright{float: right;}
-.homeright,.homeleft{width: 45%;height: 700px;text-align: left;  overflow: auto;border: 1px  solid  #FFF;position: relative;}
-.leftcontenttop{height: 50px;background: #FFFFFF;line-height:50px;position: fixed;width: 40%;}
-.left{height: 50px;line-height: 50px;padding-left: 8px;float: left;}
-.right{height: 30px;line-height: 30px;float: right;border: 1px  solid  #FFF;margin: 8px;padding: 0 8px}
+.homeright{float: right;margin-left: 10px;}
+.homeright,.homeleft{width: 40%;height: 700px;text-align: left;border: 1px  solid #FFF;overflow: scroll;}
+/* head  style */
+.leftcontenttop{height: 50px;background: #FFFFFF;line-height:50px;width: 100%;}
+.left{height: 50px;line-height: 50px;padding-left: 8px;float: left}
+.right{height: 30px;line-height: 30px;float: right;border: 1px  solid  #FFF;border: 1px  solid #000;margin: 10px 30px}
 
-
-/* Left style */
-.listsmallleft{height: 120px;border: 1px solid #ccc;padding: 8px;padding: 5px;padding-top: 55px;}
+/* Left  list style */
+.listsmallleft{height: 120px;border: 1px solid #ccc;padding: 8px;padding-top: 55px;}
 .listleft{background: #8f8a8a;width: 120px;height: 74px;float: left}
 .listright{padding-left: 130px;}
 .listright  div{font-size: 15px;padding-bottom: 7px;}
 
-/* Left style */
+/*Right  list  style */
 .listsmallright{height: 120px;border: 1px solid #ccc;padding: 8px;border-left: 2px  #1b926a solid;padding-top: 55px;}
 .iconleft{height: 100%;float: left;margin-top: 14px;}
 .textright li{list-style-type: none;text-align: left;margin: 0px}
