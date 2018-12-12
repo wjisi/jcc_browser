@@ -1,11 +1,16 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import jUser from "./modules/user";
+import {
+  Vue
+} from "vue";
+import {
+  Vuex
+} from "vuex";
+import Juser from "./modules/user";
+import Jother from "./modules/other";
 Vue.use(Vuex);
-
 const store = new Vuex.Store({
   modules: {
-    jUser
+    Juser,
+    Jother
   }
 });
 

@@ -1,25 +1,36 @@
-import Vue from "vue";
+import {
+  Vue
+} from "vue";
 
 const state = {
-  netState: true
+  netState: true,
+  contentTitle: ""
 }
 
 const mutations = {
-  updateNetState(state, net) {
-    // state.netState = net
-    Vue.set(state, 'net', net);
+  updateNetState(state, netState) {
+    Vue.set(state, 'netState', netState);
+  },
+  updateContentTitle(state, contentTitle) {
+    Vue.set(state, 'contentTitle', contentTitle);
   }
 }
 
 const actions = {
   updateNetState: ({
     commit
-  }) => commit('updateNetState')
+  }) => commit('updateNetState'),
+  updateContentTitle: ({
+    commit
+  }) => commit('updateContentTitle')
 }
 
 const getters = {
   netState(state) {
-    return state.netState
+    return state.netState;
+  },
+  contentTitle(state) {
+    return state.contentTitle;
   }
 }
 

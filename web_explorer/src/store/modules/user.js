@@ -1,9 +1,13 @@
-import Vue from 'vue';
-import Lockr from "lockr";
+import {
+  Vue
+} from 'vue';
+import {
+  Lockr
+} from "lockr";
 import {
   isEmptyObject
 } from 'js/utils';
-Lockr.prefix = 'jc_browser';
+Lockr.prefix = 'jcc_explorer';
 /**
   当前用户状态:
   0:未登录，
@@ -11,7 +15,7 @@ Lockr.prefix = 'jc_browser';
   */
 const NEED_LOGIN = 0;
 const HAD_LOGINED = 1;
-const user = {
+const Juser = {
   state: {
     userStatus: Lockr.get('user_status') || NEED_LOGIN,
     userInfo: Lockr.get('user_info') || {},
@@ -65,4 +69,4 @@ const user = {
   }
 };
 
-export default user;
+export default Juser;

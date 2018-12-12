@@ -1,12 +1,12 @@
 <template>
-  <div id="blockchain">
-    BLOCKCHAIN
+  <div id="hash">
+    HASH INFO
   </div>
 </template>
 
 <script>
 export default {
-  name: "blockchain",
+  name: "hash",
   data() {
     return {
       msg: "Welcome to weidex browser"
@@ -16,8 +16,9 @@ export default {
 </script>
 
 <style scoped>
-#blockchain {
+#hash {
   width: 100%;
+  height: 100%;
   margin-top: 100px;
 }
 </style>

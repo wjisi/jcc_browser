@@ -12,13 +12,13 @@ export default new Router({
     name: 'home',
     component: _import('home')
   }, {
-    path: '/blockchain',
-    name: 'blockchain',
-    component: _import('blockchain/index')
+    path: '/block',
+    name: 'block',
+    component: _import('block/index')
   }, {
-    path: '/tokens',
-    name: 'tokens',
-    component: _import('tokens/index')
+    path: '/hash',
+    name: 'hash',
+    component: _import('hash/index')
   }, {
     path: '/moreInfo',
     name: 'moreInfo',

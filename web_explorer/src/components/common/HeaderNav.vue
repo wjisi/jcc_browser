@@ -24,7 +24,7 @@
     <div class="languageSwitch">
       <el-popover placement="bottom" trigger="hover" v-model="showLanguage">
           <div v-for="(item,index) in languageList" :key="index"  @click="switchLanguage(index);" class="languageContent">
-             <span :class="`jcc-${item.label}-icon`"></span>
+            <span :class="`jcc-${item.label}-icon`"></span>
             <div style="display:inline-block;min-width:60px;margin-left:15px;">{{item.name}}</div>
           </div>
           <div slot="reference" style="width:100px;color:#0f3988;position:relative;top:25px;left:10px;cursor:pointer;">
@@ -61,8 +61,8 @@ export default {
     navTitles() {
       return [
         { name: this.$t("message.indexPage"), isShow: true, to: "home" },
-        { name: this.$t("message.blockchain"), isShow: true, to: "blockchain" },
-        { name: this.$t("message.tokens"), isShow: true, to: "tokens" },
+        { name: this.$t("message.blockchain"), isShow: true, to: "block" },
+        { name: this.$t("message.hashInfo"), isShow: true, to: "hash" },
         { name: this.$t("message.moreInfo"), isShow: true, to: "moreInfo" }
       ];
     }
@@ -133,7 +133,7 @@ export default {
   input {
     float: left;
     width: 320px;
-    height: 28px;
+    height: 30px;
     text-indent: 5px;
     // outline: none;
     font-size: 14px;
@@ -168,7 +168,7 @@ export default {
     min-width: 80px;
     padding: 0 5px;
     position: relative;
-    top: 3px;
+    top: 2px;
     border-bottom: 2px solid #eeeeee;
     color: #5f5f5f;
     cursor: pointer;
@@ -182,7 +182,6 @@ export default {
     border-bottom: 2px solid #2765dacc;
   }
 }
-
 .languageContent {
   position: relative;
   display: flex;

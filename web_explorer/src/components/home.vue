@@ -29,18 +29,9 @@
 </template>
 
 <script>
-import { getDayBlocklist } from "../js/fetch";
+// import { getDayBlocklist } from "../js/fetch";
 export default {
   name: "home",
-  mounted() {
-    let res = getDayBlocklist({
-      date: "2018-11-04",
-      from: 1,
-      to: 2,
-      amount: 5
-    });
-    console.log(res);
-  },
   data() {
     return {
       blockList: []
@@ -51,14 +42,16 @@ export default {
 
 <style lang="scss" scoped>
 #home {
-  width: 100%;
+  width: 96%;
+  padding: 2%;
+  min-height: 510px;
   font-size: 13px;
   color: #464646;
 }
 .kLineWrap {
   height: 100px;
   line-height: 100px;
-  margin: 20px 0 20px;
+  margin-bottom: 20px;
   border-radius: 5px;
   background-color: #fff;
 }
@@ -91,6 +84,8 @@ export default {
         padding: 4px;
         margin-right: 16px;
         min-width: 65px;
+        user-select: none;
+        cursor: pointer;
         border: 1px solid #929292;
       }
     }

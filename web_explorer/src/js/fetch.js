@@ -31,7 +31,7 @@ export const getBlocklist = async (num = 6) => {
 }
 
 /** get block list by date
- *  @param {Object}params
+ *  @param {Object}data
  *  {date,from,to,amount}
  */
 export const getDayBlocklist = async (data) => {
