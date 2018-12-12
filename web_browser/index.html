@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>web_browser</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title id="homepage_title"></title>
+  <script>
+    var titles = {
+      "zh": "威链(SWTC)区块链浏览器",
+      "en": "Weidex Blockchain Explorer"
+    }
+    var lang = localStorage.getItem('languageType');
+    if (!lang || lang === '') {
+      lang = (navigator.language || navigator.userLanguage).substr(0, 2);
+      localStorage.setItem('languageType', lang);
+    }
+    document.getElementById("homepage_title").innerHTML = titles[lang];
+
+  </script>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" type="text/css" href="./static/initStyle.css">
+  <link rel="stylesheet" type="text/css" href="./static/iconfont.css?version=1.0">
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
+
+<style>
+  html,
+  body {
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+
+</style>
