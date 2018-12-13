@@ -7,7 +7,8 @@
       <ul class="blockList">
         <li class="listHead">
           <div>
-            <i class="iconfont icon-dashuju" style="font-size:20px;"></i><span>{{$t("message.block")}}</span>
+            <i class="iconfont icon-dashuju" style="font-size:20px;"></i>
+            <span>{{$t("message.block")}}</span>
           </div>
           <p>{{$t("message.viewall")}}</p>
         </li>
@@ -18,7 +19,8 @@
       <ul class="transactionList">
         <li class="listHead">
           <div>
-          <i class="iconfont icon-jiaoyiguanli"></i><span>{{$t("message.transaction")}}</span>
+            <i class="iconfont icon-jiaoyiguanli"></i>
+            <span>{{$t("message.transaction")}}</span>
           </div>
           <p>{{$t("message.viewall")}}</p>
         </li>
