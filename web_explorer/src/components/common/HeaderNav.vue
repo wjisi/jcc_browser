@@ -17,7 +17,7 @@
       </div>
       <!-- Nav part -->
       <div class="headNavbar">
-        <span :class="{'navButton':true,'selectNav':currentView===item.to}" @click="navClick(item.to)" v-for="(item,index) in navTitles" :key="index" v-show="item.isShow">{{item.name}}</span>
+        <span :class="{'navButton':true,'selectNav':currentNav===item.to}" @click="navClick(item.to)" v-for="(item,index) in navTitles" :key="index" v-show="item.isShow">{{item.name}}</span>
       </div>
     </div>
     <!-- switch language -->
@@ -42,7 +42,6 @@ export default {
   name: "headerNav",
   data() {
     return {
-      currentView: "",
       searchContent: "",
       showLanguage: false,
       languageList: {
@@ -58,6 +57,9 @@ export default {
     currentLanguage() {
       return this.$i18n.locale;
     },
+    currentNav() {
+      return this.$store.getters.currentNav;
+    },
     navTitles() {
       return [
         { name: this.$t("message.indexPage"), isShow: true, to: "home" },
@@ -72,7 +74,7 @@ export default {
       this.$router.push({ name: "login" });
     },
     navClick(to) {
-      this.currentView = to;
+      this.$store.dispatch("updateCurrentNav", to);
       this.$router.push(`/${to}`);
     },
     confirmSearch() {

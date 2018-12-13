@@ -8,7 +8,14 @@
   "hashInfo": "HASH",
   "moreInfo": "MORE",
   "block": "BLOCK",
+  "inputSearchContent": "Please enter the Search content",
   "transaction": "TRANSACTION",
   "viewall": "View more",
-  "inputSearchContent": "Please enter the Search content"
+  "hash": "Hash",
+  "parentHash": "ParentHash",
+  "dateTime": "DateTime",
+  "time": "TIME",
+  "trannum": "Transnum",
+  "selectiondate": "Selectiondate"
+
 }
