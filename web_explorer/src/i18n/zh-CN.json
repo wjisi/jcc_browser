@@ -8,13 +8,15 @@
   "hashInfo": "交易哈希",
   "moreInfo": "更多信息",
   "block": "区块",
+  "inputSearchContent": "请输入搜索内容",
   "transaction": "交易",
   "viewall": "查看全部",
-  "inputSearchContent": "请输入搜索内容",
   "hash": "哈希",
-  "parentHash": "父哈希",
-  "dateTime": "生成时间",
-  "time": "时间",
-  "trannum": "交易数",
-  "selectiondate": "选择日期"
+  "selectiondate": "选择日期",
+  "blockList": {
+    "id": "ID",
+    "dateTime": "生成时间",
+    "parentHash": "父哈希",
+    "transctionNums": "交易数"
+  }
 }

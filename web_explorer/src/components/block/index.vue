@@ -1,50 +1,16 @@
 <template>
   <div id="block">
-    <div class="Selectiondate">
-      <div class="block">
-        <span class="demonstration">{{$t("message.selectiondate")}}</span>
-        <el-date-picker
-          v-model="value2"
-          align="right"
-          type="date"
-          :picker-options="pickerOptions1"
-          value-format="yyyy-MM-dd"
-          @change="handleUddata"
-        ></el-date-picker>
-      </div>
+    <div class="selectionDate">
+      <div class="demonstration">{{$t("message.selectiondate")}}</div>
+      <el-date-picker v-model="selectedDate" align="right" type="date" :picker-options="pickerOptions" value-format="yyyy-MM-dd" @change="setDatetiem"></el-date-picker>
     </div>
-    <div class="data">
-      <ul class="datalit">
-        <li id="datatitle">
-          <div class="aaa">{{$t("message.hash")}}</div>
-        </li>
-        <li v-for="item   of   firstlist" :key="item.id">
-          <span>{{item.hash}}</span>
-        </li>
-      </ul>
-      <ul class="datalist">
-        <li id="datatitle">{{$t("message.hash")}}</li>
-        <li v-for="item   of   firstlist" :key="item.id">
-          <span>{{item.parentHash}}</span>
-        </li>
-      </ul>
-      <ul>
-        <li id="datatitle">{{$t("message.parentHash")}}</li>
-        <li v-for="item   of   firstlist" :key="item.id">
-          <span>{{item.dateTime}}</span>
-        </li>
-      </ul>
-      <ul>
-        <li id="datatitle">{{$t("message.trannum")}}</li>
-        <li v-for="item   of   firstlist" :key="item.id">{{item.transNum}}</li>
-      </ul>
-      <ul>
-        <li id="datatitle">{{$t("message.time")}}</li>
-        <li v-for="item   of   firstlist" :key="item.id">
-          <span>{{item.time}}</span>
-        </li>
-      </ul>
-    </div>
+    <el-table :data="blockList" style="width:100%" height="100%">
+      <el-table-column prop="_id" :label="$t('message.blockList.id')" width="110%"></el-table-column>
+      <el-table-column prop="dateTime" :label="$t('message.blockList.dateTime')" width="200%"></el-table-column>
+      <el-table-column prop="hash" :label="$t('message.hash')" width="350"></el-table-column>
+      <el-table-column prop="parentHash" :label="$t('message.blockList.parentHash')" width="350"></el-table-column>
+      <el-table-column prop="transNum" :label="$t('message.blockList.transctionNums')" width="100"></el-table-column>
+    </el-table>
   </div>
 </template>
 <script>
@@ -53,70 +19,41 @@ export default {
   name: "block",
   data() {
     return {
-      pickerOptions1: {
+      pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
-        },
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            }
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            }
-          },
-          {
-            text: "一周前1",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
+        }
       },
-      value1: "",
-      value2: "",
-      firstlist: [],
-      lastList: [],
-      timer: ""
+      selectedDate: "",
+      blockList: []
     };
   },
   created() {
-    this.handledata();
+    this.getAllList();
   },
   methods: {
-    async handledata() {
-      let res = await getBlocklist(20);
-      this.firstlist = res.data.data;
+    async getAllList(nums = 20) {
+      let res = await getBlocklist(nums);
+      this.blockList = res.data.data;
+      console.log(this.blockList);
     },
-    async handleUddata() {
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
-      console.log(this.value2);
-      let res = await getDayBlocklist({
-        date: this.value2,
+    setDatetiem(val) {
+      this.selectedDate = val;
+    },
+    async getListByFilter() {
+      let data = {
+        date: this.selectedDate,
         from: 1,
         to: 2,
         amount: 10
-      });
-      console.log(res.data.data);
-      this.timer = setTimeout(() => {
-        this.firstlist = res.data.data;
-      }, 16);
+      };
+      let res = await getDayBlocklist(data);
+      this.blockList = res.data.data;
     }
   }
 };
 </script>
-<style>
+<style lang="scss" scoped>
 #block {
   width: 100%;
   min-height: 900px;
@@ -127,52 +64,12 @@ export default {
   font-weight: bold;
   font-size: 18px;
 }
-.Selectiondate {
+.selectionDate {
   margin-top: 30px;
   display: flex;
   min-width: 700px;
   justify-content: center;
   margin-bottom: 30px;
   overflow: hidden;
-}
-.data {
-  height: 800px;
-  background: white;
-  border: #e1e1e1 solid 1px;
-}
-.data ul {
-  height: 700px;
-  background: white;
-  width: 20%;
-  float: left;
-  text-align: left;
-  border-bottom: 0;
-}
-#datatitle {
-  font-size: 13px;
-  font-weight: bold;
-  height: 35px;
-  line-height: 35px;
-  background: #f9f9f9;
-  width: 100%;
-}
-li {
-  font-size: 10px;
-  height: 35px;
-  line-height: 35px;
-  border-bottom: 1px solid #ccc;
-}
-li span {
-  display: block;
-  color: forestgreen;
-  width: 70%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-li span:hover {
-  text-decoration: underline;
-}
-.datalit li {
-  padding-left: 10px;
 }
 </style>

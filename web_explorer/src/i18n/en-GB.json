@@ -12,10 +12,12 @@
   "transaction": "TRANSACTION",
   "viewall": "View more",
   "hash": "Hash",
-  "parentHash": "ParentHash",
-  "dateTime": "DateTime",
-  "time": "TIME",
-  "trannum": "Transnum",
-  "selectiondate": "Selectiondate"
+  "selectiondate": "Selectiondate",
+  "blockList": {
+    "id": "ID",
+    "dateTime": "Create Time",
+    "parentHash": "Parent HASH",
+    "transctionNums": "Transction Amount"
+  }
 
 }
