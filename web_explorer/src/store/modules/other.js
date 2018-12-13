@@ -1,6 +1,4 @@
-import {
-  Vue
-} from "vue";
+import Vue from "vue";
 
 const state = {
   netState: true,
@@ -22,7 +20,7 @@ const actions = {
   }) => commit('updateNetState'),
   updateContentTitle: ({
     commit
-  }) => commit('updateContentTitle')
+  }, title) => commit('updateContentTitle', title)
 }
 
 const getters = {

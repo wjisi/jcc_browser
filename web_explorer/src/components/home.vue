@@ -1,13 +1,13 @@
 <template>
   <div id="home">
     <!-- periodic table moudle -->
-    <div class="kLineWrap">成交量及交易历史K线图</div>
+    <div class="kLineWrap">Transaction k-line</div>
     <div class="listWrap">
       <!-- latest block list -->
       <ul class="blockList">
         <li class="listHead">
           <div>
-            <i class="iconfont icon-dashuju" style="font-size:20px;"></i><span>{{$t("message.block")}}</span>
+            <i class="iconfont icon-dashuju" style="font-size:20px;position:relative;top:2px;"></i><span>{{$t("message.block")}}</span>
           </div>
           <p>{{$t("message.viewall")}}</p>
         </li>
@@ -32,6 +32,9 @@
 // import { getDayBlocklist } from "../js/fetch";
 export default {
   name: "home",
+  created() {
+    this.$store.commit("updateContentTitle", "close");
+  },
   data() {
     return {
       blockList: []

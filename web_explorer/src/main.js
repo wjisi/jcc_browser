@@ -5,7 +5,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App';
 import router from './router';
-import store from 'store';
+import store from './store';
 import VueI18n from 'vue-i18n';
 import VueClipboard from 'vue-clipboard2';
 import {

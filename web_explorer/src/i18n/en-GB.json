@@ -8,6 +8,7 @@
   "hashInfo": "HASH",
   "moreInfo": "MORE",
   "block": "BLOCK",
-  "transaction": "trans",
-  "viewall": "View more"
+  "transaction": "TRANSACTION",
+  "viewall": "View more",
+  "inputSearchContent": "Please enter the Search content"
 }

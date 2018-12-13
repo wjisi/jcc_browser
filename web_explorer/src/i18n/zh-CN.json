@@ -9,5 +9,6 @@
   "moreInfo": "更多信息",
   "block": "区块",
   "transaction": "交易",
-  "viewall": "查看全部"
+  "viewall": "查看全部",
+  "inputSearchContent": "请输入搜索内容"
 }

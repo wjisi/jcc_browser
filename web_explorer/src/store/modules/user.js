@@ -1,12 +1,8 @@
-import {
-  Vue
-} from 'vue';
-import {
-  Lockr
-} from "lockr";
+import Vue from 'vue';
+import Lockr from "lockr";
 import {
   isEmptyObject
-} from 'js/utils';
+} from '../../js/utils';
 Lockr.prefix = 'jcc_explorer';
 /**
   当前用户状态:
@@ -19,7 +15,7 @@ const Juser = {
   state: {
     userStatus: Lockr.get('user_status') || NEED_LOGIN,
     userInfo: Lockr.get('user_info') || {},
-    balance: {},
+    balance: {}
   },
   mutations: {
     SET_USER_STATUS(state, status) {

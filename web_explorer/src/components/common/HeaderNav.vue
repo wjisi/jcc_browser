@@ -79,7 +79,7 @@ export default {
       if (this.searchContent === "") {
         this.$message({
           type: "error",
-          message: "请输入搜索内容",
+          message: this.$t("message.inputSearchContent"),
           duration: 1600,
           showClose: true
         });
