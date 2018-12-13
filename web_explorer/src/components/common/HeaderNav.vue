@@ -8,7 +8,7 @@
       <div class="searchWrap">
         <div style="display:inline;cursor:pointer;" @click="toLogin">
           <span style="font-size:13px;color:#555;user-select:none;">{{$t("message.login")}}</span>
-          <i class="iconfont icon-zhanghuanquan" style="font-size:13px;margin-right:20px;color:#555;"></i>
+          <i class="iconfont icon-login" style="font-size:15px;margin-right:20px;color:#555;"></i>
         </div>
         <div style="display:inline-block;white-space:nowrap;">
           <input type="text" v-model="searchContent" :placeholder="$t('message.searchPlaceholder')">
