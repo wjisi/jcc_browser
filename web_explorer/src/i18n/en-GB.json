@@ -1,6 +1,6 @@
 {
   "homeTitle": "Weidex Blockchain Explorer",
-  "login": "Login",
+  "login": "LOGIN",
   "search": "GO",
   "searchPlaceholder": "Serach by Address/Txhash/Block",
   "indexPage": "HOME",
@@ -8,8 +8,17 @@
   "hashInfo": "HASH",
   "moreInfo": "MORE",
   "block": "BLOCK",
-  "transaction": "trans",
-  "viewall": "View more",
   "kLine": "K-Line",
-  "time": "Time"
+  "time": "Time",
+  "inputSearchContent": "Please enter the Search content",
+  "transaction": "TRANSACTION",
+  "viewall": "View more",
+  "hash": "Hash",
+  "selectiondate": "Selectiondate",
+  "blockList": {
+    "id": "ID",
+    "dateTime": "Create Time",
+    "parentHash": "Parent HASH",
+    "transctionNums": "Transction Amount"
+  }
 }

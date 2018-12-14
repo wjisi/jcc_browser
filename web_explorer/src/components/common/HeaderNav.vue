@@ -8,10 +8,7 @@
       <div class="searchWrap">
         <div style="display:inline;cursor:pointer;" @click="toLogin">
           <span style="font-size:13px;color:#555;user-select:none;">{{$t("message.login")}}</span>
-          <i
-            class="iconfont icon-zhanghuanquan"
-            style="font-size:13px;margin-right:20px;color:#555;"
-          ></i>
+          <i class="iconfont icon-login" style="font-size:15px;margin-right:20px;color:#555;"></i>
         </div>
         <div style="display:inline-block;white-space:nowrap;">
           <input type="text" v-model="searchContent" :placeholder="$t('message.searchPlaceholder')">
@@ -21,7 +18,7 @@
       <!-- Nav part -->
       <div class="headNavbar">
         <span
-          :class="{'navButton':true,'selectNav':currentView===item.to}"
+          :class="{'navButton':true,'selectNav':currentNav===item.to}"
           @click="navClick(item.to)"
           v-for="(item,index) in navTitles"
           :key="index"
@@ -62,7 +59,6 @@ export default {
   name: "headerNav",
   data() {
     return {
-      currentView: "",
       searchContent: "",
       showLanguage: false,
       languageList: {
@@ -78,6 +74,9 @@ export default {
     currentLanguage() {
       return this.$i18n.locale;
     },
+    currentNav() {
+      return this.$store.getters.currentNav;
+    },
     navTitles() {
       return [
         { name: this.$t("message.indexPage"), isShow: true, to: "home" },
@@ -92,14 +91,14 @@ export default {
       this.$router.push({ name: "login" });
     },
     navClick(to) {
-      this.currentView = to;
+      this.$store.dispatch("updateCurrentNav", to);
       this.$router.push(`/${to}`);
     },
     confirmSearch() {
       if (this.searchContent === "") {
         this.$message({
           type: "error",
-          message: "请输入搜索内容",
+          message: this.$t("message.inputSearchContent"),
           duration: 1600,
           showClose: true
         });

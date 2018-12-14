@@ -1,6 +1,6 @@
 <template>
 <div id="container">
-  <p v-show="getTitle!==''" class="contentTitle">{{getTitle}}</p>
+  <div v-show="getTitle!=='close'&&getTitle!==''" class="contentTitle">{{getTitle}}</div>
   <div class="contentWrap">
     <router-view></router-view>
   </div>
@@ -14,8 +14,7 @@ export default {
   },
   computed: {
     getTitle() {
-      // return this.$store.getters.contentTitle;
-      return "";
+      return this.$store.getters.contentTitle;
     }
   }
 };
@@ -27,6 +26,7 @@ export default {
   .contentTitle {
     width: 100%;
     height: 50px;
+    color: blue;
     background-color: #f8f8f8;
   }
   .contentWrap {

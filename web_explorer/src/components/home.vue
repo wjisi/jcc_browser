@@ -64,16 +64,16 @@
 
 <script>
 import { getBlocklist } from "../js/fetch";
-import bus from "../js/bus";
 export default {
   name: "home",
+  created() {
+    this.$store.commit("updateContentTitle", "close");
+    this.getBlocklists();
+  },
   data() {
     return {
       listnum: []
     };
-  },
-  created() {
-    this.getBlocklists();
   },
   methods: {
     getBlocklists() {
@@ -87,7 +87,8 @@ export default {
         });
     },
     searchAll(to) {
-      bus.$emit("searchAll", to);
+      this.$store.dispatch("updateCurrentNav", to);
+      this.$router.push(`/${to}`);
     }
   }
 };

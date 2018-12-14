@@ -1,9 +1,5 @@
-import {
-  Vue
-} from "vue";
-import {
-  Vuex
-} from "vuex";
+import Vue from "vue";
+import Vuex from "vuex";
 import Juser from "./modules/user";
 import Jother from "./modules/other";
 Vue.use(Vuex);
