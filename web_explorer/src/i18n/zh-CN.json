@@ -9,5 +9,7 @@
   "moreInfo": "更多信息",
   "block": "区块",
   "transaction": "交易",
-  "viewall": "查看全部"
+  "viewall": "查看全部",
+  "kLine": "k线图",
+  "time": "时间"
 }

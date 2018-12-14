@@ -9,5 +9,7 @@
   "moreInfo": "MORE",
   "block": "BLOCK",
   "transaction": "trans",
-  "viewall": "View more"
+  "viewall": "View more",
+  "kLine": "K-Line",
+  "time": "Time"
 }

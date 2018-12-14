@@ -5,27 +5,33 @@ Vue.use(Router)
 
 export default new Router({
   routes: [{
-    path: '/',
-    redirect: '/home'
-  }, {
-    path: '/home',
-    name: 'home',
-    component: _import('home')
-  }, {
-    path: '/block',
-    name: 'block',
-    component: _import('block/index')
-  }, {
-    path: '/hash',
-    name: 'hash',
-    component: _import('hash/index')
-  }, {
-    path: '/moreInfo',
-    name: 'moreInfo',
-    component: _import('moreInfo/index')
-  }, {
-    path: '/login',
-    name: 'login',
-    component: _import('login')
-  }]
+      path: '/',
+      redirect: '/home'
+    }, {
+      path: '/home',
+      name: 'home',
+      component: _import('home')
+    }, {
+      path: '/block',
+      name: 'block',
+      component: _import('block/index')
+    }, {
+      path: '/hash',
+      name: 'hash',
+      component: _import('hash/index')
+    }, {
+      path: '/moreInfo',
+      name: 'moreInfo',
+      component: _import('moreInfo/index')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: _import('login')
+    }, {
+      path: '/viewall',
+      name: 'viewall',
+      component: _import('block/index')
+    }
+  ]
 })

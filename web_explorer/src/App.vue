@@ -7,18 +7,18 @@
 </template>
 
 <script>
-import HeaderNav from './components/common/HeaderNav';
-import BodyContainer from './components/common/BodyContainer';
-import FooterNav from './components/common/FooterNav';
+import HeaderNav from "./components/common/HeaderNav";
+import BodyContainer from "./components/common/BodyContainer";
+import FooterNav from "./components/common/FooterNav";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     HeaderNav,
     BodyContainer,
     FooterNav
   }
-}
+};
 </script>
 
 <style scoped type="text/css">
