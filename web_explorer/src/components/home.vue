@@ -11,8 +11,8 @@
               <i class="iconfont icon-dashuju" style="font-size:20px;"></i>
               <span>{{$t("message.block")}}</span>
             </div>
-            <button @click="searchAll('block')">
-              <p id="viewall">{{$t("message.viewall")}}</p>
+            <button @click="searchAll('block')" class="button">
+              {{$t("message.viewall")}}
             </button>
           </li>
           <div style>
@@ -41,7 +41,7 @@
             <i class="iconfont icon-jiaoyiguanli"></i>
             <span>{{$t("message.transaction")}}</span>
           </div>
-          <p>{{$t("message.viewall")}}</p>
+            <button class="button">{{$t("message.viewall")}}</button>
         </li>
         <li v-for="(item  , index) of  listnum" :key="index">
           <div class="listsmallleft">
@@ -134,14 +134,6 @@ export default {
           margin-right: 4px;
         }
       }
-      p {
-        padding: 4px;
-        margin-right: 16px;
-        min-width: 65px;
-        user-select: none;
-        cursor: pointer;
-        border: 1px solid #929292;
-      }
     }
     .listsmallleft {
       height: 120px;
@@ -177,6 +169,14 @@ export default {
       text-align: left;
       font-size: 30%;
       line-height: 30px;
+    }
+    .button {
+      padding: 4px;
+      margin-right: 16px;
+      min-width: 65px;
+      user-select: none;
+      cursor: pointer;
+      border: 1px solid #929292;
     }
   }
 }
