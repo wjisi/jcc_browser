@@ -8,6 +8,8 @@
   "hashInfo": "交易哈希",
   "moreInfo": "更多信息",
   "block": "区块",
+  "kLine": "k线图",
+  "time": "时间",
   "inputSearchContent": "请输入搜索内容",
   "transaction": "交易",
   "viewall": "查看全部",

@@ -8,6 +8,8 @@
   "hashInfo": "HASH",
   "moreInfo": "MORE",
   "block": "BLOCK",
+  "kLine": "K-Line",
+  "time": "Time",
   "inputSearchContent": "Please enter the Search content",
   "transaction": "TRANSACTION",
   "viewall": "View more",
@@ -19,5 +21,4 @@
     "parentHash": "Parent HASH",
     "transctionNums": "Transction Amount"
   }
-
 }
