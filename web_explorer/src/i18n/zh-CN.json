@@ -12,9 +12,9 @@
   "transaction": "交易",
   "viewall": "查看全部",
   "hash": "哈希",
-  "selectiondate": "选择日期",
+  "screendate": "筛选日期",
   "blockList": {
-    "id": "ID",
+    "height": "高度",
     "dateTime": "生成时间",
     "parentHash": "父哈希",
     "transctionNums": "交易数"

@@ -1,16 +1,56 @@
 <template>
   <div id="block">
     <div class="selectionDate">
-      <div class="demonstration">{{$t("message.selectiondate")}}</div>
-      <el-date-picker v-model="selectedDate" align="right" type="date" :picker-options="pickerOptions" value-format="yyyy-MM-dd" @change="setDatetiem"></el-date-picker>
+      <div class="selectionButton">
+        {{$t("message.screendate")}}
+        <el-date-picker
+          v-model="selectedDate"
+          align="right"
+          type="date"
+          :picker-options="pickerOptions"
+          value-format="yyyy-MM-dd"
+          @change="setDatetiem"
+        ></el-date-picker>
+        <button style="height:30px">确定</button>
+      </div>
+
+      <div class="block">
+        <el-pagination :page-size="20" :pager-count="11" layout="prev, pager, next" :total="1000"></el-pagination>
+      </div>
     </div>
-    <el-table :data="blockList" style="width:100%" height="100%">
-      <el-table-column prop="_id" :label="$t('message.blockList.id')" width="110%"></el-table-column>
-      <el-table-column prop="dateTime" :label="$t('message.blockList.dateTime')" width="200%"></el-table-column>
-      <el-table-column prop="hash" :label="$t('message.hash')" width="350"></el-table-column>
-      <el-table-column prop="parentHash" :label="$t('message.blockList.parentHash')" width="350"></el-table-column>
-      <el-table-column prop="transNum" :label="$t('message.blockList.transctionNums')" width="100"></el-table-column>
-    </el-table>
+    <div class="bockList">
+      <el-table :data="blockList" style="width:100%">
+        <el-table-column prop="_id" :label="$t('message.blockList.height')" style="width:10%"></el-table-column>
+        <el-table-column
+          prop="dateTime"
+          :label="$t('message.blockList.dateTime')"
+          style="width:20%"
+        ></el-table-column>
+        <el-table-column
+          prop="transNum"
+          :label="$t('message.blockList.transctionNums')"
+          style="width:10%"
+        ></el-table-column>
+        <el-table-column prop="hash" :label="$t('message.hash')" id="ellipsis" style="width:30%">
+          <template slot-scope="scope">{{handleHashdata(scope.row.hash)}}</template>
+        </el-table-column>
+        <el-table-column
+          prop="parentHash"
+          :label="$t('message.blockList.parentHash')"
+          id="ellipsis"
+          style="width:30%"
+        >
+          <template slot-scope="scope">{{handleHashdata(scope.row.parentHash)}}</template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-pagination
+      :page-size="20"
+      :pager-count="11"
+      layout="prev, pager, next"
+      :total="1000"
+      style="width:30%"
+    ></el-pagination>
   </div>
 </template>
 <script>
@@ -49,6 +89,10 @@ export default {
       };
       let res = await getDayBlocklist(data);
       this.blockList = res.data.data;
+    },
+    handleHashdata(value) {
+      let hashdata = value.substring(0, 20) + "...";
+      return hashdata;
     }
   }
 };
@@ -66,10 +110,11 @@ export default {
 }
 .selectionDate {
   margin-top: 30px;
-  display: flex;
-  min-width: 700px;
-  justify-content: center;
-  margin-bottom: 30px;
-  overflow: hidden;
+  margin-bottom: 50px;
+  .selectionButton {
+    float: left;
+    width: 350px;
+    height: 40px;
+  }
 }
 </style>
