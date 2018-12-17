@@ -14,9 +14,9 @@
   "transaction": "TRANSACTION",
   "viewall": "View more",
   "hash": "Hash",
-  "selectiondate": "Selectiondate",
+  "screendate": "Screendate",
   "blockList": {
-    "id": "ID",
+    "height": "Height",
     "dateTime": "Create Time",
     "parentHash": "Parent HASH",
     "transctionNums": "Transction Amount"
