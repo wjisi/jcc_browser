@@ -29,23 +29,11 @@
     <!-- switch language -->
     <div class="languageSwitch">
       <el-popover placement="bottom" trigger="hover" v-model="showLanguage">
-        <div
-          v-for="(item,index) in languageList"
-          :key="index"
-          @click="switchLanguage(index);"
-          class="languageContent"
-        >
-          <span :class="`jcc-${item.label}-icon`"></span>
+        <div v-for="(item,index) in languageList" :key="index" @click="switchLanguage(index);" class="languageContent">
           <div style="display:inline-block;min-width:60px;margin-left:15px;">{{item.name}}</div>
         </div>
-        <div
-          slot="reference"
-          style="width:100px;color:#0f3988;position:relative;top:25px;left:10px;cursor:pointer;"
-        >
-          <i
-            class="iconfont icon-zixunzhongxinicon"
-            style="font-size:13.5px;float:left;position:relative;top:2.5px;"
-          ></i>
+        <div slot="reference" style="width:100px;color:#0f3988;position:relative;top:25px;left:10px;cursor:pointer;">
+          <i class="iconfont icon-wangluo" style="font-size:13.5px;float:left;position:relative;top:2.5px;"></i>
           <span style="padding-left:4px;float:left;">{{languageList[currentLanguage].name}}</span>
         </div>
       </el-popover>
@@ -118,7 +106,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/css/icon.scss";
 #headerNav {
   font-size: 14px;
   display: flex;

@@ -1,6 +1,6 @@
 <template>
   <div id="hash">
-    HASH INFO
+    交易列表
   </div>
 </template>
 
