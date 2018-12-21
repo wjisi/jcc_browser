@@ -29,11 +29,11 @@ export default {
     color: blue;
     background-color: #f8f8f8;
   }
-  .contentWrap {
-    width: 96%;
-    height: 100%;
-    margin: 0 2%;
-    background-color: #f8f8f8;
-  }
+  // .contentWrap {
+  //   width: 96%;
+  //   height: 100%;
+  //   margin: 0 2%;
+  //   background-color: #f8f8f8;
+  // }
 }
 </style>

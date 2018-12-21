@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <HeaderNav></HeaderNav>
+    <!-- <HeaderNav></HeaderNav> -->
     <BodyContainer></BodyContainer>
-    <FooterNav></FooterNav>
+    <!-- <FooterNav></FooterNav> -->
   </div>
 </template>
 
