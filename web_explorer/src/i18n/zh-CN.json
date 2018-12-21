@@ -13,12 +13,24 @@
   "inputSearchContent": "请输入搜索内容",
   "transaction": "交易",
   "viewall": "查看全部",
-  "hash": "哈希",
+  "hash": "哈希值",
   "screendate": "筛选日期",
   "blockList": {
-    "height": "高度",
-    "dateTime": "生成时间",
+    "blockheight": "区块高度",
+    "dateTime": "时间",
     "parentHash": "父哈希",
-    "transctionNums": "交易数"
+    "transctionNums": "交易数量",
+    "sort": "排序",
+    "goto": "跳至",
+    "page": "页",
+    "confirm": "确认"
+  },
+  "hashList": {
+    "latestdeal": "最新交易",
+    "blockHash": "区块哈希值",
+    "sort": "排序",
+    "goto": "跳至",
+    "page": "页",
+    "confirm": "确认"
   }
 }

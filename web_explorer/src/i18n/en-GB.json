@@ -16,9 +16,21 @@
   "hash": "Hash",
   "screendate": "Screendate",
   "blockList": {
-    "height": "Height",
-    "dateTime": "Create Time",
+    "blockheight": "block Height",
+    "dateTime": "Time",
     "parentHash": "Parent HASH",
-    "transctionNums": "Transction Amount"
+    "transctionNums": "Deal",
+    "sort": "Sort",
+    "goto": "goto",
+    "page": "page",
+    "confirm": "confirm"
+  },
+  "hashList": {
+    "latestdeal": "latest Deal",
+    "blockHash": "Block HASH",
+    "sort": "Sort",
+    "goto": "goto",
+    "page": "page",
+    "confirm": "confirm"
   }
 }
