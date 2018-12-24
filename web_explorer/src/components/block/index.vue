@@ -9,6 +9,7 @@
         {{$t("message.screendate")}}
         <el-date-picker v-model="selectedDate" align="right"  type="date" :picker-options="pickerOptions"  value-format="yyyy-MM-dd" @change="setDatetiem"
         ></el-date-picker>
+        <Button>{{$t('message.blockList.confirm')}}</Button>
       </div>
     </div>
     <div class="bockList">
@@ -35,7 +36,7 @@
         </el-table>
        </div>
        <ul class="pagination">
-         <li><el-pagination background layout="prev, pager, next" :page-size="20"  :page-count="212"></el-pagination> </li>
+         <li><el-pagination background layout="prev, pager, next" :page-size="20"  :page-count="212" @current-change="handleCurrentChange"></el-pagination> </li>
          <li>{{$t('message.blockList.goto')}}
             <div class="inputDiv"><input type="text" placeholder="100"></div>{{$t('message.blockList.page')}}
          </li>
@@ -69,18 +70,8 @@ export default {
     async getAllList(nums = 20) {
       let res = await getBlocklist(nums);
       res = res.data.data;
-      let i = 0;
-      let list = [];
-      for (; i < res.length; i++) {
-        list.push({
-          _id: res[i]._id,
-          transNum: res[i].transNum,
-          hash: res[i].hash,
-          time: this.handleHashtime(res[i].time)
-        });
-      }
-      this.blockList = list;
-      console.log(this.blockList);
+      res = res.slice(-20);
+      this.blockList = this.handleGetData(res);
     },
     setDatetiem(val) {
       this.selectedDate = val;
@@ -95,18 +86,24 @@ export default {
       let res = await getDayBlocklist(data);
       this.blockList = res.data.data;
     },
-    rowStyle({ row, rowIndex }) {
-      return "height:40px";
-    },
-    handleData(value) {
-      return value;
-    },
-    fillZero(value) {
-      if (value < 10) {
-        value = "0" + value;
+    handleGetData(res) {
+      let i = 0;
+      let list = [];
+      for (; i < res.length; i++) {
+        list.push({
+          _id: res[i]._id,
+          transNum: res[i].transNum,
+          hash: res[i].hash,
+          time: this.handleHashtime(res[i].time)
+        });
       }
-      return value;
+      return list;
     },
+    handleCurrentChange(val) {
+      console.log(val * 20);
+      this.getAllList(val * 20);
+    },
+
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -121,6 +118,18 @@ export default {
         "-" +
         fillZero(dateIn.getDate());
       return hashTime;
+    },
+    rowStyle({ row, rowIndex }) {
+      return "height:40px";
+    },
+    handleData(value) {
+      return value;
+    },
+    fillZero(value) {
+      if (value < 10) {
+        value = "0" + value;
+      }
+      return value;
     }
   }
 };
@@ -162,8 +171,11 @@ export default {
   }
   .selectionButton {
     float: left;
-    width: 350px;
     height: 30px;
+    margin-right: 20%;
+    button {
+      height: 37px;
+    }
   }
 }
 .pagination {
@@ -181,6 +193,7 @@ export default {
     width: 50px;
     margin-left: 20px;
     background: #f2f8fc;
+    padding: 0 3px;
   }
   li .inputDiv {
     width: 36px;
@@ -197,7 +210,6 @@ export default {
     border: 0;
   }
 }
-
 #block .rowClass td:nth-child(2) {
   color: #3b3f4c;
   font-size: 14px;
@@ -215,6 +227,7 @@ export default {
   .idSpan:hover {
     color: #06aaf9;
     font-size: 14px;
+    cursor: pointer;
   }
   .timespan {
     color: #6f6868;
@@ -231,6 +244,7 @@ export default {
   }
   .hashSpan:hover {
     color: #06aaf9;
+    cursor: pointer;
   }
 }
 </style>
@@ -276,5 +290,8 @@ export default {
 #block .blockRowClass:nth-child(odd) {
   background: #f2f8fc;
   height: 40px;
+}
+.selectionButton .el-date-editor {
+  width: 150px;
 }
 </style>
