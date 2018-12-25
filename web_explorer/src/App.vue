@@ -1,22 +1,24 @@
 <template>
   <div id="app">
-    <!-- <HeaderNav></HeaderNav> -->
+    <HeaderNav v-show="isIndex"></HeaderNav>
     <BodyContainer></BodyContainer>
-    <!-- <FooterNav></FooterNav> -->
   </div>
 </template>
 
 <script>
 import HeaderNav from "./components/common/HeaderNav";
 import BodyContainer from "./components/common/BodyContainer";
-import FooterNav from "./components/common/FooterNav";
 
 export default {
   name: "App",
   components: {
     HeaderNav,
-    BodyContainer,
-    FooterNav
+    BodyContainer
+  },
+  computed: {
+    isIndex() {
+      return this.$route.name !== "home";
+    }
   }
 };
 </script>

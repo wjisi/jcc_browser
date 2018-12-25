@@ -1,6 +1,6 @@
 <template>
   <div id="moreInfo">
-    MOREINFO
+    WALLETINFO
   </div>
 </template>
 
