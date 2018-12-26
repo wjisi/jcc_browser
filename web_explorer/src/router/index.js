@@ -15,23 +15,24 @@ export default new Router({
       path: '/block',
       name: 'block',
       component: _import('block/index')
+    },
+    {
+      path: '/block/blockDetail',
+      name: 'blockDetail',
+      component: _import('block/blockDetail')
     }, {
       path: '/hash',
       name: 'hash',
       component: _import('hash/index')
     }, {
-      path: '/moreInfo',
-      name: 'moreInfo',
-      component: _import('moreInfo/index')
+      path: '/walletInfo',
+      name: 'walletInfo',
+      component: _import('walletInfo/index')
     },
     {
       path: '/login',
       name: 'login',
       component: _import('login')
-    }, {
-      path: '/viewall',
-      name: 'viewall',
-      component: _import('block/index')
     }
   ]
 })

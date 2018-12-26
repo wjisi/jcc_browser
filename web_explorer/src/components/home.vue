@@ -38,12 +38,12 @@
             </div>
           </div>
           <div class="showEnd">
-            <div class="showEndTop">
+            <div class="pilot">
               <div style="display:flex;align-items:center;">
                 <img src="../images/block_height_title.png" style="height:60px;width:50px;">
                 <div class="block">{{$t("message.blockList.blockheight")}}</div>
               </div>
-                <div class="buttom" @click="searchAll('block')">→{{$t("message.viewall")}}</div>
+              <div class="buttom" @click="searchAll('block')">→{{$t("message.viewall")}}</div>
             </div>
               <div id="list">
                 <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
@@ -77,8 +77,7 @@
         </div>
          <div class="endMidder"  >
             <el-table :data="listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
-            <el-table-column prop="_id" :label="$t('message.hashList.sort')" min-width="15%"  align="center" header-align="center">
-              <template slot-scope="scope"><span class="idSpan2">{{handleData(scope.rowIndex)}}</span></template>
+            <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.hashList.blockHash')" min-width="70%"  align="center" header-align="center">
               <template slot-scope="scope"><span class="idSpan2">{{handleData(scope.row.hash)}}</span></template>
@@ -115,8 +114,7 @@ export default {
   },
   data() {
     return {
-      listnum: [],
-      sort: [{ id: "1" }]
+      listnum: []
     };
   },
   methods: {
@@ -215,7 +213,6 @@ export default {
     width: 100%;
     height: 60%;
     display: flex;
-    flex-direction: row;
   }
   .showTopLeft {
     width: 50%;
@@ -311,7 +308,6 @@ export default {
 }
 .search {
   display: flex;
-  flex-direction: row;
   justify-content: center;
   margin-left: 19%;
   margin-top: 8%;
@@ -378,16 +374,7 @@ li {
   display: flex;
   flex-direction: column;
 }
-.showEndTop {
-  width: 91.25%;
-  height: 22%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 4%;
-  margin-top: 6%;
-  justify-content: space-between;
-}
+
 .hash {
   width: 90%;
   height: 30px;
@@ -406,11 +393,19 @@ li {
   font-size: 12px;
   text-align: left;
 }
+.pilot {
+  width: 91.25%;
+  height: 22%;
+  display: flex;
+  align-items: center;
+  margin-left: 4%;
+  margin-top: 6%;
+  justify-content: space-between;
+}
 .endTop {
   width: 91.25%;
   height: 22%;
   display: flex;
-  flex-direction: row;
   align-items: center;
   margin-left: 4%;
   margin-top: 10%;
