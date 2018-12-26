@@ -10,19 +10,20 @@
          <div class="topLeft">
             <div class="index" ><img src="../images/logo_index.png"></div>
             <p class="browser">{{$t("message.home.browser")}}</p>
-            <div class="search">
-              <input type="text" id="in" :placeholder="$t('message.searchPlaceholder')" /><button class="btn_search" @click="serch()">{{$t("message.search")}}</button>
-            </div>
+            <span class="search">
+              <input type="text" id="in" :placeholder="$t('message.searchPlaceholder')" />
+              <button class="btn_search" @click="serch()">{{$t("message.search")}}</button>
+            </span>
          </div>
          <div class="topRight" >
             <p >{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
-            <div><img src="../images/index_net.png"></div>
+            <span><img src="../images/index_net.png"></span>
          </div>
       </div>
         <div class="show">
           <div class="showTop">
             <div class="showTopLeft">
-              <div class="showTopLeftValue"><span>{{$t("message.home.providefunction")}}</span></div>
+              <div class="showTopLeftValue"><span>{{$t("message.home.providefunctiona ")}}</span></div>
             </div>
             <div class="showTopRight">
               <div style="width:50%;margin-left:42%">
@@ -41,9 +42,9 @@
             <div class="pilot">
               <div style="display:flex;align-items:center;">
                 <img src="../images/block_height_title.png" style="height:60px;width:50px;">
-                <div class="block">{{$t("message.blockList.blockheight")}}</div>
+                <span class="block">{{$t("message.blockList.blockheight")}}</span>
               </div>
-              <div class="buttom" @click="searchAll('block')">→{{$t("message.viewall")}}</div>
+              <span class="buttom" @click="searchAll('block')">→{{$t("message.viewall")}}</span>
             </div>
               <div id="list">
                 <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
@@ -53,7 +54,7 @@
                     </div>
                     <div id="listValue">
                       <div>
-                        <p id="_id">{{$t("message.home.height")}} {{item._id}}</p>
+                        <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
                         <span>
                           <p style="font-size:20px;">{{item.transNum}}</p>
                           <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
@@ -71,9 +72,9 @@
         <div class="endTop" >
           <div style="display:flex;align-items:center;">
             <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
-            <div class="block">{{$t("message.hashList.latestdeal")}}</div>
+            <span class="block">{{$t("message.hashList.latestdeal")}}</span>
           </div>
-          <div class="buttom" @click="searchAll('block')" >→{{$t("message.viewall")}}</div>
+          <span class="buttom" @click="searchAll('block')" >→{{$t("message.viewall")}}</span>
         </div>
          <div class="endMidder"  >
             <el-table :data="listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
@@ -94,10 +95,10 @@
               <span>{{$t("message.home.anhui")}}</span>
             </div>
             <div class="endEndRignt">
-              <span id="value">{{$t("message.home.officialwebsite")}}</span>|
-              <span id="value">{{$t("message.home.cooperation")}}</span>|
-              <span id="value">{{$t("message.home.partners")}}</span>|
-              <span id="value">{{$t("message.home.Contactus")}}</span>
+              <span>{{$t("message.home.officialwebsite")}}</span>|
+              <span>{{$t("message.home.cooperation")}}</span>|
+              <span>{{$t("message.home.partners")}}</span>|
+              <span>{{$t("message.home.Contactus")}}</span>
           </div>
         </div>
       </div>
@@ -193,7 +194,7 @@ export default {
       margin-top: 6%;
       margin-bottom: 5px;
     }
-    div {
+    span {
       width: 82%;
       height: 81.3%;
     }
@@ -381,14 +382,14 @@ li {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 12px;
-  margin-top: 15%;
+  margin-top: 10%;
   color: #6f6868;
 }
 .hash:hover {
   color: #06aaf9;
 }
 .time {
-  margin-top: 3%;
+  margin-top: 8%;
   color: #8a8d90;
   font-size: 12px;
   text-align: left;
@@ -446,11 +447,9 @@ li {
     font-size: 14px;
     color: #6b9eff;
     span {
-      margin-left: 3%;
-      margin-right: 3%;
       width: 100px;
     }
-    #value:hover {
+    span:hover {
       color: #18c9dd;
     }
   }
