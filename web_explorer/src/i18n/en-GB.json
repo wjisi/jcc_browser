@@ -1,7 +1,6 @@
 {
   "homeTitle": "Weidex Blockchain Explorer",
   "login": "LOGIN",
-  "search": "GO",
   "searchPlaceholder": "Serach by Address/Txhash/Block",
   "indexPage": "HOME",
   "blockchain": "BLOCK",
@@ -15,6 +14,28 @@
   "viewall": "View more",
   "hash": "Hash",
   "screendate": "Screendate",
+  "search": "search",
+  "home": {
+    "browser": "Jingchang block chain browser",
+    "height": "Heigth",
+    "basedon": "Based on block chain technology",
+    "decentralized": "Decentralized ecological Internet trading network for mutual benefit",
+    "providefunctional": "Jingchang blockchain browser provides real-time browsing, ",
+    "donot": "Do not tamper with representational values",
+    "donotvalue": "Provide the unique and non-tampering characterization value of the real-time browsing function of weilian",
+    "realtime": "Real-time browsing function",
+    "realtimevalue": "Internet alliance public chain transparent, open basic transaction records query and other functions",
+    "recordquery": "Transaction record query",
+    "recordqueryvalue": "Transaction records query and other functions of the Internet alliance public chain transparent, open basis",
+    "deal": "Deal",
+    "dealNums": "DealNums",
+    "anhui": "Anhui jingchang digital technology co., LTD",
+    "officialwebsite": "Well chang's official website",
+    "cooperation": "Business cooperation",
+    "partners": "partners",
+    "Contactus": "Contact us"
+
+  },
   "blockList": {
     "blockheight": "block Height",
     "dateTime": "Time",
