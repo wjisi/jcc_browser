@@ -77,7 +77,7 @@
         </div>
          <div class="endMidder"  >
             <el-table :data="listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
-            <el-table-column prop="_id" :label="$t('message.hashList.sort')" min-width="15%"  align="center" header-align="center">
+            <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
               <template slot-scope="scope"><span class="idSpan2">{{handleData(scope.rowIndex)}}</span></template>
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.hashList.blockHash')" min-width="70%"  align="center" header-align="center">
