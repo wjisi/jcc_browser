@@ -23,7 +23,7 @@
         <div class="show">
           <div class="showTop">
             <div class="showTopLeft">
-              <div class="showTopLeftValue"><span>{{$t("message.home.providefunctiona ")}}</span></div>
+              <div class="showTopLeftValue"><span>{{$t("message.home.providefunction")}}</span></div>
             </div>
             <div class="showTopRight">
               <div style="width:50%;margin-left:42%">
