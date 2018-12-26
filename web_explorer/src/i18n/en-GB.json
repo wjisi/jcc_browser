@@ -1,7 +1,6 @@
 {
   "homeTitle": "Weidex Blockchain Explorer",
   "login": "LOGIN",
-  "search": "GO",
   "searchPlaceholder": "Serach by Address/Txhash/Block",
   "indexPage": "HOME",
   "blockchain": "BLOCK",
