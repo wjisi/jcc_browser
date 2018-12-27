@@ -9,21 +9,31 @@
       <div class="top">
          <div class="topLeft">
             <div class="index" ><img src="../images/logo_index.png"></div>
-            <p class="browser">{{$t("message.home.browser")}}</p>
+            <p class="browser">{{$t("message.homeTitle")}}</p>
             <span class="search">
               <input type="text" id="in" :placeholder="$t('message.searchPlaceholder')" />
               <button class="btn_search" @click="serch()">{{$t("message.search")}}</button>
             </span>
          </div>
          <div class="topRight" >
-            <p >{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
-            <span><img src="../images/index_net.png"></span>
-         </div>
+           <div id="changelan">
+              <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
+              <el-dropdown @command="switchLanguage" trigger="click">
+                <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
+                  <i class="iconfont icon-yuyanqiehuan"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+           </div>
+           <span id="index_net"><img src="../images/index_net.png"></span>
+        </div>
       </div>
         <div class="show">
           <div class="showTop">
             <div class="showTopLeft">
-              <div class="showTopLeftValue"><span>{{$t("message.home.providefunctiona ")}}</span></div>
+              <div class="showTopLeftValue"><span>{{$t("message.home.providefunction ")}}</span></div>
             </div>
             <div class="showTopRight">
               <div style="width:50%;margin-left:42%">
@@ -74,23 +84,23 @@
             <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
             <span class="block">{{$t("message.hashList.latestdeal")}}</span>
           </div>
-          <span class="buttom" @click="searchAll('block')" >→{{$t("message.viewall")}}</span>
+          <span class="buttom" @click="searchAll('hash')" >→{{$t("message.viewall")}}</span>
         </div>
          <div class="endMidder"  >
-            <el-table :data="listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
+            <el-table :data="latestdeal,listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
-            <el-table-column id="hash" prop="hash" :label="$t('message.hashList.blockHash')" min-width="70%"  align="center" header-align="center">
+            <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
               <template slot-scope="scope"><span class="idSpan2">{{handleData(scope.row.hash)}}</span></template>
             </el-table-column>
-            <el-table-column prop="transNum" :label="$t('message.home.deal')" min-width="15%"  align="center" header-align="center">
+            <el-table-column prop="T_DateTime" :label="$t('message.home.time')" min-width="15%"  align="center" header-align="center">
             </el-table-column>
             </el-table>
          </div>
          <div class="endEnd">
             <div class="endEndLeft" >
               <img src="../images/logo_footer.png">
-              <span>{{$t("message.home.browser")}}</span>
+              <span>{{$t("message.homeTitle")}}</span>
               <div></div>
               <span>{{$t("message.home.anhui")}}</span>
             </div>
@@ -107,24 +117,45 @@
 </template>
 
 <script>
-import { getBlocklist } from "../js/fetch";
+import { getBlocklist, getLatestDeal } from "../js/fetch";
+var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "home",
   created() {
     this.getBlocklists();
+    this.getLatestDeals();
   },
   data() {
     return {
-      listnum: []
+      listnum: [],
+      latestdeal: [],
+      showLanguage: false,
+      languageList: {
+        zh: { label: "zh", name: "简体中文" },
+        en: { label: "en", name: "English" }
+      }
     };
+  },
+  computed: {
+    currentLanguage() {
+      return this.$i18n.locale;
+    }
   },
   methods: {
     getBlocklists() {
       getBlocklist(6)
         .then(data => {
-          console.log(data);
-          console.log(data.data.data.length);
           this.listnum = data.data.data;
+        })
+        .catch(error => {
+          this.$message.error(error.msg);
+        });
+    },
+    getLatestDeals() {
+      getLatestDeal(6)
+        .then(data => {
+          console.log(data);
+          this.latestdeal = data.data.data;
         })
         .catch(error => {
           this.$message.error(error.msg);
@@ -136,7 +167,6 @@ export default {
     },
     rowStyle({ row, rowIndex }) {
       if (rowIndex % 2 === 0) {
-        console.log(rowIndex);
         return "background:#f2f8fc;color:#3b3f4c;font-size:14px;";
       } else {
         return "color:#3b3f4c;font-size:14px;";
@@ -147,6 +177,12 @@ export default {
     },
     handleData(value) {
       return value;
+    },
+    switchLanguage(lang) {
+      this.$i18n.locale = lang;
+      localStorage.setItem("languageType", lang);
+      homeTitle.innerHTML = this.$t("message.homeTitle");
+      this.showLanguage = false;
     }
   }
 };
@@ -187,14 +223,21 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    p {
-      font-size: 12px;
-      color: #cee5ff;
-      font-weight: bold;
+    #changelan {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
       margin-top: 6%;
       margin-bottom: 5px;
     }
-    span {
+    p {
+      width: 30%;
+      font-size: 12px;
+      color: #cee5ff;
+      font-weight: bold;
+      margin-left: 31%;
+    }
+    #index_net {
       width: 82%;
       height: 81.3%;
     }
@@ -203,6 +246,30 @@ export default {
       width: 100%;
       margin-left: 12%;
     }
+  }
+}
+.el-dropdown-link {
+  display: inline-block;
+  white-space: nowrap;
+  height: 36px;
+  border: 1px solid #18c9dd;
+  border-radius: 6px;
+  line-height: 38px;
+  padding: 0 10px;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 4%;
+  i {
+    font-size: 8px;
+    margin-left: 8px;
+    position: relative;
+    bottom: 1px;
+  }
+}
+.el-dropdown-menu {
+  background-color: #fff;
+  .el-dropdown-menu__item {
+    padding: 0 22px;
   }
 }
 .show {
@@ -266,6 +333,7 @@ export default {
   }
   .idSpan2:hover {
     color: #06aaf9;
+    cursor: pointer;
   }
 }
 .buttom {
@@ -275,6 +343,7 @@ export default {
 }
 .buttom:hover {
   color: #18c9dd;
+  cursor: pointer;
 }
 .index {
   height: 60px;
@@ -335,36 +404,43 @@ export default {
     border-bottom-right-radius: 8px;
   }
 }
-li {
-  background-color: #f2f8fc;
-  width: 16.6%;
-  height: 190%;
-  list-style-type: none;
-  border-right: 1px solid;
-  border-right-color: #e8e8e8;
-  #listValue {
-    width: 90%;
-    height: 100%;
-    margin-left: 4%;
-    display: flex;
-    flex-direction: column;
-    div {
-      width: 100%;
-      height: 40%;
-      display: flex;
-    }
-    #_id {
-      width: 60%;
-      text-align: left;
-      margin-top: 22%;
-    }
-    span {
-      width: 30%;
+#list {
+  display: flex;
+  width: 91.25%;
+  height: 85px;
+  margin-left: 4%;
+  margin-top: 1.5%;
+  li {
+    background-color: #f2f8fc;
+    width: 16.6%;
+    height: 190%;
+    list-style-type: none;
+    border-right: 1px solid;
+    border-right-color: #e8e8e8;
+    #listValue {
+      width: 90%;
+      height: 100%;
+      margin-left: 4%;
       display: flex;
       flex-direction: column;
-      margin-top: 8%;
-      p {
-        color: #93a3b7;
+      div {
+        width: 100%;
+        height: 40%;
+        display: flex;
+      }
+      #_id {
+        width: 60%;
+        text-align: left;
+        margin-top: 22%;
+      }
+      span {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 8%;
+        p {
+          color: #93a3b7;
+        }
       }
     }
   }
@@ -375,7 +451,6 @@ li {
   display: flex;
   flex-direction: column;
 }
-
 .hash {
   width: 90%;
   height: 30px;
@@ -387,6 +462,7 @@ li {
 }
 .hash:hover {
   color: #06aaf9;
+  cursor: pointer;
 }
 .time {
   margin-top: 8%;
@@ -451,16 +527,11 @@ li {
     }
     span:hover {
       color: #18c9dd;
+      cursor: pointer;
     }
   }
 }
-#list {
-  display: flex;
-  width: 91.25%;
-  height: 85px;
-  margin-left: 4%;
-  margin-top: 1.5%;
-}
+
 #erect {
   height: 124px;
   width: 8px;

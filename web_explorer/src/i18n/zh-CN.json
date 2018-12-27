@@ -16,7 +16,6 @@
   "screendate": "筛选日期",
   "search": "搜索",
   "home": {
-    "browser": "井畅区块链浏览器",
     "height": "高度",
     "basedon": "基于区块链技术构建的 ",
     "decentralized": "去中心化互享生态互联网交易网络",
@@ -33,7 +32,9 @@
     "officialwebsite": "井畅官网",
     "cooperation": "商务合作",
     "partners": "合作伙伴",
-    "Contactus": "联系我们"
+    "Contactus": "联系我们",
+    "dealhash": "交易哈希值",
+    "time": "交易时间"
 
   },
   "blockList": {

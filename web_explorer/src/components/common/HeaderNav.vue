@@ -1,7 +1,7 @@
 <template>
   <div id="headerNav">
     <!-- logo -->
-    <div class="headLogo">
+    <div class="headLogo" @click="backhome('home')">
       <img :src="logo" >
       <span>{{$t("message.homeTitle")}}</span>
     </div>
@@ -43,7 +43,7 @@ export default {
       showLanguage: false,
       languageList: {
         zh: { label: "zh", name: "简体中文" },
-        en: { label: "en", name: "Englishh" }
+        en: { label: "en", name: "English" }
       }
     };
   },
@@ -83,6 +83,10 @@ export default {
       localStorage.setItem("languageType", lang);
       homeTitle.innerHTML = this.$t("message.homeTitle");
       this.showLanguage = false;
+    },
+    backhome(to) {
+      this.$store.dispatch("updateCurrentNav", to);
+      this.$router.push(`/${to}`);
     }
   }
 };
@@ -103,6 +107,7 @@ export default {
   display: flex;
   align-items: center;
   margin-right: 20px;
+  cursor: pointer;
   img {
     width: 40px;
     height: 40px;
