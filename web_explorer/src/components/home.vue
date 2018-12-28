@@ -1,8 +1,8 @@
 <template>
    <div id="home" >
      <span>
-       <span style="height:24.3%;"><img src="../images/index_top.png"></span>
-       <span style="height:38.4%;"><img src="../images/index_show.png"></span>
+       <span style="height:24.3%;bottom:5px;"><img src="../images/index_top.png"></span>
+       <span style="height:38.4%;top:10px;"><img src="../images/index_show.png"></span>
        <div></div>
      </span>
      <div class="init" >
@@ -200,11 +200,12 @@ export default {
   background: #f2f8fc;
   display: flex;
   flex-direction: column;
+  span > span {
+    position: relative;
+  }
   span > div {
     height: 800px;
     background: #1850d7;
-    position: relative;
-    bottom: 10px;
   }
   span > img {
     width: 100%;
