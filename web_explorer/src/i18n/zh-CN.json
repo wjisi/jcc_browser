@@ -31,5 +31,23 @@
     "goto": "跳至",
     "page": "页",
     "confirm": "确认"
+  },
+  "blockDetailList": {
+    "latestdeal": "最新交易",
+    "serialnumber": "序号",
+    "transactiontype": "交易类型",
+    "transactionmode": "交易方式",
+    "transactiontime": "交易时间",
+    "transactionnumber": "交易编号",
+    "sender": "发送发",
+    "servicecharge": "手续费",
+    "currentblock": "当前区块",
+    "hashnumber": "哈希值",
+    "closetime": "关闭时间",
+    "lasthash": "上一块哈希值",
+    "Transactionvolume": "交易数量",
+    "total": "总量",
+    "sorry": "抱歉",
+    "nodealAtall": "暂无交易"
   }
 }

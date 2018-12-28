@@ -14,12 +14,12 @@
     </div>
     <div class="bockList">
        <div class="bockListData">
-         <el-table :data="blockList" style="width:100%" :row-style="rowStyle"  row-class-name="blockRowClass" header-row-class-name="blockHeaderRowclass">
+         <el-table :data="blockList" style="width:100%"  row-class-name="blockRowClass" header-row-class-name="blockHeaderRowclass">
          <el-table-column  width="46px"></el-table-column>
          <el-table-column type="index" :label="$t('message.blockList.sort')"    min-width="15%">
          </el-table-column>
          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="18%">
-            <template slot-scope="scope"><span class="idSpan">{{handleData(scope.row._id)}}</span></template>
+            <template slot-scope="scope"><span class="idSpan" @click="jumpDetail(scope.row.hash)">{{handleData(scope.row._id)}}</span></template>
          </el-table-column>
          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="22%">
           <template slot-scope="scope">
@@ -30,10 +30,11 @@
             <template slot-scope="scope"><span class="transNumSpan">{{handleData(scope.row.transNum)}}</span></template>
          </el-table-column>
          <el-table-column prop="hash"  :label="$t('message.hash')"  id="ellipsis" align="right" header-align="center" min-width="32%">
-             <template slot-scope="scope"><span class="hashSpan">{{handleData(scope.row.hash)}}</span></template>
+             <template slot-scope="scope"><span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{handleData(scope.row.hash)}}</span></template>
          </el-table-column>
           <el-table-column  width="46px" ></el-table-column>
         </el-table>
+
        </div>
        <ul class="pagination">
          <li><el-pagination background layout="prev, pager, next" :page-size="20"  :page-count="212" @current-change="handleCurrentChange"></el-pagination> </li>
@@ -57,10 +58,7 @@ export default {
         }
       },
       selectedDate: "",
-      blockList: [],
-      getRowClass: "",
-      index: "",
-      labelclass: ""
+      blockList: []
     };
   },
   created() {
@@ -119,11 +117,14 @@ export default {
         fillZero(dateIn.getDate());
       return hashTime;
     },
-    rowStyle({ row, rowIndex }) {
-      return "height:40px";
-    },
     handleData(value) {
       return value;
+    },
+    jumpDetail(hash) {
+      this.$router.push({
+        name: "blockDetail",
+        params: { hash: hash }
+      });
     },
     fillZero(value) {
       if (value < 10) {

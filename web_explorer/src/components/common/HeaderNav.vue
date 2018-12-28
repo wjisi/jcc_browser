@@ -43,7 +43,7 @@ export default {
       showLanguage: false,
       languageList: {
         zh: { label: "zh", name: "简体中文" },
-        en: { label: "en", name: "Englishh" }
+        en: { label: "en", name: "English" }
       }
     };
   },
