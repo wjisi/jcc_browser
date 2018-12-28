@@ -1,141 +1,168 @@
 <template>
-   <div id="home" style="width:100%;background:#f2f8fc;display:flex;flex-direction:column;">
-     <div style="width:100%;height:100%; position:relative;">
-       <div style="width:100%;height:24.3%;"><img src="../images/index_top.png" style="height:100%;width:100%"></div>
-       <div style="width:100%;height:38.4%;"><div style="background:#f2f8fc;;width:100%;height:1%;"></div><img src="../images/index_show.png" style="height:100%;width:100%"></div>
-       <div style="width:100%;height:800px;background:#1850d7;position:relative;bottom:10px;"></div>
-     </div>
-     <div class="init" style="position:absolute;width:100%;hight:1600px;z-indent:2;display:flex;flex-direction:column;">
-       <div class="top" style="width:100%;height:25%;display:flex;flex-direction:row;">
-         <div class="topLeft" style="width:50%;height:100%;display:flex;flex-direction:column;">
-            <div class="index" style="height:60px;width:60px; margin-left: 54.5%;margin-top: 5%;"><img src="../images/logo_index.png" alt="" style="width:100%;height:100%;"></div>
-            <div style="font-size:22px;color:#F4F4FB;margin-top:14px;height:31px;width:50%;margin-left:34%;min-width:176px;">井畅区块链浏览器</div>
-            <!-- <input type="text" style="> -->
-            <div class="search" style="display:flex;flex-direction:row;justify-content:center;margin-left:19%;margin-top:8%;min-width:320px;">
-              <input type="text" id="in"  placeholder="请输入钱包地址或交易哈希"/><button class="btn_search">搜索</button>
+   <div id="home" >
+     <span>
+       <span style="height:24.3%;"><img src="../images/index_top.png"></span>
+       <span style="height:38.4%;"><img src="../images/index_show.png"></span>
+       <div></div>
+     </span>
+     <div class="init" >
+      <div class="top">
+         <div class="topLeft">
+            <div class="index" ><img src="../images/logo_index.png"></div>
+            <p class="browser">{{$t("message.homeTitle")}}</p>
+            <div class="searchWarp">
+              <input type="text" :placeholder="$t('message.searchPlaceholder')">
+              <span class="serachButton" >
+                <i class="iconfont icon-sousuoicon"></i>
+              </span>
             </div>
          </div>
-         <div class="topRight" style="width:50%;height:100%;dispaly:flex;flex-direction:column;justify-content:center;">
-            <div style="font-size:12px;color:#CEE5FF;font-weight:bold;margin-top:6%;margin-bottom:5px;">基于区块链技术构建的<br>去中心化互享生态互联网交易网络</div>
-            <div class="net" style="width: 82%;height: 81.3%;"><img src="../images/index_net.png" alt="" style="height:100%;width:100%;margin-left:12%"></div>
-         </div>
-       </div>
-       <div class="show" style="width:100%;height:624px;display:flex;flex-direction:column;">
-          <div class="showTop" style="width:100%;height:60%;display:flex;flex-direction:row;">
-            <div class="showTopLeft" style="width:50%;height:100%;">
-              <div class="showTopLeftValue" style="height: 25%;width: 54%;margin-top: 13%;margin-left: 11%; font-size: 18px;min-width:320px;min-height:94px;"><div style="heigth:100%;width:85%;">井畅区块链浏览器提供对井通和井畅等互享网账本的实时浏览功能，交易检测功能，以及互享</div></div>
+         <div class="topRight" >
+           <div id="changelan">
+              <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
+              <el-dropdown @command="switchLanguage" trigger="click">
+                <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
+                  <i class="iconfont icon-yuyanqiehuan"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+           </div>
+           <span id="index_net"><img src="../images/index_net.png"></span>
+        </div>
+      </div>
+        <div class="show">
+          <div class="showTop">
+            <div class="showTopLeft">
+              <div class="showTopLeftValue"><span>{{$t("message.home.providefunction ")}}</span></div>
             </div>
-            <div class="showTopRight" style="width:50%;height:100%;text-align: left;">
+            <div class="showTopRight">
               <div style="width:50%;margin-left:42%">
-                <div id="title">不可篡改表征价值</div>
-                <p id="value">提供对威链、墨客、井通等互享网账本的实时浏览功能<br>唯一、不可篡改表征价值</p>
+                <p id="title">{{$t("message.home.donot")}}</p>
+                <p id="value">{{$t("message.home.donotvalue")}}</p>
                 <div style="margin-left:10%;">
-                <p id="title">实时浏览功能</p>
-                <p id="value">互联网联盟公链透明、公开的基础<br>交易记录查询等功能</p>
+                  <p id="title">{{$t("message.home.realtime")}}</p>
+                  <p id="value">{{$t("message.home.realtimevalue")}}</p>
                 </div>
-                <p id="title">交易记录查询</p>
-                <p id="value">交易记录查询等功能<br>互联网联盟公链透明、公开的基础</p>
+                <p id="title">{{$t("message.home.recordquery")}}</p>
+                <p id="value">{{$t("message.home.recordqueryvalue")}}</p>
               </div>
             </div>
           </div>
-          <div class="showEnd" style="width:100%;height:40%;display;flex;flex-direction:column;">
-              <div class="showEndTop" style="width:91.25%;height:22%;display:flex;flex-direction:row;align-items:center;margin-left:4%;margin-top:6%;justify-content:space-between;">
-                <div style="display:flex;flex-direction:row;align-items:center;">
-                  <img src="../images/block_height_title.png" style="height:60px;width:50px;">
-                  <div class="block">区块高度</div>
-                </div>
-                <div class="buttom" @click="searchAll('block')" style=" width:150px;color:#c7cfd5;text-align:right;" onMouseOut="this.style.color='#c7cfd5'" onMouseOver="this.style.color='#18c9dd'">→查看更多</div>
+          <div class="showEnd">
+            <div class="pilot">
+              <div style="display:flex;align-items:center;">
+                <img src="../images/block_height_title.png" style="height:60px;width:50px;">
+                <span class="block">{{$t("message.blockList.blockheight")}}</span>
               </div>
-              <div class="showEndEnd" style="width:100%;height:88%;">
-                <div style="display:flex;flex-direction:row;width:91.25%;height:85px;margin-left:4%;margin-top:1.5%;">
-                  <li v-for="(item  , index) of  listnum" :key="index" :class="'class'+index" style="background-color:#f2f8fc ;
-                      width:16.6%;height:190%;list-style-type:none;border-right:1px solid;border-right-color:#e8e8e8;">
-                    <div style="display:flex;flex-direction:row;width:100%;height:100%;">
-                      <div  style="height:124px;width:8px;background:#e8e8e8;border-radius:8px;margin-top:9%;margin-left:7%;">
-                        <div :class="'className'+index" style="height:98px;width:8px;border-radius:8px;margin-top:26px"></div>
+              <span class="buttom" @click="searchAll('block')">
+                <i class="iconfont icon-chakangengduoicon"></i>
+                {{$t("message.viewall")}}</span>
+            </div>
+              <div id="list" v-show="listnum.length !==0">
+                <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
+                  <div style="display:flex;">
+                    <div id="erect">
+                      <div :class="'className'+index"></div>
+                    </div>
+                    <div id="listValue">
+                      <div>
+                        <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
+                        <span>
+                          <p style="font-size:20px;">{{item.transNum}}</p>
+                          <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
+                        </span>
                       </div>
-                      <div style="width:90%;height:100%;margin-left:4%;display:flex;flex-direction:column;">
-                        <div style="width:100%;height:40%;display:flex;">
-                          <div style="width:60%;text-align:left;margin-top:22%">高度  {{item._id}}</div>
-                          <div style="width:30%;display:flex;flex-direction:column;margin-top:8%">
-                            <div style="font-size:20px;color:#93a3b7">{{item.transNum}}</div>
-                            <div style="font-size:15px;color:#93a3b7">交易数</div>
-                          </div>
-                        </div>
-                        <div style="width:90%;height:30;overflow: hidden;text-overflow: ellipsis;font-size:12px;margin-top:15%;color:#6f6868" onMouseOut="this.style.color='#6f6868'" onMouseOver="this.style.color='#06aaf9'">{{item.hash}}</div>
-                        <div style="margin-top:10%;color:#8a8d90;font-size:12px;text-align:left;">{{item.dateTime}}</div>
-                      </div>
-                      </div>
-                    </li>
-                </div>
+                        <p class="hash" >{{item.hash}}</p>
+                        <p class="time" >{{item.dateTime}}</p>
+                    </div>
+                  </div>
+                </li>
               </div>
+              <div v-show="listnum.length === 0" class="v-show">{{$t('message.home.nodata')}}</div>
           </div>
        </div>
-       <div class="end">
-         <div class="endTop" style="width:91.25%;height:22%;display:flex;flex-direction;row;align-items:center;margin-left:4%;margin-top:10%;justify-content:space-between;">
-            <div style="display:flex;flex-direction:row;align-items:center;">
-              <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
-              <div class="block">最新交易</div>
-            </div>
-            <div class="buttom" @click="searchAll('block')" style=" width:150px;color:#c7cfd5;text-align:right;" onMouseOut="this.style.color='#c7cfd5'" onMouseOver="this.style.color='#18c9dd'">→查看更多</div>
-         </div>
-         <div class="endMidder" style="width:91.25%;margin-left:4%">
-            <div style="width:100%;margin-top:20px;">
-              <table width="100%;" style="font-size:14px;">
-                <tr bgcolor=#ffffff height=40px >
-                  <td width='15%' align=left style="padding-left:3%">排序</td>
-                  <td width='58%'>区块哈希值</td>
-                  <td width='27%' align=right style="padding-right:4%;">交易</td>
-                </tr>
-                <tr v-for="(item  , index) of  listnum" :key="index" bgcolor=#ffffff height=40px>
-                  <td width='15%' align=left style="padding-left:4%;" :class="'classNum'+index">{{index+1}}</td>
-                  <td :class="'classNum'+index" style="color:#6f6868;overflow: hidden;text-overflow: ellipsis;" onMouseOut="this.style.color='#6f6868'" onMouseOver="this.style.color='#06aaf9'">{{item.hash}}</td>
-                  <td width='27%' align=right style="padding-right:4%;" :class="'classNum'+index">{{item._id}}</td>
-                </tr>
-              </table>
-            </div>
-         </div>
-         <div class="endEnd" style="display:flex; align-items:center; height:80px;width:91.25%;margin-left:4%;justify-content:space-between;margin-top:5%;">
-            <div style="display:flex; align-items:center; font-size:14px; color:#f4f5fe;width:60%">
-            <img src="../images/logo_footer.png" style="height:30px;width:30px;">
-            <div style="margin-left:10px;">井畅区块链浏览器</div>
-            <div style="margin-left:10px;width:2px;height:14px;background:#eef1fe;border-radius: 1px;" ></div>
-            <div style="margin-left:10px;">安徽井畅数字技术有限公司</div>
+      <div class="end">
+        <div class="endTop" >
+          <div style="display:flex;align-items:center;">
+            <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
+            <span class="block">{{$t("message.hashList.latestdeal")}}</span>
           </div>
-          <div style="display:flex; align-items:center;font-size:14px;color:#6b9eff">
-            <div style="margin-right:6%;width:100px; " onMouseOut="this.style.color='#6b9eff'" onMouseOver="this.style.color='#18c9dd'">井畅官网</div>
-            <div style="margin-right:6%; ">|</div>
-            <div style="margin-right:6%; width:100px;" onMouseOut="this.style.color='#6b9eff'" onMouseOver="this.style.color='#18c9dd'">商务合作</div>
-            <div style="margin-right:6%; ">|</div>
-            <div style="margin-right:6%; width:100px;" onMouseOut="this.style.color='#6b9eff'" onMouseOver="this.style.color='#18c9dd'">合作伙伴</div>
-            <div style="margin-right:6%; ">|</div>
-            <div style="width:100px;" onMouseOut="this.style.color='#6b9eff'" onMouseOver="this.style.color='#18c9dd'">联系我们</div>
-          </div>
+          <span class="buttom" @click="searchAll('hash')" >
+            <i class="iconfont icon-chakangengduoicon"></i>
+            {{$t("message.viewall")}}</span>
+        </div>
+         <div class="endMidder"  >
+            <el-table :data="latestdeal,listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
+            <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
+            </el-table-column>
+            <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
+              <template slot-scope="scope"><span class="idSpan2">{{handleData(scope.row.hash)}}</span></template>
+            </el-table-column>
+            <el-table-column prop="T_DateTime" :label="$t('message.home.time')" min-width="15%"  align="center" header-align="center">
+            </el-table-column>
+            </el-table>
          </div>
-       </div>
-     </div>
+         <div class="endEnd">
+            <div class="endEndLeft" >
+              <img src="../images/logo_footer.png">
+              <span>{{$t("message.homeTitle")}}</span>
+              <div></div>
+              <span>{{$t("message.home.anhui")}}</span>
+            </div>
+            <div class="endEndRignt">
+              <span>{{$t("message.home.officialwebsite")}}</span>|
+              <span>{{$t("message.home.cooperation")}}</span>|
+              <span>{{$t("message.home.partners")}}</span>|
+              <span>{{$t("message.home.Contactus")}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
    </div>
 </template>
 
 <script>
-import { getBlocklist } from "../js/fetch";
+import { getBlocklist, getLatestDeal } from "../js/fetch";
+var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "home",
   created() {
     this.getBlocklists();
+    this.getLatestDeals();
   },
   data() {
     return {
-      listnum: []
+      listnum: [],
+      latestdeal: [],
+      showLanguage: false,
+      languageList: {
+        zh: { label: "zh", name: "简体中文" },
+        en: { label: "en", name: "English" }
+      }
     };
+  },
+  computed: {
+    currentLanguage() {
+      return this.$i18n.locale;
+    }
   },
   methods: {
     getBlocklists() {
       getBlocklist(6)
         .then(data => {
-          console.log(data);
-          console.log(data.data.data.length);
           this.listnum = data.data.data;
+        })
+        .catch(error => {
+          this.$message.error(error.msg);
+        });
+    },
+    getLatestDeals() {
+      getLatestDeal(6)
+        .then(data => {
+          console.log(data);
+          this.latestdeal = data.data.data;
         })
         .catch(error => {
           this.$message.error(error.msg);
@@ -144,37 +171,198 @@ export default {
     searchAll(to) {
       this.$store.dispatch("updateCurrentNav", to);
       this.$router.push(`/${to}`);
+    },
+    rowStyle({ row, rowIndex }) {
+      if (rowIndex % 2 === 0) {
+        return "background:#f2f8fc;color:#3b3f4c;font-size:14px;";
+      } else {
+        return "color:#3b3f4c;font-size:14px;";
+      }
+    },
+    headerRowStyle() {
+      return "font-size:14px;color:#3b3f4c;";
+    },
+    handleData(value) {
+      return value;
+    },
+    switchLanguage(lang) {
+      this.$i18n.locale = lang;
+      localStorage.setItem("languageType", lang);
+      homeTitle.innerHTML = this.$t("message.homeTitle");
+      this.showLanguage = false;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+#home {
+  width: 100%;
+  background: #f2f8fc;
+  display: flex;
+  flex-direction: column;
+  span > div {
+    height: 800px;
+    background: #1850d7;
+    position: relative;
+    bottom: 10px;
+  }
+  span > img {
+    width: 100%;
+    height: 100%;
+  }
+}
+.init {
+  position: absolute;
+  width: 100%;
+}
 .top {
-  background: url("../images/index_top.png") no-repeat;
-  background-size: 100%, 25%;
   width: 100%;
   height: 25%;
-}
-.showTopLeftValue {
-  float: left;
-  color: #ffffff;
-  background: linear-gradient(to right, #23dccd, #04a8f9);
-  border-radius: 20px;
-  text-align: left;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  .topLeft {
+    width: 50%;
+    height: 100%;
+    flex-direction: column;
+  }
+  .topRight {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    #changelan {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 6%;
+      margin-bottom: 5px;
+    }
+    p {
+      width: 30%;
+      font-size: 12px;
+      color: #cee5ff;
+      font-weight: bold;
+      margin-left: 31%;
+    }
+    #index_net {
+      width: 82%;
+      height: 81.3%;
+    }
+    img {
+      height: 100%;
+      width: 100%;
+      margin-left: 12%;
+    }
+  }
 }
-#title {
-  font-size: 0.875em;
-  color: #3b3434;
-  margin-bottom: 9px;
-  margin-top: 16%;
+.el-dropdown-link {
+  display: inline-block;
+  white-space: nowrap;
+  height: 36px;
+  border: 1px solid #18c9dd;
+  border-radius: 6px;
+  line-height: 38px;
+  padding: 0 10px;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 4%;
+  i {
+    font-size: 8px;
+    margin-left: 8px;
+    position: relative;
+    bottom: 1px;
+  }
 }
-#value {
-  font-size: 0.875em;
-  color: #797b7e;
+.el-dropdown-menu {
+  background-color: #fff;
+  .el-dropdown-menu__item {
+    padding: 0 22px;
+  }
 }
+.show {
+  width: 100%;
+  height: 624px;
+  display: flex;
+  flex-direction: column;
+  .showTop {
+    width: 100%;
+    height: 60%;
+    display: flex;
+  }
+  .showTopLeft {
+    width: 50%;
+    height: 100%;
+    .showTopLeftValue {
+      float: left;
+      color: #ffffff;
+      background: linear-gradient(to right, #23dccd, #04a8f9);
+      border-radius: 20px;
+      text-align: left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 25%;
+      width: 54%;
+      margin-top: 13%;
+      margin-left: 11%;
+      font-size: 18px;
+      min-width: 320px;
+      min-height: 94px;
+      span {
+        width: 85%;
+      }
+    }
+  }
+  .showTopRight {
+    width: 50%;
+    height: 100%;
+    text-align: left;
+    font-size: 14px;
+    #title {
+      color: #3b3434;
+      margin-bottom: 9px;
+      margin-top: 13%;
+    }
+    #value {
+      color: #797b7e;
+      width: 80%;
+    }
+  }
+}
+.endMidder {
+  width: 91.25%;
+  margin-left: 4%;
+  margin-top: 1.5%;
+  .idSpan2 {
+    color: #6f6868;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .idSpan2:hover {
+    color: #06aaf9;
+    cursor: pointer;
+  }
+}
+.buttom {
+  width: 150px;
+  color: #c7cfd5;
+  text-align: right;
+}
+.buttom:hover {
+  color: #18c9dd;
+  cursor: pointer;
+}
+.index {
+  height: 60px;
+  width: 60px;
+  margin-left: 54.5%;
+  margin-top: 5%;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .block {
   height: 40px;
   width: 120px;
@@ -186,26 +374,200 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.search #in {
-  outline: none;
-  width: 55%;
-  height: 40px;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-  font-size: 14px;
-  color: #a19fae;
-  border: none;
-  outline: none;
+.browser {
+  font-size: 22px;
+  color: #f4f4fb;
+  margin-top: 14px;
+  height: 31px;
+  width: 50%;
+  margin-left: 34%;
+  min-width: 176px;
 }
-.search .btn_search {
-  width: 44px;
-  height: 40px;
-  color: #ffffff;
-  background: #18c9dd;
-  border: none;
-  outline: none;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+.searchWarp {
+  display: inline-block;
+  white-space: nowrap;
+  margin-left: 19%;
+  margin-top: 8%;
+  min-width: 320px;
+  input {
+    float: left;
+    width: 320px;
+    height: 40px;
+    text-indent: 5px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    background-color: #f9f9f9;
+  }
+  .serachButton {
+    display: inline-block;
+    min-width: 45px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #18c9dd;
+    color: #fff;
+    user-select: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+}
+#list {
+  display: flex;
+  width: 91.25%;
+  height: 85px;
+  margin-left: 4%;
+  margin-top: 1.5%;
+  li {
+    background-color: #f2f8fc;
+    width: 16.6%;
+    height: 190%;
+    list-style-type: none;
+    border-right: 1px solid;
+    border-right-color: #e8e8e8;
+    #listValue {
+      width: 90%;
+      height: 100%;
+      margin-left: 4%;
+      display: flex;
+      flex-direction: column;
+      div {
+        width: 100%;
+        height: 40%;
+        display: flex;
+      }
+      #_id {
+        width: 60%;
+        text-align: left;
+        margin-top: 22%;
+      }
+      span {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 8%;
+        p {
+          color: #93a3b7;
+        }
+      }
+    }
+  }
+}
+.showEnd {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  .v-show {
+    width: 91.25%;
+    height: 85px;
+    margin-left: 4%;
+    margin-top: 1.5%;
+    color: #6f6868;
+    display: flex;
+    background-color: #f2f8fc;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.hash {
+  width: 90%;
+  height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  margin-top: 10%;
+  color: #6f6868;
+}
+.hash:hover {
+  color: #06aaf9;
+  cursor: pointer;
+}
+.time {
+  margin-top: 8%;
+  color: #8a8d90;
+  font-size: 12px;
+  text-align: left;
+}
+.pilot {
+  width: 91.25%;
+  height: 22%;
+  display: flex;
+  align-items: center;
+  margin-left: 4%;
+  margin-top: 6%;
+  justify-content: space-between;
+}
+.endTop {
+  width: 91.25%;
+  height: 22%;
+  display: flex;
+  align-items: center;
+  margin-left: 4%;
+  margin-top: 10%;
+  justify-content: space-between;
+}
+.endEnd {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  width: 91.25%;
+  margin-left: 4%;
+  justify-content: space-between;
+  margin-top: 5%;
+  .endEndLeft {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #f4f5fe;
+    width: 60%;
+    span {
+      margin-left: 10px;
+    }
+    div {
+      margin-left: 10px;
+      width: 2px;
+      height: 14px;
+      background: #eef1fe;
+      border-radius: 1px;
+    }
+    img {
+      height: 30px;
+      width: 30px;
+    }
+  }
+  .endEndRignt {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #6b9eff;
+    span {
+      width: 100px;
+    }
+    span:hover {
+      color: #18c9dd;
+      cursor: pointer;
+    }
+  }
+}
+#erect {
+  height: 124px;
+  width: 8px;
+  background: #e8e8e8;
+  border-radius: 8px;
+  margin-top: 9%;
+  margin-left: 7%;
+}
+.className0,
+.className1,
+.className2,
+.className3,
+.className4,
+.className5 {
+  height: 98px;
+  width: 8px;
+  border-radius: 8px;
+  margin-top: 26px;
 }
 .className0 {
   background: #2783f7;
@@ -224,11 +586,6 @@ export default {
 }
 .className5 {
   background: #35e3c1;
-}
-.classNum0,
-.classNum2,
-.classNum4 {
-  background: #f2f8fc;
 }
 .class0 {
   border-top-left-radius: 6px;
