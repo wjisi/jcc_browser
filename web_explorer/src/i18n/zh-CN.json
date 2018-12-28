@@ -34,7 +34,8 @@
     "partners": "合作伙伴",
     "Contactus": "联系我们",
     "dealhash": "交易哈希值",
-    "time": "交易时间"
+    "time": "交易时间",
+    "nodata": "暂无数据"
 
   },
   "blockList": {

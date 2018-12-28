@@ -34,7 +34,8 @@
     "partners": "Partners",
     "Contactus": "Contact us",
     "dealhash": "Deal Hash",
-    "time": "Deal Time"
+    "time": "Deal Time",
+    "nodata": "No Data"
 
   },
   "blockList": {
