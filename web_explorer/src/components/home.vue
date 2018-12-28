@@ -93,8 +93,8 @@
             <i class="iconfont icon-chakangengduoicon"></i>
             {{$t("message.viewall")}}</span>
         </div>
-         <div class="endMidder"  >
-            <el-table :data="latestdeal,listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
+         <div class="endMidder">
+            <el-table :data="latestdeal,listnum"  style="width: 100%;fit:false;max-height:336px;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
@@ -204,7 +204,7 @@ export default {
     position: relative;
   }
   span > div {
-    height: 800px;
+    height: 850px;
     background: #1850d7;
   }
   span > img {
