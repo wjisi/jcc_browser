@@ -1,7 +1,7 @@
 <template>
    <div id="home" >
      <span>
-       <span style="height:24.3%; "><img src="../images/index_top.png"></span>
+       <span style="height:24.3%;"><img src="../images/index_top.png"></span>
        <span style="height:38.4%;"><img src="../images/index_show.png"></span>
        <div></div>
      </span>
@@ -10,10 +10,12 @@
          <div class="topLeft">
             <div class="index" ><img src="../images/logo_index.png"></div>
             <p class="browser">{{$t("message.homeTitle")}}</p>
-            <span class="search">
-              <input type="text" id="in" :placeholder="$t('message.searchPlaceholder')" />
-              <button class="btn_search" @click="serch()">{{$t("message.search")}}</button>
-            </span>
+            <div class="searchWarp">
+              <input type="text" :placeholder="$t('message.searchPlaceholder')">
+              <span class="serachButton" >
+                <i class="iconfont icon-sousuoicon"></i>
+              </span>
+            </div>
          </div>
          <div class="topRight" >
            <div id="changelan">
@@ -54,9 +56,11 @@
                 <img src="../images/block_height_title.png" style="height:60px;width:50px;">
                 <span class="block">{{$t("message.blockList.blockheight")}}</span>
               </div>
-              <span class="buttom" @click="searchAll('block')">→{{$t("message.viewall")}}</span>
+              <span class="buttom" @click="searchAll('block')">
+                <i class="iconfont icon-chakangengduoicon"></i>
+                {{$t("message.viewall")}}</span>
             </div>
-              <div id="list">
+              <div id="list" v-show="listnum.length !==0">
                 <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
                   <div style="display:flex;">
                     <div id="erect">
@@ -76,6 +80,7 @@
                   </div>
                 </li>
               </div>
+              <div v-show="listnum.length === 0" class="v-show">{{$t('message.home.nodata')}}</div>
           </div>
        </div>
       <div class="end">
@@ -84,7 +89,9 @@
             <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
             <span class="block">{{$t("message.hashList.latestdeal")}}</span>
           </div>
-          <span class="buttom" @click="searchAll('hash')" >→{{$t("message.viewall")}}</span>
+          <span class="buttom" @click="searchAll('hash')" >
+            <i class="iconfont icon-chakangengduoicon"></i>
+            {{$t("message.viewall")}}</span>
         </div>
          <div class="endMidder"  >
             <el-table :data="latestdeal,listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
@@ -376,32 +383,33 @@ export default {
   margin-left: 34%;
   min-width: 176px;
 }
-.search {
-  display: flex;
-  justify-content: center;
+.searchWarp {
+  display: inline-block;
+  white-space: nowrap;
   margin-left: 19%;
   margin-top: 8%;
   min-width: 320px;
-  #in {
-    outline: none;
-    width: 55%;
+  input {
+    float: left;
+    width: 320px;
     height: 40px;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+    text-indent: 5px;
     font-size: 14px;
-    color: #a19fae;
     border: none;
-    outline: none;
+    border-radius: 4px 0 0 4px;
+    background-color: #f9f9f9;
   }
-  .btn_search {
-    width: 44px;
+  .serachButton {
+    display: inline-block;
+    min-width: 45px;
     height: 40px;
-    color: #ffffff;
-    background: #18c9dd;
-    border: none;
-    outline: none;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #18c9dd;
+    color: #fff;
+    user-select: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
   }
 }
 #list {
@@ -450,6 +458,17 @@ export default {
   height: 40%;
   display: flex;
   flex-direction: column;
+  .v-show {
+    width: 91.25%;
+    height: 85px;
+    margin-left: 4%;
+    margin-top: 1.5%;
+    color: #6f6868;
+    display: flex;
+    background-color: #f2f8fc;
+    justify-content: center;
+    align-items: center;
+  }
 }
 .hash {
   width: 90%;
@@ -531,7 +550,6 @@ export default {
     }
   }
 }
-
 #erect {
   height: 124px;
   width: 8px;
