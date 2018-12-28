@@ -55,5 +55,23 @@
     "goto": "goto",
     "page": "page",
     "confirm": "confirm"
+  },
+  "blockDetailList": {
+    "latestdeal": "Latest Deal",
+    "serialnumber": "serial Number",
+    "transactiontype": "transaction Type",
+    "transactionmode": "transaction Mode",
+    "transactiontime": "transaction Time",
+    "transactionnumber": "transaction Number",
+    "sender": "Sender",
+    "servicecharge": "ServiceCharge",
+    "currentblock": "current Block",
+    "hashnumber": "hash Number",
+    "closetime": "close Time",
+    "lasthash": "last Hash",
+    "Transactionvolume": "Transaction Volume",
+    "total": "total",
+    "sorry": "sorry",
+    "nodealAtall": "No deal at all"
   }
 }

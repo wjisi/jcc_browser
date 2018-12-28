@@ -41,6 +41,7 @@ export const getDayBlocklist = async (data) => {
   })
   return res;
 }
+
 /**
  * get Latest Deal
  * @param {num} num (amount of Deal want to get)
@@ -48,6 +49,18 @@ export const getDayBlocklist = async (data) => {
 export const getLatestDeal = async (num = 6) => {
   let res = await service({
     url: getInfoHost() + `/Hash?new=${parseInt(num)}`,
+    method: "get"
+  })
+  return res;
+}
+
+/** get blockDetail list by hash
+ *  @param {Object}data
+ *  {hash,from,to,amount}
+ */
+export const getBlockDetail = async (data) => {
+  let res = await service({
+    url: getInfoHost() + `/blockHASH/?HASH=${(data.hash)}&pageStart=${data.from}&pageEnd=${data.to}&pageSize=${data.amount}`,
     method: "get"
   })
   return res;
