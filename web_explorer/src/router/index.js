@@ -25,6 +25,10 @@ export default new Router({
       name: 'trade',
       component: _import('trade/index')
     }, {
+      path: '/tradeDetail',
+      name: 'tradeDetail',
+      component: _import('trade/tradeDetail')
+    }, {
       path: '/wallet',
       name: 'wallet',
       component: _import('wallet/index')
