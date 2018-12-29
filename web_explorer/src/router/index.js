@@ -21,13 +21,13 @@ export default new Router({
       name: 'blockDetail',
       component: _import('block/blockDetail')
     }, {
-      path: '/hash',
-      name: 'hash',
-      component: _import('hash/index')
+      path: '/trade',
+      name: 'trade',
+      component: _import('trade/index')
     }, {
-      path: '/walletInfo',
-      name: 'walletInfo',
-      component: _import('walletInfo/index')
+      path: '/wallet',
+      name: 'wallet',
+      component: _import('wallet/index')
     },
     {
       path: '/login',

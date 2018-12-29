@@ -1,12 +1,12 @@
 <template>
-  <div id="moreInfo">
+  <div id="wallet">
     WALLETINFO
   </div>
 </template>
 
 <script>
 export default {
-  name: "moreInfo",
+  name: "wallet",
   data() {
     return {
       msg: "Welcome to weidex browser"
@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style scoped>
-#moreInfo {
+#wallet {
   width: 100%;
   height: 100%;
   margin-top: 100px;

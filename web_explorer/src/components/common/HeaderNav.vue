@@ -47,9 +47,6 @@ export default {
       }
     };
   },
-  created() {
-    this.navClick("home");
-  },
   computed: {
     currentLanguage() {
       return this.$i18n.locale;
@@ -61,10 +58,6 @@ export default {
   methods: {
     toLogin() {
       this.$router.push({ name: "login" });
-    },
-    navClick(to) {
-      this.$store.dispatch("updateCurrentNav", to);
-      this.$router.push(`/${to}`);
     },
     confirmSearch() {
       if (this.searchContent === "") {

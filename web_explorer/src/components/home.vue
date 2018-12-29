@@ -89,7 +89,7 @@
             <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
             <span class="block">{{$t("message.hashList.latestdeal")}}</span>
           </div>
-          <span class="buttom" @click="searchAll('hash')" >
+          <span class="buttom" @click="searchAll('trade')" >
             <i class="iconfont icon-chakangengduoicon"></i>
             {{$t("message.viewall")}}</span>
         </div>

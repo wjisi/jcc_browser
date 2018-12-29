@@ -1,5 +1,5 @@
 <template>
-  <div id="hash" class="blo">
+  <div id="trade" class="blo">
     <div class="selectionDate">
       <div class="blocktitle">
         <img src='../../images/latest_trade_title.png' />
@@ -39,7 +39,7 @@
 <script>
 import { getBlocklist, getDayBlocklist } from "../../js/fetch";
 export default {
-  name: "hash",
+  name: "trade",
   data() {
     return {
       pickerOptions: {
@@ -59,7 +59,7 @@ export default {
     this.getAllList();
   },
   methods: {
-    async getAllList (nums = 20) {
+    async getAllList(nums = 20) {
       let res = await getBlocklist(nums);
       this.blockList = res.data.data;
       console.log(this.blockList);
@@ -81,13 +81,13 @@ export default {
       return "height:40px";
     },
     handleData(value) {
-        return value;
+      return value;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-#hash {
+#trade {
   background-color: #f2f8fc;
   text-align: center;
   padding: 0 70px;
@@ -161,35 +161,35 @@ export default {
   font-size: 14px;
   height: 40px;
 }
-#hash .hashrowClass:nth-child(odd){
- background: #f2f8fc;
+#hash .hashrowClass:nth-child(odd) {
+  background: #f2f8fc;
   height: 40px;
 }
- #hash .hashrowClass td:nth-child(2) {
+#hash .hashrowClass td:nth-child(2) {
   color: #3b3f4c;
   font-size: 14px;
 }
 #hash .el-table .cell {
-  .hashSpan{
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
+  .hashSpan {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: #3b3f4c;
     font-size: 14px;
   }
-  .hashSpan:hover{
+  .hashSpan:hover {
     color: #06aaf9;
   }
-   .transNumSpan{
-     color: #6f6868;
+  .transNumSpan {
+    color: #6f6868;
   }
 }
-#hash  .pagination .is-background {
+#hash .pagination .is-background {
   .el-pager li:not(.disabled).active {
-     background: #18c9dd;
-       color: #ffffff;
-      }
-  .el-pager li{
+    background: #18c9dd;
+    color: #ffffff;
+  }
+  .el-pager li {
     background: #ffffff;
     width: 40px;
     height: 40px;
@@ -198,22 +198,23 @@ export default {
     border-radius: 6px;
     font-size: 14px;
     color: #959595;
- }
-.btn-next,.btn-prev {
-  background: #ffffff;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  margin-right: 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #959595;
-      }
+  }
+  .btn-next,
+  .btn-prev {
+    background: #ffffff;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #959595;
+  }
 }
-#hash  .el-pager .el-icon-more{
+#hash .el-pager .el-icon-more {
   display: none;
 }
-#hash  .el-table--enable-row-hover .el-table__body tr:hover>td{
-background-color:  rgba(255, 255, 255, 0);
+#hash .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: rgba(255, 255, 255, 0);
 }
 </style>
