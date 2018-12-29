@@ -1,8 +1,8 @@
 <template>
    <div id="home" >
      <span>
-       <span style="height:24.3%;"><img src="../images/index_top.png"></span>
-       <span style="height:38.4%;"><img src="../images/index_show.png"></span>
+       <span style="height:24.3%;bottom:5px;"><img src="../images/index_top.png"></span>
+       <span style="height:38.4%;top:10px;"><img src="../images/index_show.png"></span>
        <div></div>
      </span>
      <div class="init" >
@@ -93,8 +93,8 @@
             <i class="iconfont icon-chakangengduoicon"></i>
             {{$t("message.viewall")}}</span>
         </div>
-         <div class="endMidder"  >
-            <el-table :data="latestdeal,listnum"  style="width: 100%" :row-style="rowStyle"  :header-row-style="headerRowStyle">
+         <div class="endMidder">
+            <el-table :data="latestdeal,listnum"  style="width: 100%;fit:false;max-height:336px;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
@@ -200,11 +200,12 @@ export default {
   background: #f2f8fc;
   display: flex;
   flex-direction: column;
-  span > div {
-    height: 800px;
-    background: #1850d7;
+  span > span {
     position: relative;
-    bottom: 10px;
+  }
+  span > div {
+    height: 850px;
+    background: #1850d7;
   }
   span > img {
     width: 100%;
