@@ -36,7 +36,19 @@
     "dealhash": "交易哈希值",
     "time": "交易时间",
     "nodata": "暂无数据"
-
+  },
+  "trade": {
+    "number": "当前交易编号",
+    "type": "交易类型",
+    "initiator": "交易发起方",
+    "amount": "交易金额",
+    "to": "交易对家",
+    "dealamount": "成交金额",
+    "books": "账本号",
+    "costs": "交易费用",
+    "note": "交易备注",
+    "results": "交易结果",
+    "effect": "交易效果"
   },
   "blockList": {
     "blockheight": "区块高度",
