@@ -42,8 +42,7 @@ export default {
         { message: "doo" }
       ]
     };
-  },
-  computed: {}
+  }
 };
 </script>
 <style lang="scss" scoped>

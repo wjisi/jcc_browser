@@ -94,7 +94,7 @@
             {{$t("message.viewall")}}</span>
         </div>
          <div class="endMidder">
-            <el-table :data="latestdeal,listnum"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
+            <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">

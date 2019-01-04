@@ -59,21 +59,14 @@ export default {
     white-space: nowrap;
     width: calc(50% - 20px);
   }
-  .tilleIcon {
-    font-size: 14px;
-    float: right;
-    padding: 16px 0;
-    color: #18c9dd;
-  }
-
   ul {
     width: 100%;
     overflow: hidden;
     border: 2px solid #c1e9f1;
-    height: 200px;
     border-radius: 8px;
     background: #ffffff;
     margin-bottom: 20px;
+
     li {
       display: inline-block;
       width: calc(50% - 41px);
@@ -100,32 +93,12 @@ export default {
         text-align: right;
       }
     }
-    li:nth-child(1) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(2) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(3) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(4) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(5) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(6) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(7) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(8) {
-      border-bottom: 1px solid #e0e8ed;
-    }
     li:nth-child(odd) {
+      border-bottom: 1px solid #e0e8ed;
       border-right: 1px solid #e0e8ed;
+    }
+    li:nth-child(even) {
+      border-bottom: 1px solid #e0e8ed;
     }
   }
 }
