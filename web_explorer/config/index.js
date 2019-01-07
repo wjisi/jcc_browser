@@ -20,7 +20,7 @@ module.exports = {
 
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
-    devtool: '#source-map',
+    devtool: false,
 
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -53,7 +53,7 @@ module.exports = {
         cookieDomainRewrite: {
           '*': 'localhost' // all domain cooke rewrite to localhost
         }
-      },
+      }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

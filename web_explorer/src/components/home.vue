@@ -1,35 +1,36 @@
 <template>
-   <div id="home" >
-     <span>
-       <span style="height:24.3%;bottom:5px;"><img src="../images/index_top.png"></span>
-       <span style="height:38.4%;top:10px;"><img src="../images/index_show.png"></span>
-       <div></div>
-     </span>
-     <div class="init" >
+  <div id="home" >
+    <!-- 行标签里为何套块标签？ -->
+    <span>
+      <span style="height:24.3%;bottom:5px;"><img src="../images/index_top.png"></span>
+      <span style="height:38.4%;top:10px;"><img src="../images/index_show.png"></span>
+      <div></div>
+    </span>
+    <div class="init" >
       <div class="top">
-         <div class="topLeft">
-            <div class="index" ><img src="../images/logo_index.png"></div>
-            <p class="browser">{{$t("message.homeTitle")}}</p>
-            <div class="searchWarp">
-              <input type="text" :placeholder="$t('message.searchPlaceholder')">
-              <span class="serachButton" >
-                <i class="iconfont icon-sousuoicon"></i>
+        <div class="topLeft">
+          <div class="index" ><img src="../images/logo_index.png"></div>
+          <p class="browser">{{$t("message.homeTitle")}}</p>
+          <div class="searchWarp">
+            <input type="text" :placeholder="$t('message.searchPlaceholder')">
+            <span class="serachButton" >
+              <i class="iconfont icon-sousuoicon"></i>
+            </span>
+          </div>
+        </div>
+        <div class="topRight" >
+          <div id="changelan">
+            <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
+            <el-dropdown @command="switchLanguage" trigger="click">
+              <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
+                <i class="iconfont icon-yuyanqiehuan"></i>
               </span>
-            </div>
-         </div>
-         <div class="topRight" >
-           <div id="changelan">
-              <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
-              <el-dropdown @command="switchLanguage" trigger="click">
-                <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
-                  <i class="iconfont icon-yuyanqiehuan"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
+              <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-           </div>
-           <span id="index_net"><img src="../images/index_net.png"></span>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <span id="index_net"><img src="../images/index_net.png"></span>
         </div>
       </div>
         <div class="show">
@@ -57,32 +58,32 @@
                 <span class="block">{{$t("message.blockList.blockheight")}}</span>
               </div>
               <span class="buttom" @click="searchAll('block')">
-                <i class="iconfont icon-chakangengduoicon"></i>
-                {{$t("message.viewall")}}</span>
+                <i class="iconfont icon-chakangengduoicon"></i>{{$t("message.viewall")}}
+              </span>
             </div>
-              <div id="list" v-show="listnum.length !==0">
-                <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
-                  <div style="display:flex;">
-                    <div id="erect">
-                      <div :class="'className'+index"></div>
-                    </div>
-                    <div id="listValue">
-                      <div>
-                        <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
-                        <span>
-                          <p style="font-size:20px;">{{item.transNum}}</p>
-                          <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
-                        </span>
-                      </div>
-                        <p class="hash" >{{item.hash}}</p>
-                        <p class="time" >{{item.dateTime}}</p>
-                    </div>
+            <div id="list" v-show="listnum.length !==0">
+              <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
+                <div style="display:flex;">
+                  <div id="erect">
+                    <div :class="'className'+index"></div>
                   </div>
-                </li>
-              </div>
+                  <div id="listValue">
+                    <div>
+                      <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
+                      <span>
+                        <p style="font-size:20px;">{{item.transNum}}</p>
+                        <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
+                      </span>
+                    </div>
+                      <p class="hash" >{{item.hash}}</p>
+                      <p class="time" >{{item.dateTime}}</p>
+                  </div>
+                </div>
+              </li>
+            </div>
               <div v-show="listnum.length === 0" class="v-show">{{$t('message.home.nodata')}}</div>
           </div>
-       </div>
+        </div>
       <div class="end">
         <div class="endTop" >
           <div style="display:flex;align-items:center;">
@@ -93,8 +94,8 @@
             <i class="iconfont icon-chakangengduoicon"></i>
             {{$t("message.viewall")}}</span>
         </div>
-         <div class="endMidder">
-            <el-table :data="latestdeal,listnum"  style="width: 100%;fit:false;max-height:336px;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
+          <div class="endMidder">
+            <el-table :data="latestdeal"  style="width: 100%;fit:false;max-height:336px;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
@@ -103,8 +104,8 @@
             <el-table-column prop="T_DateTime" :label="$t('message.home.time')" min-width="15%"  align="center" header-align="center">
             </el-table-column>
             </el-table>
-         </div>
-         <div class="endEnd">
+          </div>
+          <div class="endEnd">
             <div class="endEndLeft" >
               <img src="../images/logo_footer.png">
               <span>{{$t("message.homeTitle")}}</span>
@@ -120,7 +121,7 @@
         </div>
       </div>
     </div>
-   </div>
+  </div>
 </template>
 
 <script>

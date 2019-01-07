@@ -7,31 +7,35 @@
       </div>
       <div class="selectionButton">
         {{$t("message.screendate")}}
-        <el-date-picker v-model="selectedDate" align="right"  type="date" :picker-options="pickerOptions"  value-format="yyyy-MM-dd" @change="setDatetiem"
-        ></el-date-picker>
+        <el-date-picker v-model="selectedDate" align="right"  type="date" :picker-options="pickerOptions"  value-format="yyyy-MM-dd" @change="setDatetiem"></el-date-picker>
       </div>
     </div>
     <div class="bockList">
-       <div class="bockListData">
-         <el-table :data="blockList" style="width:100%" :row-style="rowStyle"  row-class-name="hashrowClass" header-row-class-name="hashHeaderRowclass">
-         <el-table-column  width="46px"></el-table-column>
-         <el-table-column type="index" :label="$t('message.hashList.sort')" width="80px"></el-table-column>
-         <el-table-column prop="hash"  :label="$t('message.hashList.blockHash')"  id="ellipsis" align="center" header-align="center" min-width="67%">
-             <template slot-scope="scope"><span class="hashSpan">{{handleData(scope.row.hash)}}</span></template>
-         </el-table-column>
-         <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="33%">
-             <template slot-scope="scope"><span class="transNumSpan">{{handleData(scope.row.transNum)}}</span></template>
-         </el-table-column>
+      <div class="bockListData">
+        <el-table :data="blockList" style="width:100%" :row-style="rowStyle"  row-class-name="hashrowClass" header-row-class-name="hashHeaderRowclass">
           <el-table-column  width="46px"></el-table-column>
+          <el-table-column type="index" :label="$t('message.hashList.sort')" width="80px"></el-table-column>
+          <el-table-column prop="hash"  :label="$t('message.hashList.blockHash')"  id="ellipsis" align="center" header-align="center" min-width="67%">
+            <template slot-scope="scope">
+              <span class="hashSpan">{{handleData(scope.row.hash)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="33%">
+            <template slot-scope="scope">
+              <span class="transNumSpan">{{handleData(scope.row.transNum)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column width="46px"></el-table-column>
         </el-table>
-       </div>
+      </div>
        <ul class="pagination">
-         <li><el-pagination background layout="prev, pager, next" small     :page-size="20"  :page-count="212" ></el-pagination></li>
-         <!-- <el-pagination small layout="prev, pager, next" background  ></el-pagination> -->
-         <li>
-          {{$t('message.hashList.goto')}}<div class="input"><input type="text" placeholder="100"></div>{{$t('message.hashList.page')}}
+        <li><el-pagination background layout="prev, pager, next" small :page-size="20"  :page-count="212" ></el-pagination></li>
+        <li>
+          {{$t('message.hashList.goto')}}
+          <div class="input"><input type="text" placeholder="100"></div>
+          {{$t('message.hashList.page')}}
         </li>
-         <li><div class="sortButton">{{$t('message.hashList.confirm')}}</div></li>
+        <li><div class="sortButton">{{$t('message.hashList.confirm')}}</div></li>
        </ul>
     </div>
   </div>

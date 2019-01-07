@@ -13,53 +13,55 @@
       </Ul>
     </div>
     <div class="bockList">
-       <div class="bockListData">
-         <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
-         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
-         <el-table-column  width="30px">
-         </el-table-column>
-         <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
-               <template slot-scope="scope">
-                          <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.seq)}}</span>
-               </template>
-         </el-table-column>
-         <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
-                       <template slot-scope="scope">
-                          <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.type)}}</span>
-                     </template>
-         </el-table-column>
-         <el-table-column prop="hashType"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
-                       <template slot-scope="scope">
-                          <span class="spanHashType">{{handleData(scope.row.hashType)}}</span>
-                     </template>
-         </el-table-column>
-         <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
-                      <template slot-scope="scope">
-                       <span>{{handleHashtime(scope.row.time)}}</span>
-                       </template>
-         </el-table-column>
-         <el-table-column prop="upperHash"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
-                       <template slot-scope="scope">
-                          <span class="spanUpperHash">{{handleData(scope.row.upperHash)}}</span>
-                     </template>
-         </el-table-column>
-         <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
-               <template slot-scope="scope">
-                          <span  class="spanAccount">{{handleData(scope.row.account)}}</span>
-               </template>
-         </el-table-column>
-         <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="6%">
-         </el-table-column>
-         <el-table-column  width="30px"></el-table-column>
+      <div class="bockListData">
+        <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
+        <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
+          <el-table-column  width="30px"></el-table-column>
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
+            <template slot-scope="scope">
+              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.seq)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
+            <template slot-scope="scope">
+              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.type)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="hashType"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
+            <template slot-scope="scope">
+              <span class="spanHashType">{{handleData(scope.row.hashType)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
+            <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
+          </el-table-column>
+          <el-table-column prop="upperHash"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
+            <template slot-scope="scope">
+              <span class="spanUpperHash">{{handleData(scope.row.upperHash)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
+            <template slot-scope="scope">
+              <span  class="spanAccount">{{handleData(scope.row.account)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="6%"></el-table-column>
+          <el-table-column  width="30px"></el-table-column>
         </el-table>
-       </div>
-       <ul class="pagination">
-         <li><el-pagination background layout="prev, pager, next" small     :page-size="20"  :page-count="212" ></el-pagination></li>
-         <li>
-          {{$t('message.hashList.goto')}}<div class="input"><input type="text" placeholder="100"></div>{{$t('message.hashList.page')}}
+      </div>
+      <ul class="pagination">
+        <li>
+          <el-pagination background layout="prev, pager, next" small :page-size="20" :page-count="212" ></el-pagination>
         </li>
-         <li><div class="sortButton">{{$t('message.hashList.confirm')}}</div></li>
-       </ul>
+        <li>
+          {{$t('message.hashList.goto')}}
+          <div class="input"><input type="text" placeholder="100"></div>
+          {{$t('message.hashList.page')}}
+        </li>
+        <li>
+          <div class="sortButton">{{$t('message.hashList.confirm')}}</div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
