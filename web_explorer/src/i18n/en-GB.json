@@ -36,7 +36,19 @@
     "dealhash": "Deal Hash",
     "time": "Deal Time",
     "nodata": "No Data"
-
+  },
+  "trade": {
+    "number": "Current Transaction Number",
+    "type": "Transaction Type",
+    "initiator": "Transaction Initiator",
+    "amount": "Transaction Amount",
+    "to": "Transaction To",
+    "dealamount": "Clinch a deal amount",
+    "books": "Books",
+    "costs": "Transaction Costs",
+    "note": "Tradnsaction Note",
+    "results": "Transaction Results",
+    "effect": "Transaction Effect"
   },
   "blockList": {
     "blockheight": "block Height",
