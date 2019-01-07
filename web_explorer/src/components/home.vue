@@ -8,27 +8,17 @@
     </span>
     <div class="init" >
       <div class="top">
-        <div class="topLeft">
-          <div class="index" ><img src="../images/logo_index.png"></div>
-          <p class="browser">{{$t("message.homeTitle")}}</p>
-          <div class="searchWarp">
-            <input type="text" :placeholder="$t('message.searchPlaceholder')">
-            <span class="serachButton" >
-              <i class="iconfont icon-sousuoicon"></i>
-            </span>
-          </div>
-        </div>
-        <div class="topRight" >
-          <div id="changelan">
-            <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
-            <el-dropdown @command="switchLanguage" trigger="click">
-              <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
-                <i class="iconfont icon-yuyanqiehuan"></i>
+         <div class="topLeft">
+            <div class="index" ><img src="../images/logo_index.png"></div>
+            <p class="browser">{{$t("message.homeTitle")}}</p>
+            <div class="searchWarp">
+              <input type="text" v-model="searchContent" :placeholder="$t('message.searchPlaceholder')">
+              <span class="serachButton"  @click="confirmSearch">
+                <i class="iconfont icon-sousuoicon"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
           </div>
           <span id="index_net"><img src="../images/index_net.png"></span>
         </div>
@@ -94,8 +84,8 @@
             <i class="iconfont icon-chakangengduoicon"></i>
             {{$t("message.viewall")}}</span>
         </div>
-          <div class="endMidder">
-            <el-table :data="latestdeal"  style="width: 100%;fit:false;max-height:336px;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
+         <div class="endMidder">
+            <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
             <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
@@ -135,6 +125,7 @@ export default {
   },
   data() {
     return {
+      searchContent: "",
       listnum: [],
       latestdeal: [],
       showLanguage: false,
@@ -191,6 +182,18 @@ export default {
       localStorage.setItem("languageType", lang);
       homeTitle.innerHTML = this.$t("message.homeTitle");
       this.showLanguage = false;
+    },
+    confirmSearch() {
+      if (this.searchContent === "") {
+        this.$message({
+          type: "error",
+          message: this.$t("message.inputSearchContent"),
+          duration: 1600,
+          showClose: true
+        });
+        return;
+      }
+      alert("跳转搜索结果页");
     }
   }
 };
@@ -335,6 +338,7 @@ export default {
   width: 91.25%;
   margin-left: 4%;
   margin-top: 1.5%;
+  // height: 450px;
   .idSpan2 {
     color: #6f6868;
     overflow: hidden;
@@ -510,9 +514,10 @@ export default {
   justify-content: space-between;
 }
 .endEnd {
+  position: relative;
+  top: 270px;
   display: flex;
   align-items: center;
-  height: 80px;
   width: 91.25%;
   margin-left: 4%;
   justify-content: space-between;
