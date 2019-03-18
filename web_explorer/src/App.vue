@@ -8,12 +8,16 @@
 <script>
 import HeaderNav from "./components/common/HeaderNav";
 import BodyContainer from "./components/common/BodyContainer";
+import { getConfigs } from "@/js/config";
 
 export default {
   name: "App",
   components: {
     HeaderNav,
     BodyContainer
+  },
+  mounted() {
+    getConfigs();
   },
   computed: {
     isIndex() {

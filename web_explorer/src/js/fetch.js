@@ -1,5 +1,6 @@
 import axios from 'axios';
-// import store from 'store';
+import { getUUID } from "./utils";
+import store from 'store';
 
 const service = axios.create({
   withCredentials: true,
@@ -7,22 +8,35 @@ const service = axios.create({
 })
 
 // server's url and port
-const infoHosts = process.env.infoHosts
-const infoPort = process.env.infoPort
+const infoHosts = process.env.infoHosts;
+const infoPort = process.env.infoPort;
 
 const getInfoHost = () => {
-  let host = infoHosts[Math.floor(Math.random() * infoHosts.length)];
-  return "https://" + host + ":" + infoPort;
+  let uri = "";
+  if (process.env.NODE_ENV === "production") {
+    let hosts = store.getters.hosts.infoHosts.length === 0 ? infoHosts : store.getters.hosts.infoHosts;
+    uri = "https://" + hosts + ":" + infoPort;
+  }
+  return uri;
 }
 
-/** get all block list
- * @param {number} num (amount of blocks want to get)
- *  */
-export const getBlocklist = async (num = 6) => {
+// get configuration file from server
+export const getConfig = async () => {
+  let url = window.location.origin + '/static/config/jc_config.json' + '?t=' + new Date().getTime();
   let res = await service({
-    url: getInfoHost() + `/newblocks?number=${parseInt(num)}`,
+    url: url,
+    method: "get"
+  });
+  return res
+}
+
+/** get last six blocks */
+export const getBlocklist = async () => {
+  let res = await service({
+    url: getInfoHost() + `/block/new/${getUUID()}`,
     method: "get"
   })
+  console.log(res)
   return res;
 }
 
