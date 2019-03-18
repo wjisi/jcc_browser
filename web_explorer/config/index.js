@@ -41,14 +41,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/**/*': {
-        target: 'http://192.168.66.249:1373',
+        target: 'http://192.168.77.149:1337',
         changeOrigin: true, //allow different domain
         cookieDomainRewrite: {
           '*': 'localhost' // all domain cooke rewrite to localhost
         }
       },
       '/*.json': {
-        target: 'http://192.168.66.249:1373',
+        target: 'http://192.168.77.149:1337',
         changeOrigin: true,
         cookieDomainRewrite: {
           '*': 'localhost' // all domain cooke rewrite to localhost

@@ -11,12 +11,8 @@ const infoHosts = process.env.infoHosts
 const infoPort = process.env.infoPort
 
 const getInfoHost = () => {
-  let uri = "";
-  if (process.env.NODE_ENV === "production") {
-    let host = infoHosts[Math.floor(Math.random() * infoHosts.length)];
-    uri = "https://" + host + ":" + infoPort;
-  }
-  return uri;
+  let host = infoHosts[Math.floor(Math.random() * infoHosts.length)];
+  return "https://" + host + ":" + infoPort;
 }
 
 /** get all block list
