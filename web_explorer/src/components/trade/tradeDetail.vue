@@ -12,16 +12,16 @@
           <li><span>{{$t('message.trade.dealamount')}}</span><span>3</span></li>
       </Ul>
     </div>
-    <trade-value-detail></trade-value-detail>
+    <!-- <trade-value-detail></trade-value-detail> -->
   </div>
 </template>
 
 <script>
-import tradeValueDetail from "./tradeValueDetail";
+// import tradeValueDetail from "./tradeValueDetail";
 export default {
-  components: {
-    tradeValueDetail
-  },
+  // components: {
+  //   tradeValueDetail
+  // },
   name: "tradeDetail",
   data() {
     return {};

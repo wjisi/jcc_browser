@@ -60,7 +60,7 @@
                 <i class="iconfont icon-chakangengduoicon"></i>
                 {{$t("message.viewall")}}</span>
             </div>
-              <div id="list" v-show="listnum.length !==0">
+              <div id="list"   v-show="listnum.length !==0">
                 <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
                   <div style="display:flex;">
                     <div id="erect">
@@ -97,10 +97,12 @@
             <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
             </el-table-column>
-            <el-table-column id="hash" prop="hash" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
-              <template slot-scope="scope"><span class="idSpan2">{{handleData(scope.row.hash)}}</span></template>
+            <el-table-column id="hash" prop="_id" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
             </el-table-column>
-            <el-table-column prop="T_DateTime" :label="$t('message.home.time')" min-width="15%"  align="center" header-align="center">
+            <el-table-column prop="time" :label="$t('message.home.time')" min-width="15%"  align="center" header-align="center">
+               <template slot-scope="scope">
+                  <span class="hashSpan" >{{handleHashtime(scope.row.time)}}</span>
+                </template>
             </el-table-column>
             </el-table>
          </div>
@@ -124,12 +126,12 @@
 </template>
 
 <script>
-import { getBlocklist, getLatestDeal } from "../js/fetch";
+import { getlastBlocklist, getLatestDeal } from "../js/fetch";
 var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "home",
   created() {
-    this.getBlocklists();
+    this.getlastBlocklists();
     this.getLatestDeals();
   },
   data() {
@@ -150,20 +152,21 @@ export default {
     }
   },
   methods: {
-    getBlocklists() {
-      getBlocklist(6)
+    getlastBlocklists() {
+      getlastBlocklist()
         .then(data => {
-          this.listnum = data.data.data;
+          console.log(data, 1);
+          this.listnum = data.data.list;
         })
         .catch(error => {
           this.$message.error(error.msg);
         });
     },
     getLatestDeals() {
-      getLatestDeal(6)
+      getLatestDeal()
         .then(data => {
-          console.log(data);
-          this.latestdeal = data.data.data;
+          console.log(data, 2);
+          this.latestdeal = data.data.list;
         })
         .catch(error => {
           this.$message.error(error.msg);
@@ -191,6 +194,29 @@ export default {
       localStorage.setItem("languageType", lang);
       homeTitle.innerHTML = this.$t("message.homeTitle");
       this.showLanguage = false;
+    },
+    handleHashtime(time) {
+      let { fillZero } = this;
+      let dateIn = new Date((time + 946684800) * 1000);
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes()) +
+        " " +
+        fillZero(dateIn.getFullYear()) +
+        "-" +
+        fillZero(dateIn.getMonth() + 1) +
+        "-" +
+        fillZero(dateIn.getDate());
+      return hashTime;
+    },
+    fillZero(value) {
+      if (value < 10) {
+        value = "0" + value;
+      }
+      return value;
     },
     confirmSearch() {
       if (this.searchContent === "") {

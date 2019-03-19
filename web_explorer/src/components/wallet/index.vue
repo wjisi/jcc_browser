@@ -1,24 +1,636 @@
 <template>
-  <div id="wallet">
-    WALLETINFO
+  <div id="wallet" class="blo">
+     <div class="blockDetailTitle">
+      <div class="walletHeader">
+        <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">#{{1}}</span></div>
+        <div class="tille" >{{$t('message.wallet.remainingSum')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
+      </div>
+      <Ul>
+        <li>
+          <div><span>SWTC<span></span></span>  <span>冻结:<span>12e2144</span></span></div>
+           <div><span>JDBT<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+        </li>
+         <li>
+           <div><span>UST<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JJCC<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+        </li>
+        <li>
+           <div><span>CNT<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JCALL<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+        </li>
+       <li>
+          <div><span>ECP<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JEKT<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+        </li>
+        <li>
+          <div><span>JETH<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JMOAC<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+        </li>
+        <li>
+           <div><span>VCC<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JSTM<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+        </li>
+      </Ul>
+      </div>
+    <!-- <div class="previous">
+      <i class="iconfont icon-fanhuishangyiyeicon"></i>
+      <span @click="goback">返回上一页</span>
+    </div> -->
+    <div class="title">
+      <span class="titleItem">{{$t('message.blockDetailList.transactionmode')}}</span>
+      <el-select v-model="selectRefreshvalue"  @change="changefreshTime" style="width:100px">
+        <el-option v-for="item in transactionmode" :key="item.selectRefreshvalue" :label="item.label" :value="item.selectRefreshvalue"></el-option>
+      </el-select>
+      <span class="titleItem1">{{$t('message.wallet.transactionCurrency')}}</span>
+      <el-select v-model="selectStatusvalues"  @change="selectState" style="width:140px">
+        <el-option v-for="item in  transactionCurrency" :key="item.selectStatusvalues" :label="item.label" :value="item.selectStatusvalues"></el-option>
+      </el-select>
+      <span class="selctionData">{{$t('message.wallet.dateRange')}}
+        <el-date-picker v-model="start" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')"></el-date-picker>至
+        <el-date-picker v-model="end" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')"></el-date-picker>
+        <span class="sure" @click="selectTimerange">确认</span>
+      </span>
+    </div>
+    <div class="bockList">
+      <div class="blockList">
+        <el-table :data="blockList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" :cell-style="cellStyle">
+          <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else >暂无数据</div>
+          </div>
+          <el-table-column prop="server_state" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
+            <template slot-scope="scope"> <div>{{scope.row.server_state}}</div></template>
+          </el-table-column>
+          <el-table-column prop="infosGetTime" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+            <template slot-scope="scope">
+              <div>{{scope.row.infosGetTime.date}}</div>
+              <div>{{scope.row.infosGetTime.time}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="complete_ledgers" :label="$t('message.blockDetailList.transactiontime')" align="center" min-width="15%">
+            <template slot-scope="scope">
+              <el-popover placement="top-start" width="200" trigger="hover" :content="scope.row.complete_ledgers.all">
+                <el-button slot="reference"> <div>{{scope.row.complete_ledgers.data1}}</div> <div>{{scope.row.complete_ledgers.data2}}</div></el-button>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column prop="peers"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+            <template slot-scope="scope"><div>{{scope.row.peers}}</div></template>
+          </el-table-column>
+          <el-table-column prop="io_latency_ms" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%"></el-table-column>
+          <el-table-column prop="startup_time" :label="$t('message.blockDetailList.transactionnumber')" id="ellipsis" align="center" min-width="13%">
+            <template slot-scope="scope">
+
+              <div>{{scope.row.startup_time.time}}</div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <ul class="pagination">
+        <li> <el-pagination background layout="prev, pager, next" :total="total" :page-size="10" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination></li>
+        <li class="allPage"><span>{{allpage}}</span>页</li>
+        <li>跳至<div class="input"><input type="text"  v-model="gopage" @focus="clearGopage"></div>页</li>
+        <li><div class="sortButton" @click="jumpSizeChange">确认</div></li>
+      </ul>
+    </div>
   </div>
 </template>
-
 <script>
+import { querySpecifiedWallet, queryDelegateWallet } from "@/js/fetch";
+import { getStyle } from "@/js/utils";
 export default {
   name: "wallet",
+  // beforeRouteEnter(to, from, next) {
+  //   next(vm => {
+  //     vm.$store.dispatch("updateCurrentPage", "historyStatus");
+  //     vm.$store.dispatch("updateCurrentNode", vm.$route.params.server);
+  //     vm.getData();
+  //     vm.changefreshTime();
+  //   });
+  // },
+  // beforeRouteLeave(to, from, next) {
+  //   clearInterval(this.timer);
+  //   next();
+  // },
   data() {
     return {
-      msg: "Welcome to weidex browser"
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
+      transactionmode: [
+        { selectmodevalue: 0, label: this.$t("message.wallet.allMode") },
+        { selectmodevalue: 1, label: this.$t("message.wallet.Purchase") },
+        { selectmodevalue: 2, label: this.$t("message.wallet.Sale") },
+        { selectmodevalue: 0, label: this.$t("message.wallet.Income") },
+        { selectmodevalue: 0, label: this.$t("message.wallet.Expenditure") }
+      ],
+      transactionCurrency: [
+        {
+          selectcurrencyvalues: "全部币种",
+          label: this.$t("message.wallet.allCurrency")
+        },
+        { selectcurrencyvalues: "CNT", label: "CNT" },
+        { selectcurrencyvalues: "ETH", label: "ETH" },
+        { selectCurrencyvalues: "SWTC", label: "SWTC" },
+        { selectCurrencyvalues: "MOAC", label: "MOAC" }
+      ],
+      blockList: [],
+      walletlist: [],
+      selectRefreshvalue: this.$t("message.wallet.allMode"),
+      selectStatusvalues: this.$t("message.wallet.allCurrency"),
+      start: "",
+      end: "",
+      timer: "",
+      total: 0,
+      allpage: 1,
+      startup_time: {},
+      gopage: 100,
+      currentPage: 1,
+      clearTitle: "清除定时器",
+      loading: false
     };
+  },
+  created() {
+    this.getAllList("jMMuFRknhcXfnfNUomPT6rHhXUP9F8wP6p");
+  },
+  methods: {
+    clearGopage() {
+      this.gopage = "";
+    },
+    jumpSizeChange() {
+      this.currentPage = this.gopage;
+      let datas = {
+        server: this.server,
+        start: this.start,
+        end: this.end,
+        state: this.selectStatusvalues,
+        page: this.gopage || 100
+      };
+      this.loading = false;
+      this.getData(datas);
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      let datas = {
+        server: this.server,
+        start: this.start,
+        end: this.end,
+        state: this.selectStatusvalues,
+        page: val
+      };
+      this.loading = false;
+      this.getData(datas);
+    },
+    cellStyle(data) {
+      if (data.columnIndex === 0) {
+        return getStyle(data.row.server_state);
+      }
+      return "";
+    },
+
+    changefreshTime() {
+      clearInterval(this.timer);
+      if (this.selectRefreshvalue > 0) {
+        this.timer = setInterval(() => {
+          let datas = {
+            server: this.server,
+            start: this.start,
+            end: this.end,
+            state: this.selectStatusvalues,
+            page: this.currentPage
+          };
+          this.loading = false;
+          this.getData(datas);
+        }, this.selectRefreshvalue);
+      }
+    },
+    selectTimerange() {
+      let datas = {
+        server: this.server,
+        start: this.start,
+        end: this.end,
+        state: this.selectStatusvalues,
+        page: this.currentPage
+      };
+      this.changefreshTime();
+      this.getData(datas);
+    },
+    selectState() {
+      this.currentPage = 1;
+      this.total = 0;
+      let datas = {
+        server: this.server,
+        start: this.start,
+        end: this.end,
+        state: this.selectStatusvalues,
+        page: this.currentPage
+      };
+      this.changefreshTime();
+      this.getData(datas);
+    },
+    async getAllList(wallet) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      let res = await querySpecifiedWallet(wallet);
+      let data = {
+        page: 0,
+        size: 20,
+        pair: "",
+        delegate: "0",
+        wallet: "jMMuFRknhcXfnfNUomPT6rHhXUP9F8wP6p"
+      };
+      let res2 = await queryDelegateWallet(data);
+      console.log(res2, 1111);
+      console.log(res);
+      if (
+        res.data.msg === "成功" &&
+        (res.data.code === 0 || res.data.code === "0")
+      ) {
+        // this.total = res.data.data.count;
+        // this.tranList = res.data.data.list;
+      }
+      this.loading = false;
+    },
+    handleGetData(res) {
+      let i = 0;
+      let list = [];
+      if (res && res.data && res.data.length > 0) {
+        for (; i < res.data.length; i++) {
+          let resData = JSON.parse(res.data[i]);
+          list.push({
+            server_state: resData.server_state || "null",
+            infosGetTime: this.intervalTime(resData.infosGetTime),
+            complete_ledgers: this.intervalString(resData.complete_ledgers),
+            peers: resData.peers || "null",
+            io_latency_ms: resData.io_latency_ms || "null",
+            startup_time: this.intervalTime(resData.startup_time) || "null",
+            build_version: resData.build_version || "null",
+            nodePublic: resData.public || "null",
+            last_ledger_heigth: resData.last_ledger_heigth || "null",
+            hash: resData.hash || "null",
+            last_ledger_time: resData.last_ledger_time || "null",
+            all_results: resData.all_results || "null"
+          });
+        }
+        this.total = list[0].all_results;
+        this.allpage = Math.ceil(this.total / 10);
+        this.gopage = this.allpage;
+      } else {
+        this.total = 0;
+        this.allpage = 0;
+        this.gopage = 0;
+      }
+      return list;
+    },
+    intervalTime(value) {
+      let dateTime = {};
+      if (value) {
+        dateTime.date = value.split(" ")[0];
+        dateTime.time = value.split(" ")[1];
+      } else {
+        dateTime.date = "null";
+        dateTime.time = "";
+      }
+      return dateTime;
+    },
+    intervalString(value) {
+      let ellipsisString = {};
+      if (value) {
+        ellipsisString.data1 = value.substring(0, 8);
+        ellipsisString.data2 = value.substring(8, 13);
+        ellipsisString.all = value;
+      } else {
+        ellipsisString.data1 = "null";
+        ellipsisString.data2 = "";
+        ellipsisString.all = "";
+      }
+      return ellipsisString;
+    }
   }
 };
 </script>
-
-<style scoped>
+<style lang="scss" scoped>
 #wallet {
+  text-align: center;
+  min-width: 768px;
+  padding: 0 70px;
+  padding-bottom: 110px;
+  background: #f2f8fc;
+}
+.blockDetailTitle {
+  text-align: left;
+  div {
+    display: inline-block;
+  }
+  .tille {
+    display: flex;
+    align-items: center;
+    color: #18c9dd;
+    font-size: 14px;
+  }
+  .tilleIcon {
+    font-size: 14px;
+    float: right;
+    padding: 4px 0 0 10px;
+    color: #18c9dd;
+  }
+  .walletHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #3e3f45;
+    padding: 10px 0;
+  }
+
+  ul {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    border: 2px solid #c1e9f1;
+    border-radius: 8px;
+    background: #ffffff;
+    margin-bottom: 20px;
+    li {
+      display: flex;
+      justify-content: space-between;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 20px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: #5f5d5d;
+      font-size: 14px;
+      border-bottom: 1px solid #e0e8ed;
+      div {
+        display: flex;
+        justify-content: space-between;
+        flex: 1;
+        span:nth-child(2) span {
+          margin: 10px;
+        }
+      }
+      div:nth-child(1) {
+        padding-right: 20px;
+      }
+      div:nth-child(2) {
+        border-left: 1px solid #e0e8ed;
+        padding-left: 20px;
+      }
+    }
+  }
+}
+.bockList {
+  border: 1px solid #e0e8ed;
+}
+.title {
   width: 100%;
-  height: 100%;
-  margin-top: 100px;
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  .titleItem {
+    font-size: 16px;
+    color: #383a4b;
+  }
+  .titleItem1 {
+    font-size: 16px;
+    color: #383a4b;
+    padding-left: 10px;
+  }
+}
+.el-select {
+  width: 155px;
+  margin-left: 10px;
+}
+#walllet {
+  min-width: 940px;
+  padding: 0 30px;
+  padding-bottom: 110px;
+  background: #f9faff;
+  .selction {
+    padding: 30px 0 20px 0;
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    font-size: 16px;
+    color: #383a4b;
+  }
+  .interval {
+    padding: 0 10px 0;
+  }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  font-size: 14px;
+  padding: 20px 0;
+  color: #959595;
+  .allPage {
+    padding-top: 2px;
+    font-size: 14px;
+    height: 38px;
+    line-height: 38px;
+    color: #959595;
+    margin-right: 20px;
+    span {
+      margin-right: 10px;
+    }
+  }
+  .sortButton {
+    border: 1px solid #959595;
+    border-radius: 6px;
+    height: 36px;
+    line-height: 36px;
+    width: 58px;
+    color: #959595;
+    margin-left: 20px;
+  }
+  .sortButton:hover {
+    cursor: pointer;
+  }
+  li .input {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #959595;
+    display: inline-block;
+    border-radius: 6px;
+    margin: 0 10px;
+  }
+  li div input {
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    text-align: center;
+    text-indent: 0;
+  }
+}
+.el-select-dropdown__item {
+  font-size: 14px;
+  color: #565a65;
+}
+.el-select-dropdown__item:hover {
+  background: #f2fbef;
+  opacity: 80%;
+}
+</style>
+
+<style  lang="scss" >
+.el-icon-arrow-right {
+  font-size: 16px;
+}
+.el-table__expanded-cell {
+  padding: 0px 20px !important;
+  padding-top: 16px !important;
+  background: #f8f8f8;
+  width: 80px !important;
+  font-size: 12px;
+  .el-form-item:nth-child(odd) {
+    width: 60%;
+    color: #383a4b;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .el-form-item:nth-child(even) {
+    width: 32%;
+    color: #383a4b;
+  }
+}
+.walletHeaderRowclass {
+  color: #383a4b;
+  font-size: 14px;
+  height: 40px;
+  th {
+    border-right: 1px solid #e0e8ed;
+  }
+  th:nth-child(n + 8) {
+    border-right: 0px;
+  }
+}
+#wallet .walletrowClass {
+  font-size: 12px;
+  height: 40px;
+  td {
+    border-right: 1px solid #e0e8ed;
+  }
+  td:nth-child(n + 8) {
+    border-right: 0px;
+  }
+}
+.el-picker-panel {
+  width: 330px;
+  height: 348px;
+}
+.selctionData {
+  right: 0;
+  color: #383a4b;
+  font-size: 16px;
+  display: inline-block;
+  float: right;
+  overflow: hidden;
+  .sure {
+    width: 38px;
+    height: 38px;
+    line-height: 40px;
+    border: 1px solid #959595;
+    background: #f9faff;
+    display: inline-block;
+    padding: 0 8px;
+    padding-right: 5px;
+    border-radius: 6px;
+  }
+  .sure:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
+    cursor: pointer;
+  }
+  input::-webkit-input-placeholder {
+    color: #565a65;
+    font-size: 14px;
+    position: relative;
+    left: 0px;
+    top: 3px;
+  }
+  .el-date-editor {
+    text-align: center;
+    width: 130px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 6px 0 6px;
+    text-align: left;
+    bottom: 1.8px;
+  }
+}
+.el-input__prefix {
+  right: 7px;
+  bottom: 2px;
+  .el-input__icon {
+    float: right;
+    font-size: 18px;
+  }
+}
+.el-input__inner {
+  padding: 0 7px 0 7px !important;
+  height: 40px;
+}
+#wallet .pagination .is-background {
+  .el-pager li:not(.disabled).active {
+    background: #5769fa;
+    border: 0px;
+    color: #fff;
+  }
+  .el-pager li {
+    background: #ffffff;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #959595;
+    border: 1px solid #959595;
+  }
+  .btn-next,
+  .btn-prev {
+    background: #ffffff;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #959595;
+    border: 1px solid #959595;
+  }
+}
+#wallet .el-pager .el-icon-more {
+  display: none;
+}
+.selected span {
+  color: #565a65;
+  font-size: 14px;
+  font-weight: normal;
+}
+.el-table__expand-icon {
+  transform: rotate(90deg);
+  margin-right: 10px;
+  .el-icon {
+    margin-left: -8px;
+    margin-top: -8px;
+  }
+}
+.el-table__expand-icon--expanded {
+  transform: rotate(-90deg);
+}
+.el-button {
+  border: 0;
+  background: none;
+  font-size: 12px;
 }
 </style>

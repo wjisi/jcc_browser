@@ -16,6 +16,10 @@
       <div class="bockListData">
         <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
+           <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else >暂无数据</div>
+          </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
             <template slot-scope="scope">
@@ -35,9 +39,9 @@
           <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
           </el-table-column>
-          <el-table-column prop="upperHash"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
+          <el-table-column prop="dest"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
             <template slot-scope="scope">
-              <span class="spanUpperHash">{{handleData(scope.row.upperHash)}}</span>
+              <span class="spanUpperHash">{{handleData(scope.row.dest)}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
@@ -49,17 +53,16 @@
           <el-table-column  width="30px"></el-table-column>
         </el-table>
       </div>
-      <ul class="pagination">
+       <ul class="pagination">
         <li>
-          <el-pagination background layout="prev, pager, next" small :page-size="20" :page-count="212" ></el-pagination>
+          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
+        </li>
+        <li style="min-width: 1.08rem">{{$t('message.blockList.goto')}}
+          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
+          {{$t('message.blockList.page')}}
         </li>
         <li>
-          {{$t('message.hashList.goto')}}
-          <div class="input"><input type="text" placeholder="100"></div>
-          {{$t('message.hashList.page')}}
-        </li>
-        <li>
-          <div class="sortButton">{{$t('message.hashList.confirm')}}</div>
+          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
       </ul>
     </div>
@@ -79,7 +82,11 @@ export default {
       blockList: [],
       hashtime: {},
       bash: {},
-      hash: "718B0EA840DAFD58B28065BD687D9C339262B34D9422439B51E06CE6288CBDF8"
+      hash: "",
+      loading: false,
+      total: 0,
+      currentPage: 1,
+      gopage: 100
     };
   },
   created() {
@@ -87,20 +94,49 @@ export default {
   },
   methods: {
     async getData() {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       this.hash = this.$route.params.hash;
-      let data = {
-        hash: this.hash,
-        from: 1,
-        to: 2,
-        amount: 20
-      };
-      let res = await getBlockDetail(data);
-      this.blockList = res.data.data.TX;
-      console.log(res);
-      this.bash = res.data.data.base;
+      let res = await getBlockDetail(this.hash);
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        console.log(res, "111111");
+        this.total = res.data.count;
+        this.blockList = res.data.list;
+        this.bash = res.data.info;
+      }
+      this.loading = false;
+    },
+    clearGopage() {
+      this.gopage = "";
     },
     handleData(value) {
       return value;
+    },
+    jumpSizeChange() {
+      this.currentPage = this.gopage;
+      this.loading = false;
+      this.getData();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+
+      this.loading = false;
+      this.getData();
+    },
+    handleGetData(res) {
+      let i = 0;
+      let list = [];
+      for (; i < res.length; i++) {
+        list.push({
+          _id: res[i]._id,
+          transNum: res[i].transNum,
+          hash: res[i].hash,
+          time: this.handleHashtime(res[i].time)
+        });
+      }
+      return list;
     },
     handleHashtime(time) {
       let { fillZero } = this;
@@ -133,6 +169,38 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 20px;
+  padding-bottom: 110px;
+  .sortButton {
+    border: 1px solid #959595;
+    border-radius: 6px;
+    height: 36px;
+    line-height: 36px;
+    width: 50px;
+    margin-left: 20px;
+    background: #f2f8fc;
+    padding: 0 3px;
+  }
+  li .inputDiv {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #959595;
+    display: inline-block;
+    margin: 0 10px;
+    border-radius: 6px;
+  }
+  li div input {
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+  }
 }
 .blockDetailTitle {
   text-align: left;

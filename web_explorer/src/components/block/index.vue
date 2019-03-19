@@ -14,14 +14,18 @@
     <div class="bockList">
       <div class="bockListData">
         <el-table :data="blockList" style="width:100%"  row-class-name="blockRowClass" header-row-class-name="blockHeaderRowclass">
+           <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else >暂无数据</div>
+          </div>
           <el-table-column  width="46px"></el-table-column>
           <el-table-column type="index" :label="$t('message.blockList.sort')" min-width="15%"></el-table-column>
-          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="18%">
+          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="18%"  align="center" header-align="center">
             <template slot-scope="scope">
               <span class="idSpan" @click="jumpDetail(scope.row.hash)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="22%">
+          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="22%"  header-align="center" align="center">
             <template slot-scope="scope">
               <span style="margin-right:10px;">{{scope.row.time.time}}</span>
               <span>{{scope.row.time.date}}</span>
@@ -42,21 +46,22 @@
       </div>
       <ul class="pagination">
         <li>
-          <el-pagination background layout="prev, pager, next" :page-size="20"  :page-count="212" @current-change="handleCurrentChange"></el-pagination>
+          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
         </li>
         <li>{{$t('message.blockList.goto')}}
-          <div class="inputDiv"><input type="text" placeholder="100"></div>
+          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
+          <!-- placeholder="100" -->
           {{$t('message.blockList.page')}}
         </li>
         <li>
-          <div class="sortButton">{{$t('message.blockList.confirm')}}</div>
+          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
-import { getBlocklist, getDayBlocklist } from "../../js/fetch";
+import { getBlocklist } from "../../js/fetch";
 export default {
   name: "block",
   data() {
@@ -67,31 +72,61 @@ export default {
         }
       },
       selectedDate: "",
-      blockList: []
+      blockList: [],
+      total: 0,
+      loading: false,
+      currentPage: 1,
+      gopage: 100
     };
   },
   created() {
-    this.getAllList();
+    let data = {
+      page: 0,
+      size: 20
+    };
+    this.getAllList(data);
   },
   methods: {
-    async getAllList(nums = 20) {
-      let res = await getBlocklist(nums);
-      res = res.data.data;
-      res = res.slice(-20);
-      this.blockList = this.handleGetData(res);
+    async getAllList(data) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      debugger;
+      let res = await getBlocklist(data);
+      console.log(res, 1);
+      console.log(res.result, 2);
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        debugger;
+        // console.log(res.data.result, 2);
+        this.total = res.data.count;
+        this.blockList = this.handleGetData(res.data.list);
+      }
+      this.loading = false;
     },
     setDatetiem(val) {
       this.selectedDate = val;
     },
-    async getListByFilter() {
+    clearGopage() {
+      this.gopage = "";
+    },
+    jumpSizeChange() {
+      this.currentPage = this.gopage;
       let data = {
-        date: this.selectedDate,
-        from: 1,
-        to: 2,
-        amount: 10
+        size: 20,
+        page: this.gopage || 100
       };
-      let res = await getDayBlocklist(data);
-      this.blockList = res.data.data;
+      this.loading = false;
+      this.getAllList(data);
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      let data = {
+        page: val,
+        size: 20
+      };
+      this.loading = false;
+      this.getAllList(data);
     },
     handleGetData(res) {
       let i = 0;
@@ -106,11 +141,6 @@ export default {
       }
       return list;
     },
-    handleCurrentChange(val) {
-      console.log(val * 20);
-      this.getAllList(val * 20);
-    },
-
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -204,6 +234,7 @@ export default {
     margin-left: 20px;
     background: #f2f8fc;
     padding: 0 3px;
+    cursor: pointer;
   }
   li .inputDiv {
     width: 36px;

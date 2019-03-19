@@ -39,12 +39,13 @@
   },
   "trade": {
     "number": "当前交易编号",
+    "narrationAndOthers": "叙述与其它",
     "type": "交易类型",
     "initiator": "交易发起方",
     "amount": "交易金额",
     "to": "交易对家",
     "dealamount": "成交金额",
-    "books": "账本号",
+    "booknumber": "账本号",
     "costs": "交易费用",
     "note": "交易备注",
     "results": "交易结果",
@@ -85,5 +86,22 @@
     "total": "总量",
     "sorry": "抱歉",
     "nodealAtall": "暂无交易"
+  },
+  "wallet": {
+    "currentWalletAddress": "当前钱包地址",
+    "remainingSum": "余额",
+    "frozen": "冻结",
+    "Issuer": "发行方",
+    "TransactionToHome": "交易对家",
+    "transactionCurrency": "交易币种",
+    "allCurrency": "全部币种",
+    "allMode": "全部方式",
+    "dateRange": "日期范围",
+    "startTime": "开始时间",
+    "endTime": "结束时间",
+    "Purchase": "买入",
+    "Sale": "卖出",
+    "Income": "收入",
+    "Expenditure": "支出"
   }
 }
