@@ -19,7 +19,7 @@
             <div v-else >暂无数据</div>
           </div>
           <el-table-column  width="46px"></el-table-column>
-          <el-table-column type="index" :label="$t('message.blockList.sort')" min-width="15%"></el-table-column>
+          <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="15%"></el-table-column>
           <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="18%"  align="center" header-align="center">
             <template slot-scope="scope">
               <span class="idSpan" @click="jumpDetail(scope.row.hash)">{{handleData(scope.row._id)}}</span>
@@ -81,7 +81,7 @@ export default {
   },
   created() {
     let data = {
-      page: 0,
+      page: 1,
       size: 20
     };
     this.getAllList(data);
@@ -92,10 +92,7 @@ export default {
         return;
       }
       this.loading = true;
-      debugger;
       let res = await getBlocklist(data);
-      console.log(res, 1);
-      console.log(res.result, 2);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.blockList = this.handleGetData(res.data.list);
@@ -131,12 +128,14 @@ export default {
       let list = [];
       for (; i < res.length; i++) {
         list.push({
+          sort: (this.currentPage - 1) * 20 + i + 1,
           _id: res[i]._id,
           transNum: res[i].transNum,
           hash: res[i].hash,
           time: this.handleHashtime(res[i].time)
         });
       }
+      console.log(list);
       return list;
     },
     handleHashtime(time) {
@@ -223,6 +222,9 @@ export default {
   font-size: 14px;
   padding-top: 20px;
   padding-bottom: 110px;
+  .number {
+    min-width: 36rem;
+  }
   .sortButton {
     border: 1px solid #959595;
     border-radius: 6px;

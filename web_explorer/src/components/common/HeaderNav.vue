@@ -67,9 +67,12 @@ export default {
           duration: 1600,
           showClose: true
         });
-        return;
+      } else {
+        this.$router.push({
+          name: "wallet",
+          params: { wallet: this.searchContent }
+        });
       }
-      alert("跳转搜索结果页");
     },
     switchLanguage(lang) {
       this.$i18n.locale = lang;

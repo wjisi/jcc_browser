@@ -2,7 +2,7 @@
   <div id="wallet" class="blo">
      <div class="blockDetailTitle">
       <div class="walletHeader">
-        <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">#{{1}}</span></div>
+        <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">#{{wallet}}</span></div>
         <div class="tille" >{{$t('message.wallet.remainingSum')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
       <Ul>
@@ -153,21 +153,21 @@ export default {
       clearTitle: "清除定时器",
       loading: false,
       walletBalance: {},
-      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
-      page: "0"
+      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe"
     };
   },
   created() {
+    this.wallet = this.$route.params.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
     let data = {
-      page: this.page,
+      page: this.currentPage || 1,
       size: 20,
-      begin: "2019-01-01",
-      end: "2019-02-01",
-      type: "OfferCreate,OfferAffect",
+      begin: this.startTime || "",
+      end: this.endTime || "",
+      type: "",
       buyOrSell: "0",
-      pair: "SWTC-CNY",
-      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe"
+      pair: "",
+      wallet: this.wallet
     };
     this.getHistoricalList(data);
   },
@@ -178,14 +178,14 @@ export default {
     jumpSizeChange() {
       this.currentPage = this.gopage;
       let data = {
-        page: this.page,
+        page: this.currentPage || "0",
         size: 20,
-        begin: this.startTime,
-        end: this.endTime,
-        type: "OfferCreate,OfferAffect",
-        buyOrSell: this.selectModeValue,
-        pair: this.selectCurrencyValue,
-        wallet: this.wallet
+        begin: this.startTime || "",
+        end: this.endTime || "",
+        type: "",
+        buyOrSell: this.selectModeValue || "",
+        pair: this.selectCurrencyValue || "",
+        wallet: this.wallet || ""
       };
       this.loading = false;
       this.getHistoricalList(data);
@@ -193,7 +193,7 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val;
       let data = {
-        page: this.page,
+        page: this.currentPage,
         size: 20,
         begin: this.startTime,
         end: this.endTime,
@@ -217,7 +217,7 @@ export default {
       }
       this.loading = true;
       // let data = {
-      //   page: this.page,
+      //   page: this.currentPage,
       //   size: 20,
       //   begin: this.startTime,
       //   end: this.endTime,
@@ -229,7 +229,6 @@ export default {
       console.log(data, 233);
       let res = await queryHistoricalWallet(data);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        this.total = res.data.count;
         this.historicalList = this.getHistoryData(res);
       }
       this.loading = false;
@@ -303,14 +302,14 @@ export default {
     changeTransactionMode() {
       console.log(this.selectModeValue);
       let data = {
-        page: this.page,
+        page: this.currentPage || "0",
         size: 20,
-        begin: this.startTime,
-        end: this.endTime,
-        type: "OfferCreate,OfferAffect",
-        buyOrSell: this.selectModeValue,
-        pair: this.selectCurrencyValue,
-        wallet: this.wallet
+        begin: this.startTime || "",
+        end: this.endTime || "",
+        type: "",
+        buyOrSell: this.selectModeValue || "",
+        pair: this.selectCurrencyValue || "",
+        wallet: this.wallet || ""
       };
       this.loading = false;
       this.getHistoricalList(data);
@@ -319,27 +318,27 @@ export default {
     changeTransactionCurrency() {
       console.log(this.selectCurrencyValue);
       let data = {
-        page: this.page,
+        page: this.currentPage || "0",
         size: 20,
-        begin: this.startTime,
-        end: this.endTime,
-        type: "OfferCreate,OfferAffect",
-        buyOrSell: this.selectModeValue,
-        pair: this.selectCurrencyValue,
-        wallet: this.wallet
+        begin: this.startTime || "",
+        end: this.endTime || "",
+        type: "",
+        buyOrSell: this.selectModeValue || "",
+        pair: this.selectCurrencyValue || "",
+        wallet: this.wallet || ""
       };
       this.getHistoricalList(data);
     },
     selectTimerange() {
       let data = {
-        page: this.page,
+        page: this.currentPage || "0",
         size: 20,
-        begin: this.startTime,
-        end: this.endTime,
-        type: "OfferCreate,OfferAffect",
-        buyOrSell: this.selectModeValue,
-        pair: this.selectCurrencyValue,
-        wallet: this.wallet
+        begin: this.startTime || "",
+        end: this.endTime || "",
+        type: "",
+        buyOrSell: this.selectModeValue || "",
+        pair: this.selectCurrencyValue || "",
+        wallet: this.wallet || ""
       };
       this.getHistoricalList(data);
     },
@@ -365,7 +364,7 @@ export default {
           });
         }
         this.total = res.data.count;
-        this.allpage = Math.ceil(this.total / 10);
+        this.allpage = Math.ceil(this.total / 20);
         this.gopage = this.allpage;
       } else {
         this.total = 0;

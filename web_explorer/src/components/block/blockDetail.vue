@@ -8,7 +8,7 @@
       </span>
       <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
       <Ul>
-        <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{bash.block}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
+        <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{handleHashtime(bash.time)}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
           <span>{{$t('message.blockDetailList.Transactionvolume')}}</span><span>{{bash.transNum}}</span></li><li><span>SWTC{{$t('message.blockDetailList.total')}}</span><span>{{bash.hashType}}</span></li>
       </Ul>
     </div>
@@ -28,12 +28,12 @@
           </el-table-column>
           <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
             <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.type)}}</span>
+              <span style="color:#6f6868;font-size:12px;">{{scope.row.type}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="hashType"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
             <template slot-scope="scope">
-              <span class="spanHashType">{{handleData(scope.row.hashType)}}</span>
+              <span class="spanHashType">{{scope.row.hashType}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
@@ -61,7 +61,7 @@
           <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
           {{$t('message.blockList.page')}}
         </li>
-        <li>
+        <li>flag
           <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
       </ul>
@@ -70,6 +70,7 @@
 </template>
 <script>
 import { getBlockDetail } from "../../js/fetch";
+import { getTransactionType, getTransactionMode } from "@/js/utils";
 export default {
   name: "blockdetail",
   data() {
@@ -100,10 +101,12 @@ export default {
       this.loading = true;
       this.hash = this.$route.params.hash;
       let res = await getBlockDetail(this.hash);
+      console.log(res);
+
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "111111");
         this.total = res.data.count;
-        this.blockList = res.data.list;
+        this.blockList = this.getHistoryData(res);
         this.bash = res.data.info;
       }
       this.loading = false;
@@ -113,6 +116,31 @@ export default {
     },
     handleData(value) {
       return value;
+    },
+    getHistoryData(res) {
+      let i = 0;
+      let list = [];
+      if (res && res.data && res.data.list.length > 0) {
+        for (; i < res.data.list.length; i++) {
+          list.push({
+            seq: res.data.list[i].seq || "----",
+            type: getTransactionType(res.data.list[i].type) || "未知交易",
+            flag: getTransactionMode(res.data.list[i].flag) || "----",
+            time: this.handleHashtime(res.data.list[i].time) || "----",
+            fee: res.data.list[i].fee || "----",
+            account: res.data.list[i].account || "----",
+            dest: res.data.list[i].dest || "----"
+          });
+        }
+        this.total = res.data.count;
+        this.allpage = Math.ceil(this.total / 20);
+        this.gopage = this.allpage;
+      } else {
+        this.total = 0;
+        this.allpage = 0;
+        this.gopage = 0;
+      }
+      return list;
     },
     jumpSizeChange() {
       this.currentPage = this.gopage;
@@ -140,17 +168,19 @@ export default {
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = {};
-      fillZero(dateIn.getDate());
-      hashTime.time =
-        fillZero(dateIn.getHours()) + ":" + fillZero(dateIn.getMinutes());
-      hashTime.date =
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
-      return hashTime.date;
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
+      return hashTime;
     },
     fillZero(value) {
       if (value < 10) {

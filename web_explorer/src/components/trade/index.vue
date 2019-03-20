@@ -21,7 +21,7 @@
           <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
           <el-table-column prop="_id"  :label="$t('message.hashList.blockHash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
             <template slot-scope="scope">
-              <span class="hashSpan">{{handleData(scope.row._id)}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="18%">
@@ -72,7 +72,7 @@ export default {
   },
   created() {
     let data = {
-      page: 0,
+      page: 1,
       size: 20
     };
     this.getAllList(data);
@@ -112,6 +112,12 @@ export default {
       };
       this.loading = false;
       this.getAllList(data);
+    },
+    jumpDetail(hash) {
+      this.$router.push({
+        name: "tradeDetail",
+        params: { hash: hash }
+      });
     },
     setDatetiem(val) {
       this.selectedDate = val;

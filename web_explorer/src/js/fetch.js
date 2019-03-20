@@ -61,15 +61,6 @@ export const getlastBlocklist = async () => {
   })
   return resSuccess(res);
 }
-/** get last six blocks detail */
-export const getBlocklist = async (data) => {
-  let res = await service({
-    // url: getInfoHost() + `/block/all/${getUUID()}?p=${data.page}&s=${data.size}`,
-    url: getInfoHost() + '/block/all/' + getUUID() + '?p=' + data.page + '&s=' + data.size,
-    method: "get"
-  })
-  return resSuccess(res);
-}
 
 /** get last six trans */
 export const getLatestDeal = async (num = 6) => {
@@ -80,11 +71,35 @@ export const getLatestDeal = async (num = 6) => {
   return resSuccess(res);
 }
 
+/** get  blocks  */
+export const getBlocklist = async (data) => {
+  let res = await service({
+    // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
+    url: getInfoHost() + '/block/all/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size,
+    method: "get"
+  })
+  return resSuccess(res);
+}
+
+/** get blockDetail list by hash
+ *  @param {Object}data
+ *  {hash,from,to,amount}
+ */
+export const getBlockDetail = async (hash) => {
+  let res = await service({
+    url: getInfoHost() + '/hash/detail/' + getUUID() + '?h=' + hash,
+    method: "get"
+    // url: getInfoHost() + `/blockHASH/?HASH=${(data.hash)}&pageStart=${data.from}&pageEnd=${data.to}&pageSize=${data.amount}`,
+    // method: "get"
+  })
+  return resSuccess(res);
+}
+
 /** get last six trans detail */
 export const getTranslist = async (data) => {
   let res = await service({
-    // url: getInfoHost() + `/block/all/${getUUID()}?p=${data.page}&s=${data.size}`,
-    url: getInfoHost() + '/trans/all/' + getUUID() + '?p=' + data.page + '&s=' + data.size,
+    // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
+    url: getInfoHost() + '/trans/all/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size,
     method: "get"
   })
   return resSuccess(res);
@@ -102,7 +117,7 @@ export const querySpecifiedWallet = async (wallet) => {
 // Current delegate query for specified Wallet
 export const queryDelegateWallet = async (data) => {
   let res = await service({
-    url: getInfoHost() + '/wallet/offer/' + getUUID() + '?p=' + data.page + '&s=' + data.size + '&c=' + data.pair + '&bs=' + data.buyOrSell + '&w=' + data.wallet,
+    url: getInfoHost() + '/wallet/offer/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size + '&c=' + data.pair + '&bs=' + data.buyOrSell + '&w=' + data.wallet,
     method: "get"
   })
   return resSuccess(res);
@@ -111,35 +126,19 @@ export const queryDelegateWallet = async (data) => {
 // Historical transaction queries for specified wallets
 export const queryHistoricalWallet = async (data) => {
   let res = await service({
-    // url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + data.page + '&s=' + data.size ,
-    url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + data.page + '&s=' + data.size + 'b=' + data.start + '&e=' + data.end + '&t=' + data.type + '&bs=' + data.buyOrSell + '&c=' + data.pair + '&w=' + data.wallet,
+    // url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + (data.page-1) + '&s=' + data.size ,
+    url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size + '&b=' + data.start + '&e=' + data.end + '&t=' + data.type + '&bs=' + data.buyOrSell + '&c=' + data.pair + '&w=' + data.wallet,
     method: "get"
   })
   return resSuccess(res);
 }
 
-/** get block list by date
- *  @param {Object}data
- *  {date,from,to,amount}
- */
-export const getDayBlocklist = async (data) => {
+// query  Wallet Income
+export const queryWalletIncome = async (wallet) => {
   let res = await service({
-    url: getInfoHost() + `/dayBlocks/?day=${data.date}&pageStart=${data.from}&pageEnd=${data.to}&pageSize=${data.amount}`,
+    // url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + (data.page-1) + '&s=' + data.size ,
+    url: getInfoHost() + '/wallet/profit/' + getUUID() + '?addr=' + wallet,
     method: "get"
-  })
-  return resSuccess(res);
-}
-
-/** get blockDetail list by hash
- *  @param {Object}data
- *  {hash,from,to,amount}
- */
-export const getBlockDetail = async (hash) => {
-  let res = await service({
-    url: getInfoHost() + '/hash/detail/' + getUUID() + '?h=' + hash,
-    method: "get"
-    // url: getInfoHost() + `/blockHASH/?HASH=${(data.hash)}&pageStart=${data.from}&pageEnd=${data.to}&pageSize=${data.amount}`,
-    // method: "get"
   })
   return resSuccess(res);
 }

@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-// import { gettransnumDetail } from "../../js/fetch";
+import { queryDelegateWallet, queryWalletIncome } from "../../js/fetch";
 export default {
   name: "transnumDetail",
   data() {
@@ -61,12 +61,12 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      blockList: [],
       hashtime: {},
       bash: {},
       transactionNumber: "",
       loading: false,
       total: 0,
+      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
       currentPage: 1,
       gopage: 100,
       transnumDetail: [
@@ -79,23 +79,31 @@ export default {
   },
   created() {
     this.transactionNumber = this.$route.params.hash;
+    this.getTransnumDetail();
   },
   methods: {
-    // async getData() {
-    //   if (this.loading) {
-    //     return;
-    //   }
-    //   this.loading = true;
-    //   this.hash = this.$route.params.hash;
-    //   let res = await gettransnumDetail(this.hash);
-    //   if (res.result === true && (res.code === 0 || res.code === "0")) {
-    //     console.log(res, "111111");
-    //     this.total = res.data.count;
-    //     this.blockList = res.data.list;
-    //     this.bash = res.data.info;
-    //   }
-    //   this.loading = false;
-    // },
+    async getTransnumDetail() {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      let data = {
+        page: this.page || 0,
+        size: 20,
+        buyOrSell: "",
+        pair: "",
+        wallet: this.wallet
+      };
+      let res = await queryDelegateWallet(data);
+      let res2 = await queryWalletIncome(this.wallet);
+      console.log(res, "211111");
+      console.log(res2, "111112");
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        console.log(res, "111111");
+        this.transnumDetail = res.data.list;
+      }
+      this.loading = false;
+    },
     clearGopage() {
       this.gopage = "";
     },
@@ -105,27 +113,27 @@ export default {
     jumpSizeChange() {
       this.currentPage = this.gopage;
       this.loading = false;
-      this.getData();
+      this.getTransnumDetail();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
 
       this.loading = false;
-      this.getData();
+      this.getTransnumDetail();
     },
-    handleGetData(res) {
-      let i = 0;
-      let list = [];
-      for (; i < res.length; i++) {
-        list.push({
-          _id: res[i]._id,
-          transNum: res[i].transNum,
-          hash: res[i].hash,
-          time: this.handleHashtime(res[i].time)
-        });
-      }
-      return list;
-    },
+    // handlegettransnumDetail(res) {
+    //   let i = 0;
+    //   let list = [];
+    //   for (; i < res.length; i++) {
+    //     list.push({
+    //       _id: res[i]._id,
+    //       transNum: res[i].transNum,
+    //       hash: res[i].hash,
+    //       time: this.handleHashtime(res[i].time)
+    //     });
+    //   }
+    //   return list;
+    // },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
