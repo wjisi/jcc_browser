@@ -142,3 +142,21 @@ export const getStyle = (key) => {
   ])
   return map.get(key);
 }
+export const getTransactionType = (key) => {
+  let map = new Map([
+    ["OfferCreate", "创建委托"],
+    ["OfferAffect", "被动成交"],
+    ["OfferCancel", "撤消委托"],
+    ["Send", "支付"],
+    ["Receive", "收到"],
+    ["其它", "未知"]
+  ])
+  return map.get(key);
+}
+export const getTransactionMode = (key) => {
+  let map = new Map([
+    [1, "买"],
+    [2, "卖"]
+  ])
+  return map.get(key);
+}

@@ -102,7 +102,7 @@ export const querySpecifiedWallet = async (wallet) => {
 // Current delegate query for specified Wallet
 export const queryDelegateWallet = async (data) => {
   let res = await service({
-    url: getInfoHost() + '/wallet/offer/' + getUUID() + '?p=' + data.page + '&s=' + data.size + '&c=' + data.pair + '&bs=' + data.delegate + '&w=' + data.wallet,
+    url: getInfoHost() + '/wallet/offer/' + getUUID() + '?p=' + data.page + '&s=' + data.size + '&c=' + data.pair + '&bs=' + data.buyOrSell + '&w=' + data.wallet,
     method: "get"
   })
   return resSuccess(res);
@@ -111,7 +111,8 @@ export const queryDelegateWallet = async (data) => {
 // Historical transaction queries for specified wallets
 export const queryHistoricalWallet = async (data) => {
   let res = await service({
-    url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + data.page + '&s=' + data.size + '&b=' + data.begin + '&e=' + data.end + '&t=' + data.type + '&c=' + data.pair + '&w=' + data.wallet,
+    // url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + data.page + '&s=' + data.size ,
+    url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + data.page + '&s=' + data.size + 'b=' + data.start + '&e=' + data.end + '&t=' + data.type + '&bs=' + data.buyOrSell + '&c=' + data.pair + '&w=' + data.wallet,
     method: "get"
   })
   return resSuccess(res);

@@ -18,7 +18,7 @@
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >暂无数据</div>
+            <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
@@ -121,7 +121,6 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-
       this.loading = false;
       this.getData();
     },
@@ -175,7 +174,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  margin-top: 20px;
+  padding-top: 20px;
   padding-bottom: 110px;
   .sortButton {
     border: 1px solid #959595;

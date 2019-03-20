@@ -38,7 +38,6 @@
         </li>
         <li>{{$t('message.blockList.goto')}}
           <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
-          <!-- placeholder="100" -->
           {{$t('message.blockList.page')}}
         </li>
         <li>
@@ -146,7 +145,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  margin-top: 20px;
+  padding-top: 20px;
   padding-bottom: 110px;
   .sortButton {
     border: 1px solid #959595;

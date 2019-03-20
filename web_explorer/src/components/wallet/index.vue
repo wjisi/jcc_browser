@@ -7,28 +7,28 @@
       </div>
       <Ul>
         <li>
-          <div><span>SWTC<span></span></span>  <span>冻结:<span>12e2144</span></span></div>
-           <div><span>JDBT<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div><span>SWTC<span>{{walletBalance.SWTC_value}}</span></span>  <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span></div>
+           <div><span>JDBT<span>{{walletBalance.JDBT_value}} </span></span><span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
          <li>
-           <div><span>UST<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JJCC<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>UST<span>{{walletBalance.UST_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JJCC<span>{{walletBalance.JJCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
         <li>
-           <div><span>CNT<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JCALL<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>CNT<span>{{walletBalance.CNT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JCALL<span>{{walletBalance.JCALL_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
        <li>
-          <div><span>ECP<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JEKT<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div><span>ECP<span>{{walletBalance.ECP_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JEKT<span>{{walletBalance.JEKT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
-        <li>
-          <div><span>JETH<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JMOAC<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+         <li>
+          <div><span>JETH<span>{{walletBalance.JETH_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JMOAC<span>{{walletBalance.JMOAC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
-        <li>
-           <div><span>VCC<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JSTM<span></span></span>  <span>发行方:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+         <li>
+          <div><span>VCC<span>{{walletBalance.VCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JSTM<span>{{walletBalance.JSTM_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
       </Ul>
       </div>
@@ -38,74 +38,76 @@
     </div> -->
     <div class="title">
       <span class="titleItem">{{$t('message.blockDetailList.transactionmode')}}</span>
-      <el-select v-model="selectRefreshvalue"  @change="changefreshTime" style="width:100px">
-        <el-option v-for="item in transactionmode" :key="item.selectRefreshvalue" :label="item.label" :value="item.selectRefreshvalue"></el-option>
+      <el-select v-model="selectModeValue"  @change="changeTransactionMode" style="width:100px">
+        <el-option v-for="item in transactionMode" :key="item.selectModeValue" :label="item.label" :value="item.selectModeValue"></el-option>
       </el-select>
       <span class="titleItem1">{{$t('message.wallet.transactionCurrency')}}</span>
-      <el-select v-model="selectStatusvalues"  @change="selectState" style="width:140px">
-        <el-option v-for="item in  transactionCurrency" :key="item.selectStatusvalues" :label="item.label" :value="item.selectStatusvalues"></el-option>
+      <el-select v-model="selectCurrencyValue"  @change="changeTransactionCurrency" style="width:100px">
+        <el-option v-for="item in  transactionCurrency" :key="item.selectCurrencyValue" :label="item.label" :value="item.selectCurrencyValue"></el-option>
       </el-select>
       <span class="selctionData">{{$t('message.wallet.dateRange')}}
-        <el-date-picker v-model="start" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')"></el-date-picker>至
-        <el-date-picker v-model="end" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')"></el-date-picker>
+        <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')"></el-date-picker>至
+        <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')"></el-date-picker>
         <span class="sure" @click="selectTimerange">确认</span>
       </span>
     </div>
     <div class="bockList">
-      <div class="blockList">
-        <el-table :data="blockList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" :cell-style="cellStyle">
+      <div class="historicalList">
+        <el-table :data="historicalList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" :cell-style="cellStyle">
           <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >暂无数据</div>
+            <div v-else ><img src='../../images/not _found_list.png' /><div>暂无数据</div></div>
           </div>
-          <el-table-column prop="server_state" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
-            <template slot-scope="scope"> <div>{{scope.row.server_state}}</div></template>
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
           </el-table-column>
-          <el-table-column prop="infosGetTime" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+          </el-table-column>
+          <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="center" min-width="15%">
+          </el-table-column>
+          <el-table-column prop="fee"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+          </el-table-column>
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-              <div>{{scope.row.infosGetTime.date}}</div>
-              <div>{{scope.row.infosGetTime.time}}</div>
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="complete_ledgers" :label="$t('message.blockDetailList.transactiontime')" align="center" min-width="15%">
-            <template slot-scope="scope">
-              <el-popover placement="top-start" width="200" trigger="hover" :content="scope.row.complete_ledgers.all">
-                <el-button slot="reference"> <div>{{scope.row.complete_ledgers.data1}}</div> <div>{{scope.row.complete_ledgers.data2}}</div></el-button>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column prop="peers"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
-            <template slot-scope="scope"><div>{{scope.row.peers}}</div></template>
-          </el-table-column>
-          <el-table-column prop="io_latency_ms" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%"></el-table-column>
-          <el-table-column prop="startup_time" :label="$t('message.blockDetailList.transactionnumber')" id="ellipsis" align="center" min-width="13%">
-            <template slot-scope="scope">
-
-              <div>{{scope.row.startup_time.time}}</div>
+          <el-table-column prop="hash" :label="$t('message.blockDetailList.transactionnumber')" id="ellipsis" align="center" min-width="13%">
+           <template slot-scope="scope">
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
         </el-table>
       </div>
-      <ul class="pagination">
-        <li> <el-pagination background layout="prev, pager, next" :total="total" :page-size="10" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination></li>
-        <li class="allPage"><span>{{allpage}}</span>页</li>
-        <li>跳至<div class="input"><input type="text"  v-model="gopage" @focus="clearGopage"></div>页</li>
-        <li><div class="sortButton" @click="jumpSizeChange">确认</div></li>
+       <ul class="pagination">
+        <li>
+          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
+        </li>
+        <li>{{$t('message.blockList.goto')}}
+          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
+          {{$t('message.blockList.page')}}
+        </li>
+        <li>
+          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
-import { querySpecifiedWallet, queryDelegateWallet } from "@/js/fetch";
-import { getStyle } from "@/js/utils";
+import {
+  querySpecifiedWallet,
+  // queryDelegateWallet,
+  queryHistoricalWallet
+} from "@/js/fetch";
+import { getStyle, getTransactionType, getTransactionMode } from "@/js/utils";
 export default {
   name: "wallet",
   // beforeRouteEnter(to, from, next) {
   //   next(vm => {
   //     vm.$store.dispatch("updateCurrentPage", "historyStatus");
-  //     vm.$store.dispatch("updateCurrentNode", vm.$route.params.server);
+  //     vm.$store.dispatch("updateCurrentNode", vm.$route.params.wallet);
   //     vm.getData();
-  //     vm.changefreshTime();
+  //     vm.changeTransactionMode();
   //   });
   // },
   // beforeRouteLeave(to, from, next) {
@@ -119,29 +121,29 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      transactionmode: [
-        { selectmodevalue: 0, label: this.$t("message.wallet.allMode") },
-        { selectmodevalue: 1, label: this.$t("message.wallet.Purchase") },
-        { selectmodevalue: 2, label: this.$t("message.wallet.Sale") },
-        { selectmodevalue: 0, label: this.$t("message.wallet.Income") },
-        { selectmodevalue: 0, label: this.$t("message.wallet.Expenditure") }
+      transactionMode: [
+        { selectModeValue: 0, label: this.$t("message.wallet.allMode") },
+        { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
+        { selectModeValue: 2, label: this.$t("message.wallet.Sale") },
+        { selectModeValue: 3, label: this.$t("message.wallet.Income") },
+        { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
       ],
       transactionCurrency: [
         {
-          selectcurrencyvalues: "全部币种",
+          selectCurrencyValue: "",
           label: this.$t("message.wallet.allCurrency")
         },
-        { selectcurrencyvalues: "CNT", label: "CNT" },
-        { selectcurrencyvalues: "ETH", label: "ETH" },
-        { selectCurrencyvalues: "SWTC", label: "SWTC" },
-        { selectCurrencyvalues: "MOAC", label: "MOAC" }
+        { selectCurrencyValue: "CNT", label: "CNT" },
+        { selectCurrencyValue: "ETH", label: "ETH" },
+        { selectCurrencyValue: "SWTC-CNY", label: "SWTC" },
+        { selectCurrencyValue: "MOAC", label: "MOAC" }
       ],
-      blockList: [],
+      historicalList: [],
       walletlist: [],
-      selectRefreshvalue: this.$t("message.wallet.allMode"),
-      selectStatusvalues: this.$t("message.wallet.allCurrency"),
-      start: "",
-      end: "",
+      selectModeValue: this.$t("message.wallet.allMode"),
+      selectCurrencyValue: this.$t("message.wallet.allCurrency"),
+      startTime: "",
+      endTime: "",
       timer: "",
       total: 0,
       allpage: 1,
@@ -149,11 +151,25 @@ export default {
       gopage: 100,
       currentPage: 1,
       clearTitle: "清除定时器",
-      loading: false
+      loading: false,
+      walletBalance: {},
+      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
+      page: "0"
     };
   },
   created() {
-    this.getAllList("jMMuFRknhcXfnfNUomPT6rHhXUP9F8wP6p");
+    this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
+    let data = {
+      page: this.page,
+      size: 20,
+      begin: "2019-01-01",
+      end: "2019-02-01",
+      type: "OfferCreate,OfferAffect",
+      buyOrSell: "0",
+      pair: "SWTC-CNY",
+      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe"
+    };
+    this.getHistoricalList(data);
   },
   methods: {
     clearGopage() {
@@ -161,27 +177,33 @@ export default {
     },
     jumpSizeChange() {
       this.currentPage = this.gopage;
-      let datas = {
-        server: this.server,
-        start: this.start,
-        end: this.end,
-        state: this.selectStatusvalues,
-        page: this.gopage || 100
+      let data = {
+        page: this.page,
+        size: 20,
+        begin: this.startTime,
+        end: this.endTime,
+        type: "OfferCreate,OfferAffect",
+        buyOrSell: this.selectModeValue,
+        pair: this.selectCurrencyValue,
+        wallet: this.wallet
       };
       this.loading = false;
-      this.getData(datas);
+      this.getHistoricalList(data);
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      let datas = {
-        server: this.server,
-        start: this.start,
-        end: this.end,
-        state: this.selectStatusvalues,
-        page: val
+      let data = {
+        page: this.page,
+        size: 20,
+        begin: this.startTime,
+        end: this.endTime,
+        type: "OfferCreate,OfferAffect",
+        buyOrSell: this.selectModeValue,
+        pair: this.selectCurrencyValue,
+        wallet: this.wallet
       };
       this.loading = false;
-      this.getData(datas);
+      this.getHistoricalList(data);
     },
     cellStyle(data) {
       if (data.columnIndex === 0) {
@@ -189,94 +211,160 @@ export default {
       }
       return "";
     },
-
-    changefreshTime() {
-      clearInterval(this.timer);
-      if (this.selectRefreshvalue > 0) {
-        this.timer = setInterval(() => {
-          let datas = {
-            server: this.server,
-            start: this.start,
-            end: this.end,
-            state: this.selectStatusvalues,
-            page: this.currentPage
-          };
-          this.loading = false;
-          this.getData(datas);
-        }, this.selectRefreshvalue);
-      }
-    },
-    selectTimerange() {
-      let datas = {
-        server: this.server,
-        start: this.start,
-        end: this.end,
-        state: this.selectStatusvalues,
-        page: this.currentPage
-      };
-      this.changefreshTime();
-      this.getData(datas);
-    },
-    selectState() {
-      this.currentPage = 1;
-      this.total = 0;
-      let datas = {
-        server: this.server,
-        start: this.start,
-        end: this.end,
-        state: this.selectStatusvalues,
-        page: this.currentPage
-      };
-      this.changefreshTime();
-      this.getData(datas);
-    },
-    async getAllList(wallet) {
+    async getHistoricalList(data) {
       if (this.loading) {
         return;
       }
       this.loading = true;
-      let res = await querySpecifiedWallet(wallet);
-      let data = {
-        page: 0,
-        size: 20,
-        pair: "",
-        delegate: "0",
-        wallet: "jMMuFRknhcXfnfNUomPT6rHhXUP9F8wP6p"
-      };
-      let res2 = await queryDelegateWallet(data);
-      console.log(res2, 1111);
-      console.log(res);
-      if (
-        res.data.msg === "成功" &&
-        (res.data.code === 0 || res.data.code === "0")
-      ) {
-        // this.total = res.data.data.count;
-        // this.tranList = res.data.data.list;
+      // let data = {
+      //   page: this.page,
+      //   size: 20,
+      //   begin: this.startTime,
+      //   end: this.endTime,
+      //   type: "OfferCreate,OfferAffect",
+      //   buyOrSell: this.selectModeValue,
+      //   pair: this.selectCurrencyValue,
+      //   wallet: this.wallet
+      // };
+      console.log(data, 233);
+      let res = await queryHistoricalWallet(data);
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        this.total = res.data.count;
+        this.historicalList = this.getHistoryData(res);
       }
       this.loading = false;
     },
-    handleGetData(res) {
+    async getBalanceList(wallet) {
+      let res = await querySpecifiedWallet(wallet);
+      // let data = {
+      //   page: 0,
+      //   size: 20,
+      //   wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe"
+      // };
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        this.walletBalance = this.getWalletBalanceData(res);
+      }
+    },
+    getWalletBalanceData(res) {
+      let list = {};
+      if (res && res.data) {
+        res = res.data;
+        list = {
+          SWTC_value: this.displayDefaultValues(res.SWTC.value) || "0.0000",
+          SWTC_frozen: this.displayDefaultValues(res.SWTC.frozen) || "0.0000",
+          JDBT_value:
+            this.displayDefaultValues(
+              res.JDBT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          UST_value:
+            this.displayDefaultValues(
+              res.UST_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          JJCC_value:
+            this.displayDefaultValues(
+              res.JJCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          CNT_value:
+            this.displayDefaultValues(
+              res.CNT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          JCALL_value:
+            this.displayDefaultValues(
+              res.JCALL_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          ECP_value:
+            this.displayDefaultValues(
+              res.ECP_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          JEKT_value:
+            this.displayDefaultValues(
+              res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          JETH_value:
+            this.displayDefaultValues(
+              res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          JMOAC_value:
+            this.displayDefaultValues(
+              res.JMOAC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          VCC_value:
+            this.displayDefaultValues(
+              res.VCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000",
+          JSTM_value:
+            this.displayDefaultValues(
+              res.JSTM_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+            ).value || "0.0000"
+        };
+      }
+      return list;
+    },
+    changeTransactionMode() {
+      console.log(this.selectModeValue);
+      let data = {
+        page: this.page,
+        size: 20,
+        begin: this.startTime,
+        end: this.endTime,
+        type: "OfferCreate,OfferAffect",
+        buyOrSell: this.selectModeValue,
+        pair: this.selectCurrencyValue,
+        wallet: this.wallet
+      };
+      this.loading = false;
+      this.getHistoricalList(data);
+    },
+
+    changeTransactionCurrency() {
+      console.log(this.selectCurrencyValue);
+      let data = {
+        page: this.page,
+        size: 20,
+        begin: this.startTime,
+        end: this.endTime,
+        type: "OfferCreate,OfferAffect",
+        buyOrSell: this.selectModeValue,
+        pair: this.selectCurrencyValue,
+        wallet: this.wallet
+      };
+      this.getHistoricalList(data);
+    },
+    selectTimerange() {
+      let data = {
+        page: this.page,
+        size: 20,
+        begin: this.startTime,
+        end: this.endTime,
+        type: "OfferCreate,OfferAffect",
+        buyOrSell: this.selectModeValue,
+        pair: this.selectCurrencyValue,
+        wallet: this.wallet
+      };
+      this.getHistoricalList(data);
+    },
+    displayDefaultValues(value) {
+      if (value) {
+        return value;
+      } else {
+        return { value: undefined };
+      }
+    },
+    getHistoryData(res) {
       let i = 0;
       let list = [];
-      if (res && res.data && res.data.length > 0) {
-        for (; i < res.data.length; i++) {
-          let resData = JSON.parse(res.data[i]);
+      if (res && res.data && res.data.list.length > 0) {
+        for (; i < res.data.list.length; i++) {
           list.push({
-            server_state: resData.server_state || "null",
-            infosGetTime: this.intervalTime(resData.infosGetTime),
-            complete_ledgers: this.intervalString(resData.complete_ledgers),
-            peers: resData.peers || "null",
-            io_latency_ms: resData.io_latency_ms || "null",
-            startup_time: this.intervalTime(resData.startup_time) || "null",
-            build_version: resData.build_version || "null",
-            nodePublic: resData.public || "null",
-            last_ledger_heigth: resData.last_ledger_heigth || "null",
-            hash: resData.hash || "null",
-            last_ledger_time: resData.last_ledger_time || "null",
-            all_results: resData.all_results || "null"
+            type: getTransactionType(res.data.list[i].type) || "----",
+            flag: getTransactionMode(res.data.list[i].flag) || "----",
+            time: this.handleHashtime(res.data.list[i].time) || "----",
+            fee: res.data.list[i].fee || "----",
+            account: res.data.list[i].account || "----",
+            hash: res.data.list[i].hash || "----"
           });
         }
-        this.total = list[0].all_results;
+        this.total = res.data.count;
         this.allpage = Math.ceil(this.total / 10);
         this.gopage = this.allpage;
       } else {
@@ -286,29 +374,34 @@ export default {
       }
       return list;
     },
-    intervalTime(value) {
-      let dateTime = {};
-      if (value) {
-        dateTime.date = value.split(" ")[0];
-        dateTime.time = value.split(" ")[1];
-      } else {
-        dateTime.date = "null";
-        dateTime.time = "";
-      }
-      return dateTime;
+    jumpDetail(hash) {
+      this.$router.push({
+        name: "transnumDetail",
+        params: { hash: hash }
+      });
     },
-    intervalString(value) {
-      let ellipsisString = {};
-      if (value) {
-        ellipsisString.data1 = value.substring(0, 8);
-        ellipsisString.data2 = value.substring(8, 13);
-        ellipsisString.all = value;
-      } else {
-        ellipsisString.data1 = "null";
-        ellipsisString.data2 = "";
-        ellipsisString.all = "";
+    fillZero(value) {
+      if (value < 10) {
+        value = "0" + value;
       }
-      return ellipsisString;
+      return value;
+    },
+    handleHashtime(time) {
+      let { fillZero } = this;
+      let dateIn = new Date((time + 946684800) * 1000);
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes()) +
+        " " +
+        fillZero(dateIn.getFullYear()) +
+        "-" +
+        fillZero(dateIn.getMonth() + 1) +
+        "-" +
+        fillZero(dateIn.getDate());
+      return hashTime;
     }
   }
 };
@@ -320,6 +413,17 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+  .hashSpan {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #3b3f4c;
+    font-size: 14px;
+  }
+  .hashSpan:hover {
+    color: #06aaf9;
+    cursor: pointer;
+  }
 }
 .blockDetailTitle {
   text-align: left;
@@ -370,6 +474,9 @@ export default {
         display: flex;
         justify-content: space-between;
         flex: 1;
+        span:nth-child(1) span {
+          margin: 10px;
+        }
         span:nth-child(2) span {
           margin: 10px;
         }
@@ -429,46 +536,31 @@ export default {
   align-items: center;
   background: #ffffff;
   font-size: 14px;
-  padding: 20px 0;
-  color: #959595;
-  .allPage {
-    padding-top: 2px;
-    font-size: 14px;
-    height: 38px;
-    line-height: 38px;
-    color: #959595;
-    margin-right: 20px;
-    span {
-      margin-right: 10px;
-    }
-  }
+  padding-top: 20px;
+  padding-bottom: 110px;
   .sortButton {
     border: 1px solid #959595;
     border-radius: 6px;
     height: 36px;
     line-height: 36px;
-    width: 58px;
-    color: #959595;
+    width: 50px;
     margin-left: 20px;
+    background: #f2f8fc;
+    padding: 0 3px;
   }
-  .sortButton:hover {
-    cursor: pointer;
-  }
-  li .input {
+  li .inputDiv {
     width: 36px;
     height: 36px;
     border: 1px solid #959595;
     display: inline-block;
-    border-radius: 6px;
     margin: 0 10px;
+    border-radius: 6px;
   }
   li div input {
     border-radius: 6px;
     width: 36px;
     height: 36px;
     border: 0;
-    text-align: center;
-    text-indent: 0;
   }
 }
 .el-select-dropdown__item {
@@ -506,22 +598,22 @@ export default {
   color: #383a4b;
   font-size: 14px;
   height: 40px;
-  th {
-    border-right: 1px solid #e0e8ed;
-  }
-  th:nth-child(n + 8) {
-    border-right: 0px;
-  }
+  // th {
+  //   border-right: 1px solid #e0e8ed;
+  // }
+  // th:nth-child(n + 8) {
+  //   border-right: 0px;
+  // }
 }
 #wallet .walletrowClass {
   font-size: 12px;
   height: 40px;
-  td {
-    border-right: 1px solid #e0e8ed;
-  }
-  td:nth-child(n + 8) {
-    border-right: 0px;
-  }
+  // td {
+  //   border-right: 1px solid #e0e8ed;
+  // }
+  // td:nth-child(n + 8) {
+  //   border-right: 0px;
+  // }
 }
 .el-picker-panel {
   width: 330px;

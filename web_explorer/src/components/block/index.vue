@@ -97,8 +97,6 @@ export default {
       console.log(res, 1);
       console.log(res.result, 2);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        debugger;
-        // console.log(res.data.result, 2);
         this.total = res.data.count;
         this.blockList = this.handleGetData(res.data.list);
       }
@@ -223,7 +221,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  margin-top: 20px;
+  padding-top: 20px;
   padding-bottom: 110px;
   .sortButton {
     border: 1px solid #959595;

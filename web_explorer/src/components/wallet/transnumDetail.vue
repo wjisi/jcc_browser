@@ -1,8 +1,8 @@
 <template>
-  <div id="blockdetail" class="blo">
-    <div class="blockDetailTitle">
+  <div id="transnumDetail" class="blo">
+    <div class="transnumDetailTitle">
       <div class="walletHeader">
-        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{1}}</span></div>
+        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
         <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
       <Ul>
@@ -28,13 +28,13 @@
         </li>
       </Ul>
       </div>
-    <div class="bockList">
+    <div class="transnum">
       <div class="title">{{$t('message.trade.effect')}}</div>
-        <ul>
-      <li v-for="(item,index) of  transnumDetail" :key="index"  >
-        <span>{{item.message}}</span><span>{{item.message}}</span>
-      </li>
-    </ul>
+        <ul class="transnumList">
+          <li v-for="(item,index) of  transnumDetail" :key="index"  >
+           <span>{{item.message}}</span><span>{{item.message}}</span>
+          </li>
+        </ul>
        <ul class="pagination">
         <li>
           <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
@@ -51,9 +51,9 @@
   </div>
 </template>
 <script>
-import { getBlockDetail } from "../../js/fetch";
+// import { gettransnumDetail } from "../../js/fetch";
 export default {
-  name: "blockdetail",
+  name: "transnumDetail",
   data() {
     return {
       pickerOptions: {
@@ -64,7 +64,7 @@ export default {
       blockList: [],
       hashtime: {},
       bash: {},
-      hash: "",
+      transactionNumber: "",
       loading: false,
       total: 0,
       currentPage: 1,
@@ -78,24 +78,24 @@ export default {
     };
   },
   created() {
-    this.getData();
+    this.transactionNumber = this.$route.params.hash;
   },
   methods: {
-    async getData() {
-      if (this.loading) {
-        return;
-      }
-      this.loading = true;
-      this.hash = this.$route.params.hash;
-      let res = await getBlockDetail(this.hash);
-      if (res.result === true && (res.code === 0 || res.code === "0")) {
-        console.log(res, "111111");
-        this.total = res.data.count;
-        this.blockList = res.data.list;
-        this.bash = res.data.info;
-      }
-      this.loading = false;
-    },
+    // async getData() {
+    //   if (this.loading) {
+    //     return;
+    //   }
+    //   this.loading = true;
+    //   this.hash = this.$route.params.hash;
+    //   let res = await gettransnumDetail(this.hash);
+    //   if (res.result === true && (res.code === 0 || res.code === "0")) {
+    //     console.log(res, "111111");
+    //     this.total = res.data.count;
+    //     this.blockList = res.data.list;
+    //     this.bash = res.data.info;
+    //   }
+    //   this.loading = false;
+    // },
     clearGopage() {
       this.gopage = "";
     },
@@ -151,14 +151,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#blockdetail {
+#transnumDetail {
   text-align: center;
   min-width: 768px;
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
 }
-.blockDetailTitle {
+.transnumDetailTitle {
   text-align: left;
   .tille {
     display: flex;
@@ -223,7 +223,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  margin-top: 20px;
+  padding-top: 20px;
   padding-bottom: 110px;
   .sortButton {
     border: 1px solid #959595;
@@ -259,9 +259,27 @@ export default {
   font-size: 16px;
   border-bottom: 1px #d0eef5;
 }
-.bockList {
+.transnum {
   background-color: #f2f8fc;
   border: 1px solid #d0eef5;
+  .transnumList {
+    min-height: 660px;
+    background: #ffffff;
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 14px;
+      color: #868080;
+      height: 40px;
+      align-content: center;
+      border-bottom: 1px solid #e0e8ed;
+      span {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
 }
 .pagination {
   display: flex;
@@ -269,7 +287,6 @@ export default {
   align-items: center;
   background: #ffffff;
   font-size: 14px;
-  padding: 20px 0;
   .sortButton {
     border: 1px solid #959595;
     border-radius: 6px;
@@ -297,7 +314,7 @@ export default {
 </style>
 
 <style  lang="scss" >
-#blockdetail .pagination .is-background {
+#transnumDetail .pagination .is-background {
   .el-pager li:not(.disabled).active {
     background: #18c9dd;
     color: #ffffff;
@@ -324,7 +341,7 @@ export default {
     color: #959595;
   }
 }
-#blockdetail .el-pager .el-icon-more {
+#transnumDetail .el-pager .el-icon-more {
   display: none;
 }
 </style>
