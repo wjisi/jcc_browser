@@ -75,7 +75,7 @@ export default {
       } else if (/^\d{32}$/.test(this.searchContent)) {
         this.$router.push({
           name: "wallet",
-          params: { wallet: this.searchContent }
+          params: { hash: this.searchContent }
         });
       } else {
         this.$message({

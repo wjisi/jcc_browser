@@ -147,6 +147,7 @@ export const getTransactionType = (key) => {
     ["OfferCreate", "创建委托"],
     ["OfferAffect", "被动成交"],
     ["OfferCancel", "撤消委托"],
+    ["Payment", "主动成交"],
     ["Send", "支付"],
     ["Receive", "收到"],
     ["其它", "未知"]

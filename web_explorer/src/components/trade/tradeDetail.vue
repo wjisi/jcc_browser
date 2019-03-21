@@ -7,24 +7,42 @@
       </div>
       <Ul>
         <li>
-           <div><span>{{$t('message.trade.type')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>2</span></div>
+           <div><span>{{$t('message.trade.type')}}</span>  <span>{{transnumkList.type}}</span></div>
+           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>{{transnumkList.sep}}</span></div>
         </li>
           <li>
-           <div><span>{{$t('message.trade.initiator')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.costs')}}</span>  <span>2</span></div>
+           <div><span>{{$t('message.trade.initiator')}}</span>  <span>{{transnumkList.account}}</span></div>
+           <div><span>{{$t('message.trade.costs')}}</span>  <span>{{transnumkList.fee}}</span></div>
         </li>
          <li>
-           <div><span>{{$t('message.trade.amount')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.note')}}</span>  <span>2</span></div>
+           <div>
+               <span>{{$t('message.trade.amount')}}</span>
+               <span v-show="transnumkList.realPaysValue">
+                 <span>{{transnumkList.realPaysValue}}</span>
+                 <span>{{transnumkList.realPaysCurrency}}</span>
+                 <span>{{transnumkList.realGetsValue}}</span>
+                 <span>{{transnumkList.realPaysCurrency}}</span>
+               </span>
+               <span v-show="!transnumkList.realPaysValue">{{defaultValue}}</span>
+          </div>
+           <div><span>{{$t('message.trade.note')}}</span>  <span>{{transnumkList.memos}}</span></div>
         </li>
         <li>
-           <div><span>{{$t('message.trade.to')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.results')}}</span>  <span>2</span></div>
+           <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div>
+           <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
         </li>
          <li>
-           <div><span>{{$t('message.trade.dealamount')}}</span>  <span>1</span></div>
-           <div><span></span>  <span>2</span></div>
+           <div>
+             <span>{{$t('message.trade.dealamount')}}</span>
+             <span v-show="transnumkList.matchPaysValue">
+               <span>{{transnumkList.matchPaysValue}}</span>
+               <span>{{transnumkList.matchPaysCurrency}}</span>
+               <span>{{transnumkList.matchGetsValue}}</span>
+               <span>{{transnumkList.matchPaysCurrency}}</span>
+            </span>
+            <span v-show="!transnumkList.matchPaysValue">{{defaultValue}}</span>
+          </div>
+           <div><span>{{$t('message.trade.ismatch')}}</span>  <span>{{transnumkList.matchFlag}}</span></div>
         </li>
       </Ul>
       </div>
@@ -75,6 +93,8 @@ export default {
       wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
       currentPage: 1,
       gopage: 100,
+      transnumkList: {},
+      defaultValue: "",
       transnumDetail: [
         { message: "foo" },
         { message: "boo" },
@@ -95,40 +115,19 @@ export default {
       // }
       this.loading = true;
       this.hash = this.$route.params.hash;
+      // "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
       let res = await getBlockDetail(this.hash);
       console.log(res);
 
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "99999999");
         // this.total = res.data.count;
-        this.blockList = this.handelDealHashData(res);
-        console.log(this.blockList);
+        this.transnumkList = this.handelDealHashData(res);
+        console.log(this.transnumkList);
         // this.bash = res.data.info;
       }
       // this.loading = false;
     },
-    // async getTransnumDetail() {
-    //   if (this.loading) {
-    //     return;
-    //   }
-    //   this.loading = true;
-    //   let data = {
-    //     page: this.page || 0,
-    //     size: 20,
-    //     buyOrSell: "",
-    //     pair: "",
-    //     wallet: this.wallet
-    //   };
-    //   let res = await queryDelegateWallet(data);
-    //   let res2 = await queryWalletIncome(this.wallet);
-    //   console.log(res, "211111");
-    //   console.log(res2, "111112");
-    //   if (res.result === true && (res.code === 0 || res.code === "0")) {
-    //     console.log(res, "111111");
-    //     this.transnumDetail = res.data.list;
-    //   }
-    //   this.loading = false;
-    // },
     clearGopage() {
       this.gopage = "";
     },
@@ -138,20 +137,29 @@ export default {
     handelDealHashData(res) {
       let list = {};
       if (res && res.data) {
-        debugger;
         res = res.data;
         list = {
           type: getTransactionType(res.type) || "---",
+          sep: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
+          realPaysCurrency: this.displayDefaultCurrency(res.realPays).currency,
+          realPaysValue: this.displayDefaultValues(res.realPays).value,
+          realGetsCurrency: this.displayDefaultCurrency(res.realGets).currency,
+          realGetsValue: this.displayDefaultValues(res.realGets).value,
+          memos: "---",
           dest: res.dest || "---",
-          realPays: res.realPays || "---",
-          memos: this.displayDefaultMemoData(res.memos[0]).MemoData || "---",
-          succ: this.judgeDealSuccess(res.type) || "---",
+          succ: this.judgeDealSuccess(res.succ) || "---",
+          matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
+            .currency,
+          matchPaysValue: this.displayDefaultValues(res.matchPays).value,
+          matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
+            .currency,
+          matchGetsValue: this.displayDefaultValues(res.matchGets).value,
           matchFlag: this.judgeIsMatch(this.matchFlag) || "---"
         };
       }
-      debugger;
+      this.defaultValue = "---";
       return list;
     },
     jumpSizeChange() {
@@ -175,10 +183,8 @@ export default {
     },
     displayDefaultMemoData(value) {
       if (value) {
-        debugger;
         return value;
       } else {
-        debugger;
         return { MemoData: undefined };
       }
     },
@@ -187,6 +193,14 @@ export default {
         return value;
       } else {
         return { value: undefined };
+      }
+    },
+    displayDefaultCurrency(value) {
+      if (value) {
+        return value;
+      } else {
+        debugger;
+        return { currency: undefined };
       }
     },
     handleCurrentChange(val) {

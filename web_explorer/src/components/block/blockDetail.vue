@@ -36,9 +36,9 @@
               <span class="spanHashType">{{scope.row.hashType}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
+          <!-- <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="25%">
             <template slot-scope="scope">
               <span class="spanUpperHash">{{handleData(scope.row._id)}}</span>
@@ -61,7 +61,7 @@
           <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
           {{$t('message.blockList.page')}}
         </li>
-        <li>flag
+        <li>
           <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
       </ul>
@@ -126,7 +126,7 @@ export default {
             seq: res.data.list[i].seq || "----",
             type: getTransactionType(res.data.list[i].type) || "未知交易",
             flag: getTransactionMode(res.data.list[i].flag) || "----",
-            time: this.handleHashtime(res.data.list[i].time) || "----",
+            // time: this.handleHashtime(res.data.list[i].time) || "----",
             fee: res.data.list[i].fee || "----",
             account: res.data.list[i].account || "----",
             _id: res.data.list[i]._id || "----"
