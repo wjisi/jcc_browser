@@ -51,13 +51,7 @@
   </div>
 </template>
 <script>
-import {
-  // queryDelegateWallet,
-  // queryWalletIncome,
-  getBlockDetail
-} from "../../js/fetch";
-import { getTransactionType } from "@/js/utils";
-// , getTransactionMode
+import { queryDelegateWallet, queryWalletIncome } from "../../js/fetch";
 export default {
   name: "transnumDetail",
   data() {
@@ -85,109 +79,41 @@ export default {
   },
   created() {
     this.transactionNumber = this.$route.params.hash;
-    // this.getTransnumDetail();
-    this.getData();
+    this.getTransnumDetail();
   },
   methods: {
-    async getData() {
-      // if (this.loading) {
-      //   return;
-      // }
-      this.loading = true;
-      this.hash = this.$route.params.hash;
-      let res = await getBlockDetail(this.hash);
-      console.log(res);
-
-      if (res.result === true && (res.code === 0 || res.code === "0")) {
-        console.log(res, "99999999");
-        // this.total = res.data.count;
-        this.blockList = this.handelDealHashData(res);
-        console.log(this.blockList);
-        // this.bash = res.data.info;
+    async getTransnumDetail() {
+      if (this.loading) {
+        return;
       }
-      // this.loading = false;
+      this.loading = true;
+      let data = {
+        page: this.page || 0,
+        size: 20,
+        buyOrSell: "",
+        pair: "",
+        wallet: this.wallet
+      };
+      let res = await queryDelegateWallet(data);
+      let res2 = await queryWalletIncome(this.wallet);
+      console.log(res, "211111");
+      console.log(res2, "111112");
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        console.log(res, "111111");
+        this.transnumDetail = res.data.list;
+      }
+      this.loading = false;
     },
-    // async getTransnumDetail() {
-    //   if (this.loading) {
-    //     return;
-    //   }
-    //   this.loading = true;
-    //   let data = {
-    //     page: this.page || 0,
-    //     size: 20,
-    //     buyOrSell: "",
-    //     pair: "",
-    //     wallet: this.wallet
-    //   };
-    //   let res = await queryDelegateWallet(data);
-    //   let res2 = await queryWalletIncome(this.wallet);
-    //   console.log(res, "211111");
-    //   console.log(res2, "111112");
-    //   if (res.result === true && (res.code === 0 || res.code === "0")) {
-    //     console.log(res, "111111");
-    //     this.transnumDetail = res.data.list;
-    //   }
-    //   this.loading = false;
-    // },
     clearGopage() {
       this.gopage = "";
     },
     handleData(value) {
       return value;
     },
-    handelDealHashData(res) {
-      let list = {};
-      if (res && res.data) {
-        debugger;
-        res = res.data;
-        list = {
-          type: getTransactionType(res.type) || "---",
-          account: res.account || "---",
-          fee: res.fee || "---",
-          dest: res.dest || "---",
-          realPays: res.realPays || "---",
-          memos: this.displayDefaultMemoData(res.memos[0]).MemoData || "---",
-          succ: this.judgeDealSuccess(res.type) || "---",
-          matchFlag: this.judgeIsMatch(this.matchFlag) || "---"
-        };
-      }
-      debugger;
-      return list;
-    },
     jumpSizeChange() {
       this.currentPage = this.gopage;
       this.loading = false;
       this.getTransnumDetail();
-    },
-    judgeDealSuccess(value) {
-      if (value === "tesSUCCESS") {
-        return this.$t("message.trade.successtrade");
-      } else {
-        return undefined;
-      }
-    },
-    judgeIsMatch(value) {
-      if (value) {
-        return this.$t("message.trade.ismatch");
-      } else {
-        return undefined;
-      }
-    },
-    displayDefaultMemoData(value) {
-      if (value) {
-        debugger;
-        return value;
-      } else {
-        debugger;
-        return { MemoData: undefined };
-      }
-    },
-    displayDefaultValues(value) {
-      if (value) {
-        return value;
-      } else {
-        return { value: undefined };
-      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;

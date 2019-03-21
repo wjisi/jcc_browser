@@ -1,4 +1,4 @@
-export const bin2hex = function(b) {
+export const bin2hex = function (b) {
   var i = 0
   var l = 0
   var o = ''
@@ -11,7 +11,7 @@ export const bin2hex = function(b) {
   return o
 }
 
-export const getUUID = function() {
+export const getUUID = function () {
   var canvas = document.createElement('canvas')
   var ctx = canvas.getContext('2d')
   var txt = 'http://security.tencent.com/'
@@ -30,7 +30,7 @@ export const getUUID = function() {
 }
 
 export const browser = {
-  versions: (function() {
+  versions: (function () {
     let u = navigator.userAgent;
     return {
       trident: u.indexOf('Trident') > -1, // IE内核
@@ -128,4 +128,35 @@ export const toThousands = (n) => {
     result = result + '.' + fraction
   }
   return result
+}
+export const getStyle = (key) => {
+  let map = new Map([
+    ["disconnected", "background:#fbded1"],
+    ["connected", "background:#f2f3fd"],
+    ["syncing", "background:#f2f3fd"],
+    ["tracking", "background:#f2f3fd"],
+    ["full", "background:#d9ffe9"],
+    ["validating", "background:#f2f3fd"],
+    ["proposing", "background:#d9ffe9"],
+    ["error", "background:#fbded1"]
+  ])
+  return map.get(key);
+}
+export const getTransactionType = (key) => {
+  let map = new Map([
+    ["OfferCreate", "创建委托"],
+    ["OfferAffect", "被动成交"],
+    ["OfferCancel", "撤消委托"],
+    ["Send", "支付"],
+    ["Receive", "收到"],
+    ["其它", "未知"]
+  ])
+  return map.get(key);
+}
+export const getTransactionMode = (key) => {
+  let map = new Map([
+    [1, "买"],
+    [2, "卖"]
+  ])
+  return map.get(key);
 }

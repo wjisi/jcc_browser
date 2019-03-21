@@ -59,7 +59,7 @@ export default {
     toLogin() {
       this.$router.push({ name: "login" });
     },
-    confirmSearch() {
+    confirmSearch(value) {
       if (this.searchContent === "") {
         this.$message({
           type: "error",
@@ -67,10 +67,36 @@ export default {
           duration: 1600,
           showClose: true
         });
-        return;
+      } else if (/^\d{64}$/.test(this.searchContent)) {
+        this.$router.push({
+          name: "wallet",
+          params: { wallet: this.searchContent }
+        });
+      } else if (/^\d{32}$/.test(this.searchContent)) {
+        this.$router.push({
+          name: "wallet",
+          params: { wallet: this.searchContent }
+        });
+      } else {
+        this.$message({
+          type: "error",
+          message: this.$t("message.inputCorrectSearchContent"),
+          duration: 1600,
+          showClose: true
+        });
       }
-      alert("跳转搜索结果页");
     },
+    // confirmSearch() {
+    //   if (this.searchContent === "") {
+    //     this.$message({
+    //       type: "error",
+    //       message: this.$t("message.inputSearchContent"),
+    //       duration: 1600,
+    //       showClose: true
+    //     });
+    //   } else {
+    //   }
+    // },
     switchLanguage(lang) {
       this.$i18n.locale = lang;
       localStorage.setItem("languageType", lang);

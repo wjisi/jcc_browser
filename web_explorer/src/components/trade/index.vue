@@ -5,43 +5,50 @@
         <img src='../../images/latest_trade_title.png' />
         <span>{{$t('message.hashList.latestdeal')}}</span>
       </div>
-      <div class="selectionButton">
+      <!-- <div class="selectionButton">
         {{$t("message.screendate")}}
         <el-date-picker v-model="selectedDate" align="right"  type="date" :picker-options="pickerOptions"  value-format="yyyy-MM-dd" @change="setDatetiem"></el-date-picker>
-      </div>
+      </div> -->
     </div>
     <div class="bockList">
       <div class="bockListData">
-        <el-table :data="blockList" style="width:100%" :row-style="rowStyle"  row-class-name="hashrowClass" header-row-class-name="hashHeaderRowclass">
+        <el-table :data="tranList" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
+           <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else >暂无数据</div>
+          </div>
           <el-table-column  width="46px"></el-table-column>
-          <el-table-column type="index" :label="$t('message.hashList.sort')" width="80px"></el-table-column>
-          <el-table-column prop="hash"  :label="$t('message.hashList.blockHash')"  id="ellipsis" align="center" header-align="center" min-width="67%">
+          <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
             <template slot-scope="scope">
-              <span class="hashSpan">{{handleData(scope.row.hash)}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="33%">
+          <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="18%">
             <template slot-scope="scope">
-              <span class="transNumSpan">{{handleData(scope.row.transNum)}}</span>
+              <span class="transNumSpan">{{handleData(scope.row.transNum,1)}}</span>
             </template>
           </el-table-column>
           <el-table-column width="46px"></el-table-column>
         </el-table>
       </div>
-       <ul class="pagination">
-        <li><el-pagination background layout="prev, pager, next" small :page-size="20"  :page-count="212" ></el-pagination></li>
+        <ul class="pagination">
         <li>
-          {{$t('message.hashList.goto')}}
-          <div class="input"><input type="text" placeholder="100"></div>
-          {{$t('message.hashList.page')}}
+          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
         </li>
-        <li><div class="sortButton">{{$t('message.hashList.confirm')}}</div></li>
-       </ul>
+        <li>{{$t('message.blockList.goto')}}
+          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
+          {{$t('message.blockList.page')}}
+        </li>
+        <li>
+          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 <script>
-import { getBlocklist, getDayBlocklist } from "../../js/fetch";
+import { getTranslist } from "../../js/fetch";
 export default {
   name: "trade",
   data() {
@@ -52,40 +59,82 @@ export default {
         }
       },
       selectedDate: "",
-      blockList: [],
+      tranList: [],
       getRowClass: String,
       index: String,
       labelclass: String,
-      hashtime: String
+      hashtime: String,
+      total: 0,
+      loading: false,
+      currentPage: 1,
+      gopage: 100
     };
   },
   created() {
-    this.getAllList();
+    let data = {
+      page: 1,
+      size: 20
+    };
+    this.getAllList(data);
   },
   methods: {
-    async getAllList(nums = 20) {
-      let res = await getBlocklist(nums);
-      this.blockList = res.data.data;
-      console.log(this.blockList);
+    async getAllList(data) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      let res = await getTranslist(data);
+      console.log(res);
+
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        this.total = res.data.count;
+        this.tranList = res.data.list;
+      }
+      this.loading = false;
+    },
+    clearGopage() {
+      this.gopage = "";
+    },
+    jumpSizeChange() {
+      this.currentPage = this.gopage;
+      let data = {
+        size: 20,
+        page: this.gopage || 100
+      };
+      this.loading = false;
+      this.getAllList(data);
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      let data = {
+        page: val,
+        size: 20
+      };
+      this.loading = false;
+      this.getAllList(data);
+    },
+    jumpDetail(hash) {
+      this.$router.push({
+        name: "tradeDetail",
+        params: { hash: hash }
+      });
     },
     setDatetiem(val) {
       this.selectedDate = val;
     },
-    async getListByFilter() {
-      let data = {
-        date: this.selectedDate,
-        from: 1,
-        to: 2,
-        amount: 10
-      };
-      let res = await getDayBlocklist(data);
-      this.blockList = res.data.data;
-    },
     rowStyle({ row, rowIndex }) {
       return "height:40px";
     },
-    handleData(value) {
-      return value;
+    handleData(value, code = 0) {
+      if (value) {
+        return value;
+      } else {
+        if (code === 1) {
+          return "0.01SWTC";
+        } else {
+          return "null";
+        }
+      }
     }
   }
 };
@@ -96,6 +145,38 @@ export default {
   text-align: center;
   padding: 0 70px;
   min-width: 768px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  padding-top: 20px;
+  padding-bottom: 110px;
+  .sortButton {
+    border: 1px solid #959595;
+    border-radius: 6px;
+    height: 36px;
+    line-height: 36px;
+    width: 50px;
+    margin-left: 20px;
+    background: #f2f8fc;
+    padding: 0 3px;
+  }
+  li .inputDiv {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #959595;
+    display: inline-block;
+    margin: 0 10px;
+    border-radius: 6px;
+  }
+  li div input {
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+  }
 }
 .demonstration {
   font-weight: bold;
@@ -126,54 +207,23 @@ export default {
     }
   }
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  margin-top: 20px;
-  padding-bottom: 110px;
-  .sortButton {
-    border: 1px solid #959595;
-    border-radius: 6px;
-    height: 36px;
-    line-height: 36px;
-    width: 50px;
-    margin-left: 20px;
-    background: #f2f8fc;
-  }
-  li .input {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #959595;
-    display: inline-block;
-    border-radius: 6px;
-    margin: 0 10px;
-  }
-  li div input {
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    border: 0;
-  }
-}
 </style>
 
 <style  lang="scss" >
-#hash .hashHeaderRowclass {
+#trade .tradeHeaderRowclass {
   color: #3b3f4c;
   font-size: 14px;
   height: 40px;
 }
-#hash .hashrowClass:nth-child(odd) {
+#trade .traderowClass:nth-child(odd) {
   background: #f2f8fc;
   height: 40px;
 }
-#hash .hashrowClass td:nth-child(2) {
+#trade .traderowClass td:nth-child(2) {
   color: #3b3f4c;
   font-size: 14px;
 }
-#hash .el-table .cell {
+#trade .el-table .cell {
   .hashSpan {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -188,7 +238,7 @@ export default {
     color: #6f6868;
   }
 }
-#hash .pagination .is-background {
+#trade .pagination .is-background {
   .el-pager li:not(.disabled).active {
     background: #18c9dd;
     color: #ffffff;
@@ -215,10 +265,10 @@ export default {
     color: #959595;
   }
 }
-#hash .el-pager .el-icon-more {
+#trade .el-pager .el-icon-more {
   display: none;
 }
-#hash .el-table--enable-row-hover .el-table__body tr:hover > td {
+#trade .el-table--enable-row-hover .el-table__body tr:hover > td {
   background-color: rgba(255, 255, 255, 0);
 }
 </style>

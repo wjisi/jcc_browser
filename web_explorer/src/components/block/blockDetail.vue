@@ -4,11 +4,11 @@
       <span class="tille">
         {{$t('message.blockDetailList.currentblock')}}:<span style="color:#06aaf9;padding-left:10px;">#{{bash.block}}</span>
       </span>
-      <span class="tille" >{{$t('message.blockDetailList.hashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
+      <span class="tille" >{{$t('message.blockDetailList.blockhashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
       </span>
       <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
       <Ul>
-        <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{bash.block}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
+        <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{handleHashtime(bash.time)}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
           <span>{{$t('message.blockDetailList.Transactionvolume')}}</span><span>{{bash.transNum}}</span></li><li><span>SWTC{{$t('message.blockDetailList.total')}}</span><span>{{bash.hashType}}</span></li>
       </Ul>
     </div>
@@ -16,6 +16,10 @@
       <div class="bockListData">
         <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
+           <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else ><img src='../../images/not _found_list.png' /></div>
+          </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
             <template slot-scope="scope">
@@ -24,20 +28,20 @@
           </el-table-column>
           <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
             <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.type)}}</span>
+              <span style="color:#6f6868;font-size:12px;">{{scope.row.type}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="hashType"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
             <template slot-scope="scope">
-              <span class="spanHashType">{{handleData(scope.row.hashType)}}</span>
+              <span class="spanHashType">{{scope.row.hashType}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
           </el-table-column>
-          <el-table-column prop="upperHash"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="25%">
             <template slot-scope="scope">
-              <span class="spanUpperHash">{{handleData(scope.row.upperHash)}}</span>
+              <span class="spanUpperHash">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
@@ -49,17 +53,16 @@
           <el-table-column  width="30px"></el-table-column>
         </el-table>
       </div>
-      <ul class="pagination">
+       <ul class="pagination">
         <li>
-          <el-pagination background layout="prev, pager, next" small :page-size="20" :page-count="212" ></el-pagination>
+          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
         </li>
-        <li>
-          {{$t('message.hashList.goto')}}
-          <div class="input"><input type="text" placeholder="100"></div>
-          {{$t('message.hashList.page')}}
+        <li style="min-width: 1.08rem">{{$t('message.blockList.goto')}}
+          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
+          {{$t('message.blockList.page')}}
         </li>
-        <li>
-          <div class="sortButton">{{$t('message.hashList.confirm')}}</div>
+        <li>flag
+          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
       </ul>
     </div>
@@ -67,6 +70,7 @@
 </template>
 <script>
 import { getBlockDetail } from "../../js/fetch";
+import { getTransactionType, getTransactionMode } from "@/js/utils";
 export default {
   name: "blockdetail",
   data() {
@@ -79,7 +83,11 @@ export default {
       blockList: [],
       hashtime: {},
       bash: {},
-      hash: "718B0EA840DAFD58B28065BD687D9C339262B34D9422439B51E06CE6288CBDF8"
+      hash: "",
+      loading: false,
+      total: 0,
+      currentPage: 1,
+      gopage: 100
     };
   },
   created() {
@@ -87,35 +95,92 @@ export default {
   },
   methods: {
     async getData() {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       this.hash = this.$route.params.hash;
-      let data = {
-        hash: this.hash,
-        from: 1,
-        to: 2,
-        amount: 20
-      };
-      let res = await getBlockDetail(data);
-      this.blockList = res.data.data.TX;
+      let res = await getBlockDetail(this.hash);
       console.log(res);
-      this.bash = res.data.data.base;
+
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        console.log(res, "111111");
+        this.total = res.data.count;
+        this.blockList = this.getHistoryData(res);
+        this.bash = res.data.info;
+      }
+      this.loading = false;
+    },
+    clearGopage() {
+      this.gopage = "";
     },
     handleData(value) {
       return value;
     },
+    getHistoryData(res) {
+      let i = 0;
+      let list = [];
+      if (res && res.data && res.data.list.length > 0) {
+        for (; i < res.data.list.length; i++) {
+          list.push({
+            seq: res.data.list[i].seq || "----",
+            type: getTransactionType(res.data.list[i].type) || "未知交易",
+            flag: getTransactionMode(res.data.list[i].flag) || "----",
+            time: this.handleHashtime(res.data.list[i].time) || "----",
+            fee: res.data.list[i].fee || "----",
+            account: res.data.list[i].account || "----",
+            _id: res.data.list[i]._id || "----"
+          });
+        }
+        this.total = res.data.count;
+        this.allpage = Math.ceil(this.total / 20);
+        this.gopage = this.allpage;
+      } else {
+        this.total = 0;
+        this.allpage = 0;
+        this.gopage = 0;
+      }
+      return list;
+    },
+    jumpSizeChange() {
+      this.currentPage = this.gopage;
+      this.loading = false;
+      this.getData();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.loading = false;
+      this.getData();
+    },
+    handleGetData(res) {
+      let i = 0;
+      let list = [];
+      for (; i < res.length; i++) {
+        list.push({
+          _id: res[i]._id,
+          transNum: res[i].transNum,
+          hash: res[i].hash,
+          time: this.handleHashtime(res[i].time)
+        });
+      }
+      return list;
+    },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = {};
-      fillZero(dateIn.getDate());
-      hashTime.time =
-        fillZero(dateIn.getHours()) + ":" + fillZero(dateIn.getMinutes());
-      hashTime.date =
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
-      return hashTime.date;
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
+      return hashTime;
     },
     fillZero(value) {
       if (value < 10) {
@@ -133,6 +198,38 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  padding-top: 20px;
+  padding-bottom: 110px;
+  .sortButton {
+    border: 1px solid #959595;
+    border-radius: 6px;
+    height: 36px;
+    line-height: 36px;
+    width: 50px;
+    margin-left: 20px;
+    background: #f2f8fc;
+    padding: 0 3px;
+  }
+  li .inputDiv {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #959595;
+    display: inline-block;
+    margin: 0 10px;
+    border-radius: 6px;
+  }
+  li div input {
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+  }
 }
 .blockDetailTitle {
   text-align: left;
