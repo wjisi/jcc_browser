@@ -19,7 +19,7 @@
           </div>
           <el-table-column  width="46px"></el-table-column>
           <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
-          <el-table-column prop="_id"  :label="$t('message.hashList.blockHash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
             <template slot-scope="scope">
               <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>

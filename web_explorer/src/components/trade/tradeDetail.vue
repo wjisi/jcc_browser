@@ -1,58 +1,40 @@
 <template>
-  <div id="blockdetail" class="blo">
-    <div class="blockDetailTitle">
-      <span class="tille">
-        {{$t('message.blockDetailList.currentblock')}}:<span style="color:#06aaf9;padding-left:10px;">#{{bash.block}}</span>
-      </span>
-      <span class="tille" >{{$t('message.blockDetailList.hashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
-      </span>
-      <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
-      <Ul>
-        <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{bash.block}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
-          <span>{{$t('message.blockDetailList.Transactionvolume')}}</span><span>{{bash.transNum}}</span></li><li><span>SWTC{{$t('message.blockDetailList.total')}}</span><span>{{bash.hashType}}</span></li>
-      </Ul>
-    </div>
-    <div class="bockList">
-      <div class="bockListData">
-        <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
-        <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
-           <div slot="empty" style="font-size:18px;">
-            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /></div>
-          </div>
-          <el-table-column  width="30px"></el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
-            <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.seq)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
-            <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.type)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="hashType"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
-            <template slot-scope="scope">
-              <span class="spanHashType">{{handleData(scope.row.hashType)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
-            <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
-          </el-table-column>
-          <el-table-column prop="dest"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
-            <template slot-scope="scope">
-              <span class="spanUpperHash">{{handleData(scope.row.dest)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
-            <template slot-scope="scope">
-              <span  class="spanAccount">{{handleData(scope.row.account)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="6%"></el-table-column>
-          <el-table-column  width="30px"></el-table-column>
-        </el-table>
+  <div id="transnumDetail" class="blo">
+    <div class="transnumDetailTitle">
+      <div class="walletHeader">
+        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
+        <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
+      <Ul>
+        <li>
+           <div><span>{{$t('message.trade.type')}}</span>  <span>1</span></div>
+           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>2</span></div>
+        </li>
+          <li>
+           <div><span>{{$t('message.trade.initiator')}}</span>  <span>1</span></div>
+           <div><span>{{$t('message.trade.costs')}}</span>  <span>2</span></div>
+        </li>
+         <li>
+           <div><span>{{$t('message.trade.amount')}}</span>  <span>1</span></div>
+           <div><span>{{$t('message.trade.note')}}</span>  <span>2</span></div>
+        </li>
+        <li>
+           <div><span>{{$t('message.trade.to')}}</span>  <span>1</span></div>
+           <div><span>{{$t('message.trade.results')}}</span>  <span>2</span></div>
+        </li>
+         <li>
+           <div><span>{{$t('message.trade.dealamount')}}</span>  <span>1</span></div>
+           <div><span></span>  <span>2</span></div>
+        </li>
+      </Ul>
+      </div>
+    <div class="transnum">
+      <div class="title">{{$t('message.trade.effect')}}</div>
+        <ul class="transnumList">
+          <li v-for="(item,index) of  transnumDetail" :key="index"  >
+           <span>{{item.message}}</span><span>{{item.message}}</span>
+          </li>
+        </ul>
        <ul class="pagination">
         <li>
           <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
@@ -69,9 +51,15 @@
   </div>
 </template>
 <script>
-import { getBlockDetail } from "../../js/fetch";
+import {
+  // queryDelegateWallet,
+  // queryWalletIncome,
+  getBlockDetail
+} from "../../js/fetch";
+import { getTransactionType } from "@/js/utils";
+// , getTransactionMode
 export default {
-  name: "blockdetail",
+  name: "transnumDetail",
   data() {
     return {
       pickerOptions: {
@@ -79,64 +67,147 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      blockList: [],
       hashtime: {},
       bash: {},
-      hash: "",
+      transactionNumber: "",
       loading: false,
       total: 0,
+      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
       currentPage: 1,
-      gopage: 100
+      gopage: 100,
+      transnumDetail: [
+        { message: "foo" },
+        { message: "boo" },
+        { message: "coo" },
+        { message: "doo" }
+      ]
     };
   },
   created() {
+    this.transactionNumber = this.$route.params.hash;
+    // this.getTransnumDetail();
     this.getData();
   },
   methods: {
     async getData() {
-      if (this.loading) {
-        return;
-      }
+      // if (this.loading) {
+      //   return;
+      // }
       this.loading = true;
       this.hash = this.$route.params.hash;
       let res = await getBlockDetail(this.hash);
-      console.log(res, "111111");
+      console.log(res);
+
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        this.total = res.data.count;
-        this.blockList = res.data.list;
-        this.bash = res.data.info;
+        console.log(res, "99999999");
+        // this.total = res.data.count;
+        this.blockList = this.handelDealHashData(res);
+        console.log(this.blockList);
+        // this.bash = res.data.info;
       }
-      this.loading = false;
+      // this.loading = false;
     },
+    // async getTransnumDetail() {
+    //   if (this.loading) {
+    //     return;
+    //   }
+    //   this.loading = true;
+    //   let data = {
+    //     page: this.page || 0,
+    //     size: 20,
+    //     buyOrSell: "",
+    //     pair: "",
+    //     wallet: this.wallet
+    //   };
+    //   let res = await queryDelegateWallet(data);
+    //   let res2 = await queryWalletIncome(this.wallet);
+    //   console.log(res, "211111");
+    //   console.log(res2, "111112");
+    //   if (res.result === true && (res.code === 0 || res.code === "0")) {
+    //     console.log(res, "111111");
+    //     this.transnumDetail = res.data.list;
+    //   }
+    //   this.loading = false;
+    // },
     clearGopage() {
       this.gopage = "";
     },
     handleData(value) {
       return value;
     },
+    handelDealHashData(res) {
+      let list = {};
+      if (res && res.data) {
+        debugger;
+        res = res.data;
+        list = {
+          type: getTransactionType(res.type) || "---",
+          account: res.account || "---",
+          fee: res.fee || "---",
+          dest: res.dest || "---",
+          realPays: res.realPays || "---",
+          memos: this.displayDefaultMemoData(res.memos[0]).MemoData || "---",
+          succ: this.judgeDealSuccess(res.type) || "---",
+          matchFlag: this.judgeIsMatch(this.matchFlag) || "---"
+        };
+      }
+      debugger;
+      return list;
+    },
     jumpSizeChange() {
       this.currentPage = this.gopage;
       this.loading = false;
-      this.getData();
+      this.getTransnumDetail();
+    },
+    judgeDealSuccess(value) {
+      if (value === "tesSUCCESS") {
+        return this.$t("message.trade.successtrade");
+      } else {
+        return undefined;
+      }
+    },
+    judgeIsMatch(value) {
+      if (value) {
+        return this.$t("message.trade.ismatch");
+      } else {
+        return undefined;
+      }
+    },
+    displayDefaultMemoData(value) {
+      if (value) {
+        debugger;
+        return value;
+      } else {
+        debugger;
+        return { MemoData: undefined };
+      }
+    },
+    displayDefaultValues(value) {
+      if (value) {
+        return value;
+      } else {
+        return { value: undefined };
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
+
       this.loading = false;
-      this.getData();
+      this.getTransnumDetail();
     },
-    handleGetData(res) {
-      let i = 0;
-      let list = [];
-      for (; i < res.length; i++) {
-        list.push({
-          _id: res[i]._id,
-          transNum: res[i].transNum,
-          hash: res[i].hash,
-          time: this.handleHashtime(res[i].time)
-        });
-      }
-      return list;
-    },
+    // handlegettransnumDetail(res) {
+    //   let i = 0;
+    //   let list = [];
+    //   for (; i < res.length; i++) {
+    //     list.push({
+    //       _id: res[i]._id,
+    //       transNum: res[i].transNum,
+    //       hash: res[i].hash,
+    //       time: this.handleHashtime(res[i].time)
+    //     });
+    //   }
+    //   return list;
+    // },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -162,12 +233,72 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-#blockdetail {
+#transnumDetail {
   text-align: center;
   min-width: 768px;
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+}
+.transnumDetailTitle {
+  text-align: left;
+  .tille {
+    display: flex;
+    align-items: center;
+    color: #18c9dd;
+    font-size: 14px;
+  }
+  .tilleIcon {
+    font-size: 14px;
+    float: right;
+    padding: 4px 0 0 10px;
+    color: #18c9dd;
+  }
+  .walletHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #3e3f45;
+    padding: 10px 0;
+  }
+
+  ul {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    border: 2px solid #c1e9f1;
+    border-radius: 8px;
+    background: #ffffff;
+    margin-bottom: 20px;
+    li {
+      display: flex;
+      justify-content: space-between;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 20px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: #5f5d5d;
+      font-size: 14px;
+      border-bottom: 1px solid #e0e8ed;
+      div {
+        display: flex;
+        justify-content: space-between;
+        flex: 1;
+        span:nth-child(2) span {
+          margin: 10px;
+        }
+      }
+      div:nth-child(1) {
+        padding-right: 20px;
+      }
+      div:nth-child(2) {
+        border-left: 1px solid #e0e8ed;
+        padding-left: 20px;
+      }
+    }
+  }
 }
 .pagination {
   display: flex;
@@ -201,80 +332,6 @@ export default {
     border: 0;
   }
 }
-.blockDetailTitle {
-  text-align: left;
-  div {
-    display: inline-block;
-  }
-  .tille {
-    width: 50%;
-    padding: 16px 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 16px;
-    color: #3e3f45;
-    float: left;
-  }
-  .tille:nth-child(2) {
-    color: #18c9dd;
-    font-size: 14px;
-    white-space: nowrap;
-    width: calc(50% - 20px);
-  }
-  .tilleIcon {
-    font-size: 14px;
-    float: right;
-    padding: 16px 0;
-    color: #18c9dd;
-  }
-
-  ul {
-    width: 100%;
-    overflow: hidden;
-    border: 2px solid #c1e9f1;
-    height: 80px;
-    border-radius: 8px;
-    background: #ffffff;
-    margin-bottom: 20px;
-    li {
-      display: inline-block;
-      width: calc(50% - 41px);
-      height: 40px;
-      line-height: 40px;
-      padding: 0 20px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: #5f5d5d;
-      font-size: 14px;
-      position: relative;
-      vertical-align: top;
-      span:nth-child(2) {
-        white-space: nowrap;
-        position: absolute;
-        right: 20px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .lasthash {
-        width: calc(100% - 138px);
-        font-size: 12px;
-        text-align: right;
-      }
-    }
-    li:nth-child(1) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(2) {
-      border-bottom: 1px solid #e0e8ed;
-    }
-    li:nth-child(odd) {
-      border-right: 1px solid #e0e8ed;
-    }
-  }
-}
-
 .title {
   background: linear-gradient(right, #0ab1f2, #26e0cc);
   height: 40px;
@@ -284,23 +341,27 @@ export default {
   font-size: 16px;
   border-bottom: 1px #d0eef5;
 }
-.bockList {
+.transnum {
   background-color: #f2f8fc;
   border: 1px solid #d0eef5;
-}
-.spanUpperHash {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.spanAccount {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.spanAccount:hover {
-  color: #06aaf9;
-  font-size: 12px;
+  .transnumList {
+    min-height: 660px;
+    background: #ffffff;
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 14px;
+      color: #868080;
+      height: 40px;
+      align-content: center;
+      border-bottom: 1px solid #e0e8ed;
+      span {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
 }
 .pagination {
   display: flex;
@@ -308,7 +369,6 @@ export default {
   align-items: center;
   background: #ffffff;
   font-size: 14px;
-  padding: 20px 0;
   .sortButton {
     border: 1px solid #959595;
     border-radius: 6px;
@@ -336,21 +396,7 @@ export default {
 </style>
 
 <style  lang="scss" >
-.el-table {
-  th {
-    border-bottom: 1px solid #e0e8ed;
-  }
-}
-.BlockDetailHeaderRowclass {
-  color: #3b3f4c;
-  font-size: 14px;
-  height: 40px;
-}
-#blockdetail .BlockDetailrowClass {
-  font-size: 12px;
-  height: 40px;
-}
-#blockdetail .pagination .is-background {
+#transnumDetail .pagination .is-background {
   .el-pager li:not(.disabled).active {
     background: #18c9dd;
     color: #ffffff;
@@ -377,7 +423,7 @@ export default {
     color: #959595;
   }
 }
-#blockdetail .el-pager .el-icon-more {
+#transnumDetail .el-pager .el-icon-more {
   display: none;
 }
 </style>

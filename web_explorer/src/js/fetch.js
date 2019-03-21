@@ -71,7 +71,7 @@ export const getLatestDeal = async (num = 6) => {
   return resSuccess(res);
 }
 
-/** get  blocks  */
+/** get all blocks  */
 export const getBlocklist = async (data) => {
   let res = await service({
     // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
@@ -81,26 +81,23 @@ export const getBlocklist = async (data) => {
   return resSuccess(res);
 }
 
-/** get blockDetail list by hash
- *  @param {Object}data
- *  {hash,from,to,amount}
- */
+/** get all trans  */
+export const getTranslist = async (data) => {
+  let res = await service({
+    // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
+    url: getInfoHost() + '/trans/all/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size,
+    method: "get"
+  })
+  return resSuccess(res);
+}
+
+// 传不同哈希得到不同哈希对应数据
 export const getBlockDetail = async (hash) => {
   let res = await service({
     url: getInfoHost() + '/hash/detail/' + getUUID() + '?h=' + hash,
     method: "get"
     // url: getInfoHost() + `/blockHASH/?HASH=${(data.hash)}&pageStart=${data.from}&pageEnd=${data.to}&pageSize=${data.amount}`,
     // method: "get"
-  })
-  return resSuccess(res);
-}
-
-/** get last six trans detail */
-export const getTranslist = async (data) => {
-  let res = await service({
-    // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
-    url: getInfoHost() + '/trans/all/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size,
-    method: "get"
   })
   return resSuccess(res);
 }

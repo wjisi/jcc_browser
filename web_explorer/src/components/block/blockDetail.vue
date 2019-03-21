@@ -4,7 +4,7 @@
       <span class="tille">
         {{$t('message.blockDetailList.currentblock')}}:<span style="color:#06aaf9;padding-left:10px;">#{{bash.block}}</span>
       </span>
-      <span class="tille" >{{$t('message.blockDetailList.hashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
+      <span class="tille" >{{$t('message.blockDetailList.blockhashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
       </span>
       <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
       <Ul>
@@ -39,9 +39,9 @@
           <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
           </el-table-column>
-          <el-table-column prop="dest"  :label="$t('message.blockDetailList.transactionnumber')"  id="ellipsis" align="center"  min-width="25%">
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="25%">
             <template slot-scope="scope">
-              <span class="spanUpperHash">{{handleData(scope.row.dest)}}</span>
+              <span class="spanUpperHash">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
@@ -129,7 +129,7 @@ export default {
             time: this.handleHashtime(res.data.list[i].time) || "----",
             fee: res.data.list[i].fee || "----",
             account: res.data.list[i].account || "----",
-            dest: res.data.list[i].dest || "----"
+            _id: res.data.list[i]._id || "----"
           });
         }
         this.total = res.data.count;

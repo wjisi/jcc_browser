@@ -45,6 +45,10 @@
       <el-select v-model="selectCurrencyValue"  @change="changeTransactionCurrency" style="width:100px">
         <el-option v-for="item in  transactionCurrency" :key="item.selectCurrencyValue" :label="item.label" :value="item.selectCurrencyValue"></el-option>
       </el-select>
+       <span class="titleItem1">{{$t('message.blockDetailList.transactiontype')}}</span>
+      <el-select v-model="selectTypeValue"  @change="changeTransactionType" style="width:100px">
+        <el-option v-for="item in  transactionType" :key="item.selectTypeValue" :label="item.label" :value="item.selectTypeValue"></el-option>
+      </el-select>
       <span class="selctionData">{{$t('message.wallet.dateRange')}}
         <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')"></el-date-picker>至
         <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')"></el-date-picker>
@@ -68,12 +72,12 @@
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.account}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row.type)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="hash" :label="$t('message.blockDetailList.transactionnumber')" id="ellipsis" align="center" min-width="13%">
+          <el-table-column prop="hash" :label="$t('message.home.dealhash')" id="ellipsis" align="center" min-width="13%">
            <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row.type)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -138,10 +142,30 @@ export default {
         { selectCurrencyValue: "SWTC-CNY", label: "SWTC" },
         { selectCurrencyValue: "MOAC", label: "MOAC" }
       ],
+      transactionType: [
+        { selectTypeValue: "", label: this.$t("message.wallet.alltype") },
+        {
+          selectTypeValue: "OfferCreate",
+          label: this.$t("message.wallet.offerCreate")
+        },
+        {
+          selectTypeValue: "OfferAffect",
+          label: this.$t("message.wallet.offerAffect")
+        },
+        {
+          selectTypeValue: "fferAffect",
+          label: this.$t("message.wallet.offerAffect")
+        },
+        {
+          selectTypeValue: 4,
+          label: this.$t("message.wallet.transferaccounts")
+        }
+      ],
       historicalList: [],
       walletlist: [],
       selectModeValue: this.$t("message.wallet.allMode"),
       selectCurrencyValue: this.$t("message.wallet.allCurrency"),
+      selectTypeValue: this.$t("message.wallet.alltype"),
       startTime: "",
       endTime: "",
       timer: "",
@@ -157,7 +181,7 @@ export default {
     };
   },
   created() {
-    this.wallet = this.$route.params.wallet;
+    // this.wallet = this.$route.params.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
     let data = {
       page: this.currentPage || 1,
@@ -317,6 +341,19 @@ export default {
 
     changeTransactionCurrency() {
       console.log(this.selectCurrencyValue);
+      let data = {
+        page: this.currentPage || "0",
+        size: 20,
+        begin: this.startTime || "",
+        end: this.endTime || "",
+        type: "",
+        buyOrSell: this.selectModeValue || "",
+        pair: this.selectCurrencyValue || "",
+        wallet: this.wallet || ""
+      };
+      this.getHistoricalList(data);
+    },
+    changeTransactionType() {
       let data = {
         page: this.currentPage || "0",
         size: 20,

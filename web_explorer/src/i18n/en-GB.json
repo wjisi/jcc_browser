@@ -10,6 +10,7 @@
   "kLine": "K-Line",
   "time": "Time",
   "inputSearchContent": "Please enter the Search content",
+  "inputCorrectSearchContent": "Please enter the Search correct content",
   "transaction": "TRANSACTION",
   "viewall": "View more",
   "hash": "Hash",
@@ -33,8 +34,8 @@
     "cooperation": "Business cooperation",
     "partners": "Partners",
     "Contactus": "Contact us",
-    "dealhash": "Deal Hash",
-    "time": "Deal Time",
+    "dealhash": "deal hash",
+    "time": "deal time",
     "nodata": "No Data"
   },
   "trade": {
@@ -49,7 +50,9 @@
     "costs": "Transaction Costs",
     "note": "Tradnsaction Note",
     "results": "Transaction Results",
-    "effect": "Transaction Effect"
+    "effect": "Transaction Effect",
+    "successtrade": "success trade",
+    "ismatch": "is match"
   },
   "blockList": {
     "blockheight": "block Height",
@@ -63,23 +66,24 @@
   },
   "hashList": {
     "latestdeal": "latest Deal",
-    "blockHash": "Block HASH",
+    "blockHash": "block hash",
+    "transtionHash": "transtion hash",
     "sort": "Sort",
     "goto": "goto",
     "page": "page",
     "confirm": "confirm"
   },
   "blockDetailList": {
+    "hash": "hash",
     "latestdeal": "Latest Deal",
     "serialnumber": "serial Number",
     "transactiontype": "transaction Type",
     "transactionmode": "transaction Mode",
     "transactiontime": "transaction Time",
-    "transactionnumber": "transaction Number",
     "sender": "Sender",
     "servicecharge": "ServiceCharge",
     "currentblock": "current Block",
-    "hashnumber": "hash Number",
+    "blockhashnumber": "block hash",
     "closetime": "close Time",
     "lasthash": "last Hash",
     "Transactionvolume": "Transaction Volume",
@@ -95,6 +99,7 @@
     "TransactionToHome": "tran Home",
     "transactionCurrency": "transactionCurrency",
     "allCurrency": "all currency",
+    "alltype": "all type",
     "allMode": "all mode",
     "dateRange": "date range",
     "startTime": "start time",
@@ -102,6 +107,11 @@
     "Purchase": "Purchase",
     "Sale": "Sale",
     "Income": "Income",
-    "Expenditure": "expenditure"
+    "Expenditure": "expenditure",
+    "offerCreate": "offerCreate",
+    "offerAffect": "offerAffect",
+    "offerCancel": "offerCancel",
+    "transferaccounts": "trans account",
+    "unknown": "unknown"
   }
 }
