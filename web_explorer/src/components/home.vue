@@ -74,8 +74,8 @@
                           <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
                         </span>
                       </div>
-                        <p class="hash" >{{item.hash}}</p>
-                        <p class="time" >{{item.dateTime}}</p>
+                        <p class="hash"  style="font-size:12px;" @click="jumpDetail('blockDetail',item.hash)" >{{item.hash}}</p>
+                        <p class="time" >{{handleHashtime(item.time)}}</p>
                     </div>
                   </div>
                 </li>
@@ -95,14 +95,21 @@
         </div>
          <div class="endMidder">
             <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
-            <el-table-column type="index" :label="$t('message.hashList.sort')" width="195"  align="center" header-align="center">
+            <el-table-column  width="36px"  align="center" header-align="center">
             </el-table-column>
-            <el-table-column id="hash" prop="_id" :label="$t('message.home.dealhash')" min-width="70%"  align="center" header-align="center">
+            <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="15%"  align="center" header-align="center">
             </el-table-column>
-            <el-table-column prop="time" :label="$t('message.home.time')" min-width="15%"  align="center" header-align="center">
+            <el-table-column id="hash" prop="_id" :label="$t('message.home.dealhash')" min-width="65%"  align="center" header-align="center">
+               <template slot-scope="scope">
+                  <span class="hash" @click="jumpDetail('tradeDetail',scope.row._id)">{{scope.row._id}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="time" :label="$t('message.home.time')" min-width="20%"  align="center" header-align="center">
                <template slot-scope="scope">
                   <span class="hashSpan" >{{handleHashtime(scope.row.time)}}</span>
                 </template>
+            </el-table-column>
+            <el-table-column  width="36px"  align="center" header-align="center">
             </el-table-column>
             </el-table>
          </div>
@@ -152,25 +159,40 @@ export default {
     }
   },
   methods: {
-    getlastBlocklists() {
-      getlastBlocklist()
-        .then(data => {
-          console.log(data, 1);
-          this.listnum = data.data.list;
-        })
-        .catch(error => {
-          this.$message.error(error.msg);
-        });
+    // getlastBlocklists() {
+    //   getlastBlocklist()
+    //     .then(data => {
+    //       console.log(data, 1);
+    //       this.listnum = data.data.list;
+    //     })
+    //     .catch(error => {
+    //       this.$message.error(error.msg);
+    //     });
+    // },
+    // getLatestDeals() {
+    //   getLatestDeal()
+    //     .then(data => {
+    //       console.log(data, 2);
+    //       this.latestdeal = data.data.list;
+    //     })
+    //     .catch(error => {
+    //       this.$message.error(error.msg);
+    //     });
+    // },
+    async getlastBlocklists() {
+      let res = await getlastBlocklist();
+      console.log(res, "shou ye 1");
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        this.listnum = res.data.list;
+        console.log(this.listnum);
+      }
     },
-    getLatestDeals() {
-      getLatestDeal()
-        .then(data => {
-          console.log(data, 2);
-          this.latestdeal = data.data.list;
-        })
-        .catch(error => {
-          this.$message.error(error.msg);
-        });
+    async getLatestDeals() {
+      let res = await getLatestDeal();
+      console.log(res, "shou ye 2");
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        this.latestdeal = res.data.list;
+      }
     },
     searchAll(to) {
       this.$store.dispatch("updateCurrentNav", to);
@@ -201,15 +223,15 @@ export default {
       let hashTime = "";
       // fillZero(dateIn.getDate());
       hashTime =
-        fillZero(dateIn.getHours()) +
-        ":" +
-        fillZero(dateIn.getMinutes()) +
-        " " +
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
       return hashTime;
     },
     fillZero(value) {
@@ -217,6 +239,12 @@ export default {
         value = "0" + value;
       }
       return value;
+    },
+    jumpDetail(name, hash) {
+      this.$router.push({
+        name: name,
+        params: { hash: hash }
+      });
     },
     confirmSearch() {
       if (this.searchContent === "") {
@@ -516,7 +544,6 @@ export default {
   height: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px;
   margin-top: 10%;
   color: #6f6868;
 }

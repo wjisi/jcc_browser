@@ -5,7 +5,10 @@ import App from './App'
 import router from './router'
 
 Vue.config.productionTip = false
-
+router.afterEach((to, from, next) => {
+  debugger;
+  window.scrollTo(0, 0);
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -63,21 +63,35 @@
             <div v-else ><img src='../../images/not _found_list.png' /><div>暂无数据</div></div>
           </div>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
+             <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
+            </template>
           </el-table-column>
           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+               <template slot-scope="scope">
+                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
+              </template>
           </el-table-column>
           <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="center" min-width="15%">
           </el-table-column>
-          <el-table-column prop="fee"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+                <template slot-scope="scope">
+                  <span>
+                  <span>{{scope.row.transactionAmount.matchPaysValue}}</span>
+                  <span>{{scope.row.transactionAmount.matchPaysCurrency}}</span>
+                  <span>{{scope.row.transactionAmount.matchGetsValue}}</span>
+                  <span>{{scope.row.transactionAmount.matchPaysCurrency}}</span>
+                </span>
+               </template>
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.type)">{{scope.row.account}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="hash" :label="$t('message.home.dealhash')" id="ellipsis" align="center" min-width="13%">
            <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.type)">{{scope.row.hash}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -103,7 +117,13 @@ import {
   // queryDelegateWallet,
   queryHistoricalWallet
 } from "@/js/fetch";
-import { getStyle, getTransactionType, getTransactionMode } from "@/js/utils";
+import {
+  getStyle,
+  getTransactionType,
+  getTransactionMode,
+  getMatchFlag,
+  getType
+} from "@/js/utils";
 export default {
   name: "wallet",
   // beforeRouteEnter(to, from, next) {
@@ -250,8 +270,8 @@ export default {
       //   pair: this.selectCurrencyValue,
       //   wallet: this.wallet
       // };
-      console.log(data, 233);
       let res = await queryHistoricalWallet(data);
+      console.log(res, "wallet");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.historicalList = this.getHistoryData(res);
       }
@@ -259,6 +279,7 @@ export default {
     },
     async getBalanceList(wallet) {
       let res = await querySpecifiedWallet(wallet);
+      console.log(res, "walletTail");
       // let data = {
       //   page: 0,
       //   size: 20,
@@ -379,13 +400,6 @@ export default {
       };
       this.getHistoricalList(data);
     },
-    displayDefaultValues(value) {
-      if (value) {
-        return value;
-      } else {
-        return { value: undefined };
-      }
-    },
     getHistoryData(res) {
       let i = 0;
       let list = [];
@@ -395,9 +409,24 @@ export default {
             type: getTransactionType(res.data.list[i].type) || "----",
             flag: getTransactionMode(res.data.list[i].flag) || "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
-            fee: res.data.list[i].fee || "----",
+            transactionAmount: {
+              matchPaysCurrency: this.displayDefaultCurrency(
+                res.data.list[i].matchPays
+              ).currency,
+              matchPaysValue: this.displayDefaultValues(
+                res.data.list[i].matchPays
+              ).value,
+              matchGetsCurrency: this.displayDefaultCurrency(
+                res.data.list[i].matchGets
+              ).currency,
+              matchGetsValue: this.displayDefaultValues(
+                res.data.list[i].matchGets
+              ).value
+            },
             account: res.data.list[i].account || "----",
-            hash: res.data.list[i].hash || "----"
+            hash: res.data.list[i].hash || "----",
+            matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
+            displayDifferentCircles: getType(res.data.list[i].flag) || ""
           });
         }
         this.total = res.data.count;
@@ -410,9 +439,23 @@ export default {
       }
       return list;
     },
+    displayDefaultValues(value) {
+      if (value) {
+        return value;
+      } else {
+        return { value: undefined };
+      }
+    },
+    displayDefaultCurrency(value) {
+      if (value) {
+        return value;
+      } else {
+        return { currency: undefined };
+      }
+    },
     jumpDetail(hash) {
       this.$router.push({
-        name: "transnumDetail",
+        name: "tradeDetail",
         params: { hash: hash }
       });
     },
@@ -428,15 +471,15 @@ export default {
       let hashTime = "";
       // fillZero(dateIn.getDate());
       hashTime =
-        fillZero(dateIn.getHours()) +
-        ":" +
-        fillZero(dateIn.getMinutes()) +
-        " " +
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
       return hashTime;
     }
   }
@@ -461,6 +504,7 @@ export default {
     cursor: pointer;
   }
 }
+
 .blockDetailTitle {
   text-align: left;
   div {
@@ -715,7 +759,7 @@ export default {
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;

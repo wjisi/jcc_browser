@@ -149,15 +149,33 @@ export const getTransactionType = (key) => {
     ["OfferCancel", "撤消委托"],
     ["Payment", "主动成交"],
     ["Send", "支付"],
-    ["Receive", "收到"],
+    ["Receive", "收入"],
     ["其它", "未知"]
   ])
   return map.get(key);
 }
 export const getTransactionMode = (key) => {
   let map = new Map([
-    [1, "买"],
-    [2, "卖"]
+    [1, "买入"],
+    [2, "卖出"]
+  ])
+  return map.get(key);
+}
+export const getMatchFlag = (key) => {
+  let map = new Map([
+    [3, "icon-sanfang"],
+    [4, "icon-sifang"],
+    [5, "icon-Group1"],
+    [5, "icon-Group"]
+  ])
+  return map.get(key);
+}
+export const getType = (key) => {
+  let map = new Map([
+    [1, "icon-mairu"],
+    [2, "icon-maichu"],
+    ["收入", "icon-zhichu"],
+    ["收入", "icon-shouru"]
   ])
   return map.get(key);
 }

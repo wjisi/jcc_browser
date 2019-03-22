@@ -18,16 +18,13 @@
             <div v-else >暂无数据</div>
           </div>
           <el-table-column  width="46px"></el-table-column>
-          <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
+          <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
           <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
             <template slot-scope="scope">
               <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="18%">
-            <template slot-scope="scope">
-              <span class="transNumSpan">{{handleData(scope.row.transNum,1)}}</span>
-            </template>
+          <el-table-column prop="time"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="18%">
           </el-table-column>
           <el-table-column width="46px"></el-table-column>
         </el-table>
@@ -58,12 +55,12 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      selectedDate: "",
+      // selectedDate: "",
       tranList: [],
-      getRowClass: String,
+      // getRowClass: String,
       index: String,
-      labelclass: String,
-      hashtime: String,
+      // labelclass: String,
+      // hashtime: String,
       total: 0,
       loading: false,
       currentPage: 1,
@@ -88,9 +85,47 @@ export default {
 
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
-        this.tranList = res.data.list;
+        this.tranList = this.handleGetData(res.data.list);
       }
       this.loading = false;
+    },
+    handleGetData(res) {
+      let i = 0;
+      let list = [];
+      for (; i < res.length; i++) {
+        list.push({
+          sort: (this.currentPage - 1) * 20 + i + 1,
+          _id: res[i]._id,
+          // transNum: this.handleData(res[i].transNum, 1),
+          // hash: res[i].hash,
+          time: this.handleHashtime(res[i].time)
+        });
+      }
+      console.log(list);
+      return list;
+    },
+    handleHashtime(time) {
+      let { fillZero } = this;
+      let dateIn = new Date((time + 946684800) * 1000);
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
+        fillZero(dateIn.getFullYear()) +
+        "-" +
+        fillZero(dateIn.getMonth() + 1) +
+        "-" +
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
+      return hashTime;
+    },
+    fillZero(value) {
+      if (value < 10) {
+        value = "0" + value;
+      }
+      return value;
     },
     clearGopage() {
       this.gopage = "";
@@ -119,9 +154,9 @@ export default {
         params: { hash: hash }
       });
     },
-    setDatetiem(val) {
-      this.selectedDate = val;
-    },
+    // setDatetiem(val) {
+    //   this.selectedDate = val;
+    // },
     rowStyle({ row, rowIndex }) {
       return "height:40px";
     },
@@ -245,7 +280,7 @@ export default {
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;

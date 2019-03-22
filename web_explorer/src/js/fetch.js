@@ -102,6 +102,16 @@ export const getBlockDetail = async (hash) => {
   return resSuccess(res);
 }
 
+// 根据区块HASH查询其包含的交易列表
+export const getTransListByHash = async (data) => {
+  let res = await service({
+    // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
+    url: getInfoHost() + '/hash/trans/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size + '&n=' + data.total + '&h=' + data.hash,
+    method: "get"
+  })
+  return resSuccess(res);
+}
+
 // Balance query for specified Wallet
 export const querySpecifiedWallet = async (wallet) => {
   let res = await service({

@@ -8,7 +8,7 @@
       <Ul>
         <li>
            <div><span>{{$t('message.trade.type')}}</span>  <span>{{transnumkList.type}}</span></div>
-           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>{{transnumkList.sep}}</span></div>
+           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>{{transnumkList.block}}</span></div>
         </li>
           <li>
            <div><span>{{$t('message.trade.initiator')}}</span>  <span>{{transnumkList.account}}</span></div>
@@ -21,11 +21,11 @@
                  <span>{{transnumkList.realPaysValue}}</span>
                  <span>{{transnumkList.realPaysCurrency}}</span>
                  <span>{{transnumkList.realGetsValue}}</span>
-                 <span>{{transnumkList.realPaysCurrency}}</span>
+                 <span>{{transnumkList.realGetsCurrency}}</span>
                </span>
                <span v-show="!transnumkList.realPaysValue">{{defaultValue}}</span>
           </div>
-           <div><span>{{$t('message.trade.note')}}</span>  <span>{{transnumkList.memos}}</span></div>
+           <div><span>{{$t('message.trade.note')}}</span>  <span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
         </li>
         <li>
            <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div>
@@ -38,7 +38,7 @@
                <span>{{transnumkList.matchPaysValue}}</span>
                <span>{{transnumkList.matchPaysCurrency}}</span>
                <span>{{transnumkList.matchGetsValue}}</span>
-               <span>{{transnumkList.matchPaysCurrency}}</span>
+               <span>{{transnumkList.matchGetsCurrency}}</span>
             </span>
             <span v-show="!transnumkList.matchPaysValue">{{defaultValue}}</span>
           </div>
@@ -48,12 +48,12 @@
       </div>
     <div class="transnum">
       <div class="title">{{$t('message.trade.effect')}}</div>
-        <ul class="transnumList">
-          <li v-for="(item,index) of  transnumDetail" :key="index"  >
+        <ul class="transnumList" >
+          <li v-for="(item,index) of  affectedNodes" :key="index"  >
            <span>{{item.message}}</span><span>{{item.message}}</span>
           </li>
         </ul>
-       <ul class="pagination">
+       <!-- <ul class="pagination">
         <li>
           <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
         </li>
@@ -64,7 +64,7 @@
         <li>
           <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </template>
@@ -89,18 +89,13 @@ export default {
       bash: {},
       transactionNumber: "",
       loading: false,
-      total: 0,
-      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
-      currentPage: 1,
-      gopage: 100,
-      transnumkList: {},
+      // total: 0,
+      // currentPage: 1,
+      // gopage: 100,
+      transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
       defaultValue: "",
-      transnumDetail: [
-        { message: "foo" },
-        { message: "boo" },
-        { message: "coo" },
-        { message: "doo" }
-      ]
+      affectedNodes: [],
+      index: 0
     };
   },
   created() {
@@ -114,8 +109,9 @@ export default {
       //   return;
       // }
       this.loading = true;
-      this.hash = this.$route.params.hash;
-      // "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
+      this.hash =
+        this.$route.params.hash ||
+        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
       let res = await getBlockDetail(this.hash);
       console.log(res);
 
@@ -123,14 +119,13 @@ export default {
         console.log(res, "99999999");
         // this.total = res.data.count;
         this.transnumkList = this.handelDealHashData(res);
-        console.log(this.transnumkList);
         // this.bash = res.data.info;
       }
       // this.loading = false;
     },
-    clearGopage() {
-      this.gopage = "";
-    },
+    // clearGopage() {
+    //   this.gopage = "";
+    // },
     handleData(value) {
       return value;
     },
@@ -140,15 +135,14 @@ export default {
         res = res.data;
         list = {
           type: getTransactionType(res.type) || "---",
-          sep: res.seq || "---",
+          block: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
           realPaysCurrency: this.displayDefaultCurrency(res.realPays).currency,
           realPaysValue: this.displayDefaultValues(res.realPays).value,
           realGetsCurrency: this.displayDefaultCurrency(res.realGets).currency,
           realGetsValue: this.displayDefaultValues(res.realGets).value,
-          memos: "---",
-          dest: res.dest || "---",
+          memos: res.memos || [{ Memo: { MemoData: "---" } }],
           succ: this.judgeDealSuccess(res.succ) || "---",
           matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
             .currency,
@@ -156,23 +150,43 @@ export default {
           matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
             .currency,
           matchGetsValue: this.displayDefaultValues(res.matchGets).value,
-          matchFlag: this.judgeIsMatch(this.matchFlag) || "---"
+          matchFlag: this.judgeIsMatch(res.matchFlag) || "---",
+          affectedNodes: res.affectedNodes || {}
+          // [{ Memo: { MemoData: "---" } }]
+          // { final:
+          //        {takerGets: {currency: "",  value: ""},
+          //         takerPays: {currency: "", value: ""}
+          //        }
+          //  },
+          // takerPaysCurrency: this.displayDefaultCurrency(res.takerPays)
+          //   .currency,
+          // takerPaysValue: this.displayDefaultValues(res.takerPays).value,
+          // takerGetsCurrency: this.displayDefaultCurrency(res.takerGets)
+          //   .currency
         };
       }
       this.defaultValue = "---";
       return list;
     },
-    jumpSizeChange() {
-      this.currentPage = this.gopage;
-      this.loading = false;
-      this.getTransnumDetail();
-    },
+    // jumpSizeChange() {
+    //   this.currentPage = this.gopage;
+    //   this.loading = false;
+    //   this.getTransnumDetail();
+    // },
     judgeDealSuccess(value) {
       if (value === "tesSUCCESS") {
         return this.$t("message.trade.successtrade");
       } else {
         return undefined;
       }
+    },
+    judgeObject(value) {
+      // debugger;
+      // let value = [].slice.call([{ Memo: { MemoData: "---" } }])[0];
+      // return typeof value;
+      // return value;
+      console.log(value instanceof Array);
+      return value[0];
     },
     judgeIsMatch(value) {
       if (value) {
@@ -199,16 +213,15 @@ export default {
       if (value) {
         return value;
       } else {
-        debugger;
         return { currency: undefined };
       }
     },
-    handleCurrentChange(val) {
-      this.currentPage = val;
+    // handleCurrentChange(val) {
+    //   this.currentPage = val;
 
-      this.loading = false;
-      this.getTransnumDetail();
-    },
+    //   this.loading = false;
+    //   this.getTransnumDetail();
+    // },
     // handlegettransnumDetail(res) {
     //   let i = 0;
     //   let list = [];
@@ -225,17 +238,19 @@ export default {
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = {};
-      fillZero(dateIn.getDate());
-      hashTime.time =
-        fillZero(dateIn.getHours()) + ":" + fillZero(dateIn.getMinutes());
-      hashTime.date =
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
-      return hashTime.date;
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
+      return hashTime;
     },
     fillZero(value) {
       if (value < 10) {
@@ -314,38 +329,38 @@ export default {
     }
   }
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  padding-top: 20px;
-  padding-bottom: 110px;
-  .sortButton {
-    border: 1px solid #959595;
-    border-radius: 6px;
-    height: 36px;
-    line-height: 36px;
-    width: 50px;
-    margin-left: 20px;
-    background: #f2f8fc;
-    padding: 0 3px;
-  }
-  li .inputDiv {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #959595;
-    display: inline-block;
-    margin: 0 10px;
-    border-radius: 6px;
-  }
-  li div input {
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    border: 0;
-  }
-}
+// .pagination {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   font-size: 14px;
+//   padding-top: 20px;
+//   padding-bottom: 110px;
+//   .sortButton {
+//     border: 1px solid #959595;
+//     border-radius: 6px;
+//     height: 36px;
+//     line-height: 36px;
+//     width: 50px;
+//     margin-left: 20px;
+//     background: #f2f8fc;
+//     padding: 0 3px;
+//   }
+//   li .inputDiv {
+//     width: 36px;
+//     height: 36px;
+//     border: 1px solid #959595;
+//     display: inline-block;
+//     margin: 0 10px;
+//     border-radius: 6px;
+//   }
+//   li div input {
+//     border-radius: 6px;
+//     width: 36px;
+//     height: 36px;
+//     border: 0;
+//   }
+// }
 .title {
   background: linear-gradient(right, #0ab1f2, #26e0cc);
   height: 40px;
@@ -377,67 +392,67 @@ export default {
     }
   }
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #ffffff;
-  font-size: 14px;
-  .sortButton {
-    border: 1px solid #959595;
-    border-radius: 6px;
-    height: 36px;
-    line-height: 36px;
-    width: 50px;
-    margin-left: 20px;
-    background: #f2f8fc;
-  }
-  li .input {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #959595;
-    display: inline-block;
-    border-radius: 6px;
-    margin: 0 10px;
-  }
-  li div input {
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    border: 0;
-  }
-}
+// .pagination {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background: #ffffff;
+//   font-size: 14px;
+//   .sortButton {
+//     border: 1px solid #959595;
+//     border-radius: 6px;
+//     height: 36px;
+//     line-height: 36px;
+//     width: 50px;
+//     margin-left: 20px;
+//     background: #f2f8fc;
+//   }
+//   li .input {
+//     width: 36px;
+//     height: 36px;
+//     border: 1px solid #959595;
+//     display: inline-block;
+//     border-radius: 6px;
+//     margin: 0 10px;
+//   }
+//   li div input {
+//     border-radius: 6px;
+//     width: 36px;
+//     height: 36px;
+//     border: 0;
+//   }
+// }
 </style>
 
-<style  lang="scss" >
-#transnumDetail .pagination .is-background {
-  .el-pager li:not(.disabled).active {
-    background: #18c9dd;
-    color: #ffffff;
-  }
-  .el-pager li {
-    background: #ffffff;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    margin-right: 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #959595;
-  }
-  .btn-next,
-  .btn-prev {
-    background: #ffffff;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    margin-right: 10px;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #959595;
-  }
-}
-#transnumDetail .el-pager .el-icon-more {
-  display: none;
-}
+// <style  lang="scss" >
+// #transnumDetail .pagination .is-background {
+//   .el-pager li:not(.disabled).active {
+//     background: #18c9dd;
+//     color: #ffffff;
+//   }
+//   .el-pager li {
+//     background: #ffffff;
+//     width: 40px;
+//     height: 40px;
+//     line-height: 40px;
+//     margin-right: 10px;
+//     border-radius: 6px;
+//     font-size: 14px;
+//     color: #959595;
+//   }
+//   .btn-next,
+//   .btn-prev {
+//     background: #ffffff;
+//     width: 40px;
+//     height: 40px;
+//     line-height: 40px;
+//     margin-right: 10px;
+//     border-radius: 6px;
+//     font-size: 14px;
+//     color: #959595;
+//   }
+// }
+// #transnumDetail .el-pager .el-icon-more {
+//   display: none;
+// }
 </style>
