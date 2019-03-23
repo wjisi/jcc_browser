@@ -120,6 +120,8 @@ export default {
         // this.total = res.data.count;
         this.transnumkList = this.handelDealHashData(res);
         // this.bash = res.data.info;
+      } else {
+        this.transnumkList = [];
       }
       // this.loading = false;
     },
@@ -143,6 +145,7 @@ export default {
           realGetsCurrency: this.displayDefaultCurrency(res.realGets).currency,
           realGetsValue: this.displayDefaultValues(res.realGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
+          dest: res.dest || "----",
           succ: this.judgeDealSuccess(res.succ) || "---",
           matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
             .currency,
@@ -151,7 +154,7 @@ export default {
             .currency,
           matchGetsValue: this.displayDefaultValues(res.matchGets).value,
           matchFlag: this.judgeIsMatch(res.matchFlag) || "---",
-          affectedNodes: res.affectedNodes || {}
+          affectedNodes: res.affectedNodes || []
           // [{ Memo: { MemoData: "---" } }]
           // { final:
           //        {takerGets: {currency: "",  value: ""},

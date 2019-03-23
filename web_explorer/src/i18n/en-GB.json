@@ -36,7 +36,8 @@
     "Contactus": "Contact us",
     "dealhash": "deal hash",
     "time": "deal time",
-    "nodata": "No Data"
+    "nodata": "No Data",
+    "notransaction": "No Transaction"
   },
   "trade": {
     "number": "Current Transaction Number",

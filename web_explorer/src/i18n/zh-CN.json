@@ -36,7 +36,8 @@
     "Contactus": "联系我们",
     "dealhash": "交易哈希",
     "time": "交易时间",
-    "nodata": "暂无数据"
+    "nodata": "暂无数据",
+    "notransaction": "暂无交易"
   },
   "trade": {
     "number": "当前交易编号",

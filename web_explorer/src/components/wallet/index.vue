@@ -7,8 +7,11 @@
       </div>
       <Ul>
         <li>
-          <div><span>SWTC<span>{{walletBalance.SWTC_value}}</span></span>  <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span></div>
-           <div><span>JDBT<span>{{walletBalance.JDBT_value}} </span></span><span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div>
+            <span>SWTC <span>{{walletBalance.SWTC_value}}</span></span>
+            <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span>
+          </div>
+          <div><span>JDBT<span>{{walletBalance.JDBT_value}}</span> </span><span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
          <li>
            <div><span>UST<span>{{walletBalance.UST_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
@@ -57,10 +60,10 @@
     </div>
     <div class="bockList">
       <div class="historicalList">
-        <el-table :data="historicalList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" :cell-style="cellStyle">
+        <el-table :data="historicalList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" >
           <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /><div>暂无数据</div></div>
+            <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
              <template slot-scope="scope">
@@ -118,7 +121,7 @@ import {
   queryHistoricalWallet
 } from "@/js/fetch";
 import {
-  getStyle,
+  // getStyle,
   getTransactionType,
   getTransactionMode,
   getMatchFlag,
@@ -146,7 +149,7 @@ export default {
         }
       },
       transactionMode: [
-        { selectModeValue: 0, label: this.$t("message.wallet.allMode") },
+        { selectModeValue: "", label: this.$t("message.wallet.allMode") },
         { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
         { selectModeValue: 2, label: this.$t("message.wallet.Sale") },
         { selectModeValue: 3, label: this.$t("message.wallet.Income") },
@@ -183,9 +186,9 @@ export default {
       ],
       historicalList: [],
       walletlist: [],
-      selectModeValue: this.$t("message.wallet.allMode"),
-      selectCurrencyValue: this.$t("message.wallet.allCurrency"),
-      selectTypeValue: this.$t("message.wallet.alltype"),
+      selectModeValue: "",
+      selectCurrencyValue: "",
+      selectTypeValue: "",
       startTime: "",
       endTime: "",
       timer: "",
@@ -203,17 +206,17 @@ export default {
   created() {
     // this.wallet = this.$route.params.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
-    let data = {
-      page: this.currentPage || 1,
-      size: 20,
-      begin: this.startTime || "",
-      end: this.endTime || "",
-      type: "",
-      buyOrSell: "0",
-      pair: "",
-      wallet: this.wallet
-    };
-    this.getHistoricalList(data);
+    // let data = {
+    //   page: this.currentPage || 1,
+    //   size: 20,
+    //   begin: this.startTime || "",
+    //   end: this.endTime || "",
+    //   type: "",
+    //   buyOrSell: "0",
+    //   pair: "",
+    //   wallet: this.wallet
+    // };
+    this.getHistoricalList();
   },
   methods: {
     clearGopage() {
@@ -221,45 +224,21 @@ export default {
     },
     jumpSizeChange() {
       this.currentPage = this.gopage;
-      let data = {
-        page: this.currentPage || "0",
-        size: 20,
-        begin: this.startTime || "",
-        end: this.endTime || "",
-        type: "",
-        buyOrSell: this.selectModeValue || "",
-        pair: this.selectCurrencyValue || "",
-        wallet: this.wallet || ""
-      };
+      // let data = {
+      //   page: this.currentPage || "0",
+      //   size: 20,
+      //   begin: this.startTime || "",
+      //   end: this.endTime || "",
+      //   type: "",
+      //   buyOrSell: this.selectModeValue || "",
+      //   pair: this.selectCurrencyValue || "",
+      //   wallet: this.wallet || ""
+      // };
       this.loading = false;
-      this.getHistoricalList(data);
+      this.getHistoricalList();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      let data = {
-        page: this.currentPage,
-        size: 20,
-        begin: this.startTime,
-        end: this.endTime,
-        type: "OfferCreate,OfferAffect",
-        buyOrSell: this.selectModeValue,
-        pair: this.selectCurrencyValue,
-        wallet: this.wallet
-      };
-      this.loading = false;
-      this.getHistoricalList(data);
-    },
-    cellStyle(data) {
-      if (data.columnIndex === 0) {
-        return getStyle(data.row.server_state);
-      }
-      return "";
-    },
-    async getHistoricalList(data) {
-      if (this.loading) {
-        return;
-      }
-      this.loading = true;
       // let data = {
       //   page: this.currentPage,
       //   size: 20,
@@ -270,10 +249,41 @@ export default {
       //   pair: this.selectCurrencyValue,
       //   wallet: this.wallet
       // };
+      this.loading = false;
+      this.getHistoricalList();
+    },
+    // cellStyle() {
+    //   if (data.columnIndex === 0) {
+    //     return getStyle(data.row.server_state);
+    //   }
+    //   return "";
+    // },
+    async getHistoricalList() {
+      this.historicalList = [];
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      let data = {
+        page: this.currentPage || 1,
+        size: 20,
+        begin: this.startTime || "",
+        end: this.endTime || "",
+        type: this.selectTypeValue || "",
+        buyOrSell: this.selectModeValue || "",
+        pair: this.selectCurrencyValue || "",
+        wallet: this.wallet || ""
+      };
+      console.log(data);
       let res = await queryHistoricalWallet(data);
       console.log(res, "wallet");
+
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.historicalList = this.getHistoryData(res);
+      } else {
+        this.historicalList = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
@@ -287,6 +297,8 @@ export default {
       // };
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.walletBalance = this.getWalletBalanceData(res);
+      } else {
+        this.walletBalance = [];
       }
     },
     getWalletBalanceData(res) {
@@ -346,59 +358,59 @@ export default {
     },
     changeTransactionMode() {
       console.log(this.selectModeValue);
-      let data = {
-        page: this.currentPage || "0",
-        size: 20,
-        begin: this.startTime || "",
-        end: this.endTime || "",
-        type: "",
-        buyOrSell: this.selectModeValue || "",
-        pair: this.selectCurrencyValue || "",
-        wallet: this.wallet || ""
-      };
+      // let data = {
+      //   page: this.currentPage || "0",
+      //   size: 20,
+      //   begin: this.startTime || "",
+      //   end: this.endTime || "",
+      //   type: "",
+      //   buyOrSell: this.selectModeValue || "",
+      //   pair: this.selectCurrencyValue || "",
+      //   wallet: this.wallet || ""
+      // };
       this.loading = false;
-      this.getHistoricalList(data);
+      this.getHistoricalList();
     },
 
     changeTransactionCurrency() {
       console.log(this.selectCurrencyValue);
-      let data = {
-        page: this.currentPage || "0",
-        size: 20,
-        begin: this.startTime || "",
-        end: this.endTime || "",
-        type: "",
-        buyOrSell: this.selectModeValue || "",
-        pair: this.selectCurrencyValue || "",
-        wallet: this.wallet || ""
-      };
-      this.getHistoricalList(data);
+      // let data = {
+      //   page: this.currentPage || "0",
+      //   size: 20,
+      //   begin: this.startTime || "",
+      //   end: this.endTime || "",
+      //   type: "",
+      //   buyOrSell: this.selectModeValue || "",
+      //   pair: this.selectCurrencyValue || "",
+      //   wallet: this.wallet || ""
+      // };
+      this.getHistoricalList();
     },
     changeTransactionType() {
-      let data = {
-        page: this.currentPage || "0",
-        size: 20,
-        begin: this.startTime || "",
-        end: this.endTime || "",
-        type: "",
-        buyOrSell: this.selectModeValue || "",
-        pair: this.selectCurrencyValue || "",
-        wallet: this.wallet || ""
-      };
-      this.getHistoricalList(data);
+      // let data = {
+      //   page: this.currentPage || "0",
+      //   size: 20,
+      //   begin: this.startTime || "",
+      //   end: this.endTime || "",
+      //   type: "",
+      //   buyOrSell: this.selectModeValue || "",
+      //   pair: this.selectCurrencyValue || "",
+      //   wallet: this.wallet || ""
+      // };
+      this.getHistoricalList();
     },
     selectTimerange() {
-      let data = {
-        page: this.currentPage || "0",
-        size: 20,
-        begin: this.startTime || "",
-        end: this.endTime || "",
-        type: "",
-        buyOrSell: this.selectModeValue || "",
-        pair: this.selectCurrencyValue || "",
-        wallet: this.wallet || ""
-      };
-      this.getHistoricalList(data);
+      // let data = {
+      //   page: this.currentPage || "0",
+      //   size: 20,
+      //   begin: this.startTime || "",
+      //   end: this.endTime || "",
+      //   type: "",
+      //   buyOrSell: this.selectModeValue || "",
+      //   pair: this.selectCurrencyValue || "",
+      //   wallet: this.wallet || ""
+      // };
+      this.getHistoricalList();
     },
     getHistoryData(res) {
       let i = 0;
@@ -559,6 +571,11 @@ export default {
         }
         span:nth-child(2) span {
           margin: 10px;
+          // background: red;
+          // display: inline-block;
+          // overflow: hidden;
+          // text-overflow: ellipsis;
+          // white-space: nowrap;
         }
       }
       div:nth-child(1) {

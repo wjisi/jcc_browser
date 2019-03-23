@@ -116,6 +116,10 @@ export default {
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "111111");
         this.blockList = this.handleHistoryData(res);
+      } else {
+        this.blockList = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
@@ -128,12 +132,17 @@ export default {
         this.$route.params.hash ||
         "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713";
       let res = await getBlockDetail(this.hash);
-      console.log(res);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
+        debugger;
         console.log(res, "111111");
         this.total = res.data.count;
         this.blockList = this.handleHistoryData(res);
         this.bash = res.data.info;
+      } else {
+        this.blockList = [];
+        this.bash = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
@@ -190,21 +199,23 @@ export default {
       return list;
     },
     handleHashtime(time) {
-      let { fillZero } = this;
-      let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = "";
-      // fillZero(dateIn.getDate());
-      hashTime =
-        fillZero(dateIn.getFullYear()) +
-        "-" +
-        fillZero(dateIn.getMonth() + 1) +
-        "-" +
-        fillZero(dateIn.getDate()) +
-        " " +
-        fillZero(dateIn.getHours()) +
-        ":" +
-        fillZero(dateIn.getMinutes());
-      return hashTime;
+      if (time) {
+        let { fillZero } = this;
+        let dateIn = new Date((time + 946684800) * 1000);
+        let hashTime = "";
+        // fillZero(dateIn.getDate());
+        hashTime =
+          fillZero(dateIn.getFullYear()) +
+          "-" +
+          fillZero(dateIn.getMonth() + 1) +
+          "-" +
+          fillZero(dateIn.getDate()) +
+          " " +
+          fillZero(dateIn.getHours()) +
+          ":" +
+          fillZero(dateIn.getMinutes());
+        return hashTime;
+      }
     },
     fillZero(value) {
       if (value < 10) {

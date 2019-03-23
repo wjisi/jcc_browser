@@ -16,7 +16,10 @@
         <el-table :data="blockList" style="width:100%"  row-class-name="blockRowClass" header-row-class-name="blockHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >暂无数据</div>
+            <div v-else >
+               <img src='../../images/not _found_list.png' />
+               <div></div>
+            </div>
           </div>
           <el-table-column  width="36px"></el-table-column>
           <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="15%"></el-table-column>
@@ -99,6 +102,10 @@ export default {
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.blockList = this.handleGetData(res.data.list);
+      } else {
+        this.blockList = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
@@ -318,6 +325,12 @@ export default {
     font-size: 14px;
     color: #959595;
   }
+}
+input[type="text"],
+input[type="password"],
+textarea {
+  text-indent: 0px;
+  text-align: center;
 }
 #block .el-pager .el-icon-more {
   display: none;

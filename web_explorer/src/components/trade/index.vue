@@ -15,7 +15,7 @@
         <el-table :data="tranList" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >暂无数据</div>
+            <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
           <el-table-column  width="46px"></el-table-column>
           <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
@@ -64,7 +64,7 @@ export default {
       total: 0,
       loading: false,
       currentPage: 1,
-      gopage: 100
+      gopage: 1
     };
   },
   created() {
@@ -86,6 +86,10 @@ export default {
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.tranList = this.handleGetData(res.data.list);
+      } else {
+        this.tranList = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
@@ -213,6 +217,12 @@ export default {
     border: 0;
   }
 }
+input[type="text"],
+input[type="password"],
+textarea {
+  text-indent: 0px;
+  text-align: center;
+}
 .demonstration {
   font-weight: bold;
   font-size: 18px;
@@ -265,6 +275,7 @@ export default {
     white-space: nowrap;
     color: #3b3f4c;
     font-size: 14px;
+    cursor: pointer;
   }
   .hashSpan:hover {
     color: #06aaf9;

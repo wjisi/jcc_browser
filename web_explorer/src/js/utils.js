@@ -129,6 +129,9 @@ export const toThousands = (n) => {
   }
   return result
 }
+// export const getClientHeight = () => {
+//   return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+// }
 export const getStyle = (key) => {
   let map = new Map([
     ["disconnected", "background:#fbded1"],
