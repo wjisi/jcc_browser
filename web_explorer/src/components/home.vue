@@ -113,7 +113,9 @@
             </el-table-column>
             </el-table>
          </div>
-         <div class="endEnd">
+      </div>
+    </div>
+     <div class="endEnd">
             <div class="endEndLeft" >
               <img src="../images/logo_footer.png">
               <span>{{$t("message.homeTitle")}}</span>
@@ -127,8 +129,6 @@
               <span>{{$t("message.home.Contactus")}}</span>
           </div>
         </div>
-      </div>
-    </div>
    </div>
 </template>
 
@@ -490,7 +490,7 @@ export default {
   li {
     background-color: #f2f8fc;
     width: 16.6%;
-    height: 190%;
+    height: 170px;
     list-style-type: none;
     border-right: 1px solid;
     border-right-color: #e8e8e8;
@@ -577,13 +577,13 @@ export default {
 }
 .endEnd {
   position: relative;
-  top: 270px;
+  // top: 270px;
   display: flex;
   align-items: center;
   width: 91.25%;
   margin-left: 4%;
   justify-content: space-between;
-  margin-top: 5%;
+  // margin-top: 5%;
   .endEndLeft {
     display: flex;
     align-items: center;
