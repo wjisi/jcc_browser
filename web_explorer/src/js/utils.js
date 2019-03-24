@@ -169,7 +169,7 @@ export const getMatchFlag = (key) => {
     [3, "icon-sanfang"],
     [4, "icon-sifang"],
     [5, "icon-Group1"],
-    [5, "icon-Group"]
+    [6, "icon-Group"]
   ])
   return map.get(key);
 }
@@ -177,7 +177,7 @@ export const getType = (key) => {
   let map = new Map([
     [1, "icon-mairu"],
     [2, "icon-maichu"],
-    ["收入", "icon-zhichu"],
+    ["支付", "icon-zhichu"],
     ["收入", "icon-shouru"]
   ])
   return map.get(key);

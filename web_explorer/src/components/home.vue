@@ -577,11 +577,11 @@ export default {
 }
 .endEnd {
   position: relative;
-  // top: 270px;
+  background: #549fff;
   display: flex;
   align-items: center;
-  width: 91.25%;
-  margin-left: 4%;
+  width: 100%;
+  padding: 0 4%;
   justify-content: space-between;
   // margin-top: 5%;
   .endEndLeft {

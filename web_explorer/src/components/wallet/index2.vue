@@ -9,29 +9,37 @@
         <li>
           <div>
             <span>SWTC <span>{{walletBalance.SWTC_value}}</span></span>
-            <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span>
+            <span><span>{{$t('message.wallet.frozen')}}:</span><span>{{walletBalance.SWTC_frozen}}</span></span>
           </div>
-          <div><span>JDBT<span>{{walletBalance.JDBT_value}}</span> </span><span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div>
+            <span>JDBT <span>{{walletBalance.JDBT_value}}</span> </span>
+            <span>
+              <span class="span">{{$t('message.wallet.Issuer')}}：</span>
+              <span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span>
+              </span>
+          </div>
         </li>
          <li>
-           <div><span>UST<span>{{walletBalance.UST_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JJCC<span>{{walletBalance.JJCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>UST  <span>{{walletBalance.UST_value}}</span></span>
+                <span>
+                  <span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JJCC<span>{{walletBalance.JJCC_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
         <li>
-           <div><span>CNT<span>{{walletBalance.CNT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JCALL<span>{{walletBalance.JCALL_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>CNT<span>{{walletBalance.CNT_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JCALL<span>{{walletBalance.JCALL_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
        <li>
-          <div><span>ECP<span>{{walletBalance.ECP_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JEKT<span>{{walletBalance.JEKT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div><span>ECP<span>{{walletBalance.ECP_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JEKT<span>{{walletBalance.JEKT_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
          <li>
-          <div><span>JETH<span>{{walletBalance.JETH_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JMOAC<span>{{walletBalance.JMOAC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div><span>JETH<span>{{walletBalance.JETH_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JMOAC<span>{{walletBalance.JMOAC_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
          <li>
-          <div><span>VCC<span>{{walletBalance.VCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JSTM<span>{{walletBalance.JSTM_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div><span>VCC<span>{{walletBalance.VCC_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+           <div><span>JSTM<span>{{walletBalance.JSTM_value}}</span></span>  <span><span class="span">{{$t('message.wallet.Issuer')}}：</span><span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
       </Ul>
       </div>
@@ -555,27 +563,51 @@ export default {
       display: flex;
       justify-content: space-between;
       height: 40px;
-      line-height: 40px;
+      align-items: center;
       padding: 0 20px;
       white-space: nowrap;
       text-overflow: ellipsis;
+      overflow: hidden;
       color: #5f5d5d;
       font-size: 14px;
       border-bottom: 1px solid #e0e8ed;
       div {
+        min-width: 510px;
         display: flex;
         justify-content: space-between;
-        flex: 1;
-        span:nth-child(1) span {
-          margin: 10px;
+        // flex: 1;
+        span {
+          height: 40px;
+          display: inline-block;
         }
-        span:nth-child(2) span {
+        span:nth-child(1) span {
+          height: 40px;
           margin: 10px;
-          // background: red;
-          // display: inline-block;
-          // overflow: hidden;
-          // text-overflow: ellipsis;
-          // white-space: nowrap;
+          display: inline-block;
+          width: 50px;
+        }
+        span:nth-child(2) {
+          height: 40px;
+          // margin: 10px;
+          display: flex;
+          align-items: center;
+          span:nth-child(1) {
+            display: flex;
+            // align-items: center;
+            line-height: 40px;
+            width: 50px;
+            height: 40px;
+          }
+          span:nth-child(2) {
+            height: 40px;
+            // top: 10px;
+            display: flex;
+            line-height: 40px;
+            // background: #9c7676;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
       }
       div:nth-child(1) {

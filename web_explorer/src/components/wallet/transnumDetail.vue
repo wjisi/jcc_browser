@@ -250,6 +250,12 @@ export default {
     display: inline-block;
     margin: 0 10px;
     border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
   }
   li div input {
     border-radius: 6px;

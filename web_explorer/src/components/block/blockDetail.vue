@@ -41,12 +41,12 @@
           </el-table-column> -->
           <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="25%">
             <template slot-scope="scope">
-              <span class="spanUpperHash">{{scope.row._id}}</span>
+              <span class="spanAccount" @click="jumpDetail(scope.row._id)">{{scope.row._id}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
             <template slot-scope="scope">
-              <span  class="spanAccount">{{scope.row.account}}</span>
+              <span  class="spanAccount"  @click="jumpDetail(scope.row._id)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="10%">
@@ -133,7 +133,6 @@ export default {
         "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713";
       let res = await getBlockDetail(this.hash);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        debugger;
         console.log(res, "111111");
         this.total = res.data.count;
         this.blockList = this.handleHistoryData(res);
@@ -198,6 +197,12 @@ export default {
       }
       return list;
     },
+    jumpDetail(hash) {
+      this.$router.push({
+        name: "tradeDetail",
+        params: { hash: hash }
+      });
+    },
     handleHashtime(time) {
       if (time) {
         let { fillZero } = this;
@@ -258,6 +263,12 @@ export default {
     display: inline-block;
     margin: 0 10px;
     border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
   }
   li div input {
     border-radius: 6px;
@@ -354,11 +365,11 @@ export default {
   background-color: #f2f8fc;
   border: 1px solid #d0eef5;
 }
-.spanUpperHash {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+// ..spanAccount { {
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
 .spanAccount {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -367,6 +378,7 @@ export default {
 .spanAccount:hover {
   color: #06aaf9;
   font-size: 12px;
+  cursor: pointer;
 }
 .pagination {
   display: flex;
