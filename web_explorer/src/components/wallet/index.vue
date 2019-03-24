@@ -568,6 +568,7 @@ export default {
         flex: 1;
         span:nth-child(1) span {
           margin: 10px;
+          // display: inline-block;
         }
         span:nth-child(2) span {
           margin: 10px;

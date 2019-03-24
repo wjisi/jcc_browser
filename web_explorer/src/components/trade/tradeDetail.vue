@@ -184,7 +184,6 @@ export default {
       }
     },
     judgeObject(value) {
-      // debugger;
       // let value = [].slice.call([{ Memo: { MemoData: "---" } }])[0];
       // return typeof value;
       // return value;

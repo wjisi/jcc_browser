@@ -33,6 +33,7 @@
 
 <script>
 import logo from "@/images/logo_NavHead.png";
+import { getBlockDetail } from "../../js/fetch";
 var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "headerNav",
@@ -59,6 +60,39 @@ export default {
     toLogin() {
       this.$router.push({ name: "login" });
     },
+    displayDefaultHashType(value) {
+      if (value) {
+        return value;
+      } else {
+        return { value: undefined };
+      }
+    },
+    getHashType(key) {
+      let map = new Map([[1, "blockDetail"], [2, "tradeDetail"]]);
+      console.log(map.get(key), "135465");
+      return map.get(key);
+    },
+    async jumpDetailByHash(value) {
+      let res = await getBlockDetail(value);
+      console.log(res, value);
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        let hashType =
+          this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
+          this.getHashType(res.data.info.hashType);
+        console.log(hashType, 1);
+        this.$router.push({
+          name: hashType,
+          params: { hash: value }
+        });
+      } else {
+        this.$message({
+          type: "error",
+          message: this.$t("message.inputCorrectSearchContent"),
+          duration: 1600,
+          showClose: true
+        });
+      }
+    },
     confirmSearch(value) {
       if (this.searchContent === "") {
         this.$message({
@@ -67,16 +101,13 @@ export default {
           duration: 1600,
           showClose: true
         });
-      } else if (/^\d{64}$/.test(this.searchContent)) {
+      } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
         this.$router.push({
           name: "wallet",
           params: { wallet: this.searchContent }
         });
-      } else if (/^\d{32}$/.test(this.searchContent)) {
-        this.$router.push({
-          name: "wallet",
-          params: { hash: this.searchContent }
-        });
+      } else if (/^[0-9A-Za-z]{64}$/.test(this.searchContent)) {
+        this.jumpDetailByHash(this.searchContent);
       } else {
         this.$message({
           type: "error",

@@ -60,7 +60,7 @@
                 <i class="iconfont icon-chakangengduoicon"></i>
                 {{$t("message.viewall")}}</span>
             </div>
-               <div id="list"   v-show="listnum.length !==0">
+              <div id="list"   v-show="listnum.length !==0">
                 <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
                   <div style="display:flex;">
                     <div id="erect">
@@ -93,7 +93,7 @@
             <i class="iconfont icon-chakangengduoicon"></i>
             {{$t("message.viewall")}}</span>
         </div>
-        <div class="endMidder">
+         <div class="endMidder">
             <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
             <el-table-column  width="36px"  align="center" header-align="center">
             </el-table-column>
@@ -115,7 +115,7 @@
          </div>
       </div>
     </div>
-    <div class="endEnd">
+     <div class="endEnd">
             <div class="endEndLeft" >
               <img src="../images/logo_footer.png">
               <span>{{$t("message.homeTitle")}}</span>
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { getlastBlocklist, getLatestDeal, getBlockDetail } from "../js/fetch";
+import { getlastBlocklist, getLatestDeal } from "../js/fetch";
 var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "home",
@@ -246,40 +246,7 @@ export default {
         params: { hash: hash }
       });
     },
-    displayDefaultHashType(value) {
-      if (value) {
-        return value;
-      } else {
-        return { value: undefined };
-      }
-    },
-    getHashType(key) {
-      let map = new Map([[1, "blockDetail"], [2, "tradeDetail"]]);
-      console.log(map.get(key), "135465");
-      return map.get(key);
-    },
-    async jumpDetailByHash(value) {
-      let res = await getBlockDetail(value);
-      console.log(res, value);
-      if (res.result === true && (res.code === 0 || res.code === "0")) {
-        let hashType =
-          this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
-          this.getHashType(res.data.info.hashType);
-        console.log(hashType, 1);
-        this.$router.push({
-          name: hashType,
-          params: { hash: value }
-        });
-      } else {
-        this.$message({
-          type: "error",
-          message: this.$t("message.inputCorrectSearchContent"),
-          duration: 1600,
-          showClose: true
-        });
-      }
-    },
-    confirmSearch(value) {
+    confirmSearch() {
       if (this.searchContent === "") {
         this.$message({
           type: "error",
@@ -287,21 +254,9 @@ export default {
           duration: 1600,
           showClose: true
         });
-      } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
-        this.$router.push({
-          name: "wallet",
-          params: { wallet: this.searchContent }
-        });
-      } else if (/^[0-9A-Za-z]{64}$/.test(this.searchContent)) {
-        this.jumpDetailByHash(this.searchContent);
-      } else {
-        this.$message({
-          type: "error",
-          message: this.$t("message.inputCorrectSearchContent"),
-          duration: 1600,
-          showClose: true
-        });
+        return;
       }
+      alert("跳转搜索结果页");
     }
   }
 };
@@ -476,6 +431,7 @@ export default {
     height: 100%;
   }
 }
+
 .block {
   height: 40px;
   width: 120px;
@@ -588,8 +544,6 @@ export default {
   height: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
   margin-top: 10%;
   color: #6f6868;
 }
@@ -623,13 +577,11 @@ export default {
 }
 .endEnd {
   position: relative;
-  // top: 270px;
+  background: #549fff;
   display: flex;
-  background: #1850d7;
   align-items: center;
-  // width: 91.25%;
-  padding: 0 4% 40px;
-  margin: 0;
+  width: 100%;
+  padding: 0 4%;
   justify-content: space-between;
   // margin-top: 5%;
   .endEndLeft {
