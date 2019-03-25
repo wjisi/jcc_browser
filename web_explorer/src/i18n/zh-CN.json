@@ -113,6 +113,8 @@
     "offerAffect": "被动成交",
     "offerCancel": "撤消委托",
     "transferaccounts": "转账",
+    "Send": "支出",
+    "Receive": "收入",
     "unknown": "未知"
   }
 }

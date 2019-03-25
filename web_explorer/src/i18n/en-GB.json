@@ -113,6 +113,8 @@
     "offerAffect": "offerAffect",
     "offerCancel": "offerCancel",
     "transferaccounts": "trans account",
+    "Send": "支出",
+    "Receive": "收入",
     "unknown": "unknown"
   }
 }

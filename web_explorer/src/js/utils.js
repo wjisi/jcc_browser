@@ -151,7 +151,7 @@ export const getTransactionType = (key) => {
     ["OfferAffect", "被动成交"],
     ["OfferCancel", "撤消委托"],
     ["Payment", "主动成交"],
-    ["Send", "支付"],
+    ["Send", "支出"],
     ["Receive", "收入"],
     ["其它", "未知"]
   ])
@@ -177,7 +177,7 @@ export const getType = (key) => {
   let map = new Map([
     [1, "icon-mairu"],
     [2, "icon-maichu"],
-    ["支付", "icon-zhichu"],
+    ["支出", "icon-zhichu"],
     ["收入", "icon-shouru"]
   ])
   return map.get(key);

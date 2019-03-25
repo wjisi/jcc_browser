@@ -25,7 +25,7 @@
                </span>
                <span v-show="!transnumkList.realPaysValue">{{defaultValue}}</span>
           </div>
-           <div><span>{{$t('message.trade.note')}}</span>  <span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
+           <div class="note"><span>{{$t('message.trade.note')}}</span>  <span class="asciiC">{{asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span></div>
         </li>
         <li>
            <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div>
@@ -183,6 +183,17 @@ export default {
         return undefined;
       }
     },
+    asciiConverString(value) {
+      let dd = "";
+      if (value && value !== "---") {
+        for (var i = 0; i < value.length; i++) {
+          dd += String.fromCharCode(value.charCodeAt(i));
+        }
+      }
+      console.log(value, "12");
+      return dd || "---";
+    },
+
     judgeObject(value) {
       // let value = [].slice.call([{ Memo: { MemoData: "---" } }])[0];
       // return typeof value;
@@ -264,6 +275,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+// .note {
+//   min-width: 320px;
+// }
 #transnumDetail {
   text-align: center;
   min-width: 768px;
@@ -312,13 +326,21 @@ export default {
       text-overflow: ellipsis;
       color: #5f5d5d;
       font-size: 14px;
+      min-width: 320px;
       border-bottom: 1px solid #e0e8ed;
       div {
+        min-width: 280px;
         display: flex;
         justify-content: space-between;
         flex: 1;
-        span:nth-child(2) span {
-          margin: 10px;
+        span:nth-child(2) {
+          min-width: 280px;
+          display: inline-block;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-left: 20px;
+          text-overflow: ellipsis;
+          text-align: right;
         }
       }
       div:nth-child(1) {

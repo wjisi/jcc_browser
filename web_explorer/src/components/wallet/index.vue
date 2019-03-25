@@ -7,11 +7,8 @@
       </div>
       <Ul>
         <li>
-          <div>
-            <span>SWTC <span>{{walletBalance.SWTC_value}}</span></span>
-            <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span>
-          </div>
-          <div><span>JDBT<span>{{walletBalance.JDBT_value}}</span> </span><span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div><span>SWTC<span>{{walletBalance.SWTC_value}}</span></span> <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span></div>
+          <div><span>JDBT<span>{{walletBalance.JDBT_value}}</span></span> <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
          <li>
            <div><span>UST<span>{{walletBalance.UST_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
@@ -177,12 +174,20 @@ export default {
         },
         {
           selectTypeValue: "fferAffect",
-          label: this.$t("message.wallet.offerAffect")
+          label: this.$t("message.wallet.offerCancel")
         },
         {
-          selectTypeValue: 4,
-          label: this.$t("message.wallet.transferaccounts")
+          selectTypeValue: "Send",
+          label: this.$t("message.wallet.Send")
+        },
+        {
+          selectTypeValue: "Receive",
+          label: this.$t("message.wallet.Receive")
         }
+        // {
+        //   selectTypeValue: 4,
+        //   label: this.$t("message.wallet.transferaccounts")
+        // }
       ],
       historicalList: [],
       walletlist: [],
@@ -357,7 +362,7 @@ export default {
       return list;
     },
     changeTransactionMode() {
-      console.log(this.selectModeValue);
+      console.log(this.selectModeValue, "123");
       // let data = {
       //   page: this.currentPage || "0",
       //   size: 20,
@@ -400,6 +405,7 @@ export default {
       this.getHistoricalList();
     },
     selectTimerange() {
+      console.log(this.startTime);
       // let data = {
       //   page: this.currentPage || "0",
       //   size: 20,
@@ -561,22 +567,25 @@ export default {
       text-overflow: ellipsis;
       color: #5f5d5d;
       font-size: 14px;
+      min-width: 330px;
       border-bottom: 1px solid #e0e8ed;
       div {
+        min-width: 280px;
         display: flex;
         justify-content: space-between;
         flex: 1;
-        span:nth-child(1) span {
-          margin: 10px;
-          // display: inline-block;
+        span span {
+          margin-left: 10px;
         }
-        span:nth-child(2) span {
-          margin: 10px;
+        span:nth-child(2) {
+          // min-width: 290px;
+          display: inline-block;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-left: 20px;
           // background: red;
-          // display: inline-block;
-          // overflow: hidden;
-          // text-overflow: ellipsis;
-          // white-space: nowrap;
+          text-overflow: ellipsis;
+          text-align: right;
         }
       }
       div:nth-child(1) {
@@ -585,6 +594,9 @@ export default {
       div:nth-child(2) {
         border-left: 1px solid #e0e8ed;
         padding-left: 20px;
+        //  span:nth-child(1) {
+        //   background: red;
+        // }
       }
     }
   }
