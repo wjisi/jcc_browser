@@ -1,5 +1,5 @@
 {
-  "homeTitle": "井畅区块链浏览器",
+  "homeTitle": "SWTC公链浏览器",
   "login": "登录",
   "searchPlaceholder": "请输入地址/交易哈希/区块哈希",
   "indexPage": "首页",
@@ -37,7 +37,8 @@
     "dealhash": "交易哈希",
     "time": "交易时间",
     "nodata": "暂无数据",
-    "notransaction": "暂无交易"
+    "notransaction": "暂无交易",
+    "Update": "实时更新"
   },
   "trade": {
     "number": "当前交易编号",

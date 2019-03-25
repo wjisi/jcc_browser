@@ -1,12 +1,10 @@
 <template>
    <div id="home" >
-     <span>
-       <span style="height:24.3%;bottom:5px;"><img src="../images/index_top.png"></span>
-       <span style="height:38.4%;top:10px;"><img src="../images/index_show.png"></span>
-       <div></div>
-     </span>
-     <div class="init" >
-      <div class="top">
+     <section>
+       <span style="height:24.3%;bottom:50px;padding:0;margin:0;"><img src="../images/index_top.png" style="width:100%height:100%;"></span>
+     </section>
+     <section class="init">
+       <div class="top">
          <div class="topLeft">
             <div class="index" ><img src="../images/logo_index.png"></div>
             <p class="browser">{{$t("message.homeTitle")}}</p>
@@ -17,73 +15,62 @@
               </span>
             </div>
          </div>
-         <div class="topRight" >
-           <div id="changelan">
-              <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
-              <el-dropdown @command="switchLanguage" trigger="click">
-                <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
-                  <i class="iconfont icon-yuyanqiehuan"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
+         <div class="topRight" style="position:relative">
+          <div id="changelan">
+            <el-dropdown @command="switchLanguage" trigger="click">
+              <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
+                <i class="iconfont icon-yuyanqiehuan"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
            </div>
-           <span id="index_net"><img src="../images/index_net.png"></span>
+          <div class="state">
+             <span>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</span>
+          </div>
+          <span id="index_net"><img src="../images/index_net.png" style="width:100%height:100%"></span>
+         </div>
         </div>
+        <div style="position:absolute;top:100%;right:5%;display:flex;align-items:center;">
+          <span  style="color:#828f90;font-size:16px;">{{$t('message.home.Update')}}</span>
+          <el-switch style="width:42px;height:42px;margin-left:10px" v-model="showSwitch" active-color="#18c79e" inactive-color="#cbd1d2" ></el-switch>
+        </div>
+     </section>
+     <section >
+      <div class="pilot">
+        <div style="display:flex;align-items:center;">
+          <img src="../images/block_height_title.png" style="height:60px;width:50px;">
+          <span class="block">{{$t("message.blockList.blockheight")}}</span>
+        </div>
+        <span class="buttom" @click="searchAll('block')">
+          <i class="iconfont icon-chakangengduoicon"></i>
+          {{$t("message.viewall")}}</span>
       </div>
-        <div class="show">
-          <div class="showTop">
-            <div class="showTopLeft">
-              <div class="showTopLeftValue"><span>{{$t("message.home.providefunction ")}}</span></div>
-            </div>
-            <div class="showTopRight">
-              <div style="width:50%;margin-left:42%">
-                <p id="title">{{$t("message.home.donot")}}</p>
-                <p id="value">{{$t("message.home.donotvalue")}}</p>
-                <div style="margin-left:10%;">
-                  <p id="title">{{$t("message.home.realtime")}}</p>
-                  <p id="value">{{$t("message.home.realtimevalue")}}</p>
+      <div id="list"   v-show="listnum.length !==0">
+          <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
+            <div style="display:flex;">
+              <div id="erect">
+                <div :class="'className'+index"></div>
+              </div>
+              <div id="listValue">
+                <div>
+                  <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
+                  <span>
+                    <p style="font-size:20px;">{{item.transNum}}</p>
+                    <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
+                  </span>
                 </div>
-                <p id="title">{{$t("message.home.recordquery")}}</p>
-                <p id="value">{{$t("message.home.recordqueryvalue")}}</p>
+                  <p class="hash"  style="font-size:12px;" @click="jumpDetail('blockDetail',item.hash)" >{{item.hash}}</p>
+                  <p class="time" >{{handleHashtime(item.time)}}</p>
               </div>
             </div>
-          </div>
-          <div class="showEnd">
-            <div class="pilot">
-              <div style="display:flex;align-items:center;">
-                <img src="../images/block_height_title.png" style="height:60px;width:50px;">
-                <span class="block">{{$t("message.blockList.blockheight")}}</span>
-              </div>
-              <span class="buttom" @click="searchAll('block')">
-                <i class="iconfont icon-chakangengduoicon"></i>
-                {{$t("message.viewall")}}</span>
-            </div>
-               <div id="list"   v-show="listnum.length !==0">
-                <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
-                  <div style="display:flex;">
-                    <div id="erect">
-                      <div :class="'className'+index"></div>
-                    </div>
-                    <div id="listValue">
-                      <div>
-                        <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
-                        <span>
-                          <p style="font-size:20px;">{{item.transNum}}</p>
-                          <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
-                        </span>
-                      </div>
-                        <p class="hash"  style="font-size:12px;" @click="jumpDetail('blockDetail',item.hash)" >{{item.hash}}</p>
-                        <p class="time" >{{handleHashtime(item.time)}}</p>
-                    </div>
-                  </div>
-                </li>
-              </div>
-              <div v-show="listnum.length === 0" class="v-show">{{$t('message.home.nodata')}}</div>
-          </div>
-       </div>
-      <div class="end">
+          </li>
+        </div>
+        <div v-show="listnum.length === 0" class="v-show" style="background-color:#fff;margin:0 5%;padding:40px 0;">{{$t('message.home.nodata')}}</div>
+     </section>
+     <section>
+      <div class="end" style="margin:0 5%;">
         <div class="endTop" >
           <div style="display:flex;align-items:center;">
             <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
@@ -94,11 +81,9 @@
             {{$t("message.viewall")}}</span>
         </div>
         <div class="endMidder">
-            <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
-            <el-table-column  width="36px"  align="center" header-align="center">
-            </el-table-column>
-            <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="15%"  align="center" header-align="center">
-            </el-table-column>
+          <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
+            <el-table-column  width="36px"  align="center" header-align="center"></el-table-column>
+            <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="15%"  align="center" header-align="center"></el-table-column>
             <el-table-column id="hash" prop="_id" :label="$t('message.home.dealhash')" min-width="65%"  align="center" header-align="center">
                <template slot-scope="scope">
                   <span class="hash" @click="jumpDetail('tradeDetail',scope.row._id)">{{scope.row._id}}</span>
@@ -111,27 +96,27 @@
             </el-table-column>
             <el-table-column  width="36px"  align="center" header-align="center">
             </el-table-column>
-            </el-table>
-         </div>
-      </div>
-    </div>
-    <div class="endEnd">
-            <div class="endEndLeft" >
-              <img src="../images/logo_footer.png">
-              <span>{{$t("message.homeTitle")}}</span>
-              <div></div>
-              <span>{{$t("message.home.anhui")}}</span>
-            </div>
-            <div class="endEndRignt">
-              <span>{{$t("message.home.officialwebsite")}}</span>|
-              <span>{{$t("message.home.cooperation")}}</span>|
-              <span>{{$t("message.home.partners")}}</span>|
-              <span>{{$t("message.home.Contactus")}}</span>
-          </div>
+          </el-table>
         </div>
+    </div>
+     </section>
+     <section>
+      <div class="endEnd">
+        <div class="endEndLeft" >
+          <img src="../images/logo_footer.png">
+          <span>{{$t("message.homeTitle")}}</span>
+          <div></div>
+          <span>{{$t("message.home.anhui")}}</span>
+        </div>
+        <div class="endEndRignt">
+          <span>{{$t("message.home.officialwebsite")}}</span>
+          <div></div>
+          <span>{{$t("message.home.Contactus")}}</span>
+        </div>
+      </div>
+     </section>
    </div>
 </template>
-
 <script>
 import { getlastBlocklist, getLatestDeal, getBlockDetail } from "../js/fetch";
 var homeTitle = document.getElementById("homepage_title");
@@ -147,6 +132,7 @@ export default {
       listnum: [],
       latestdeal: [],
       showLanguage: false,
+      showSwitch: false,
       languageList: {
         zh: { label: "zh", name: "简体中文" },
         en: { label: "en", name: "English" }
@@ -159,26 +145,6 @@ export default {
     }
   },
   methods: {
-    // getlastBlocklists() {
-    //   getlastBlocklist()
-    //     .then(data => {
-    //       console.log(data, 1);
-    //       this.listnum = data.data.list;
-    //     })
-    //     .catch(error => {
-    //       this.$message.error(error.msg);
-    //     });
-    // },
-    // getLatestDeals() {
-    //   getLatestDeal()
-    //     .then(data => {
-    //       console.log(data, 2);
-    //       this.latestdeal = data.data.list;
-    //     })
-    //     .catch(error => {
-    //       this.$message.error(error.msg);
-    //     });
-    // },
     async getlastBlocklists() {
       let res = await getlastBlocklist();
       console.log(res, "shou ye 1");
@@ -345,17 +311,18 @@ export default {
     justify-content: center;
     #changelan {
       display: flex;
-      align-items: center;
-      justify-content: space-around;
+      justify-content: flex-end;
       margin-top: 6%;
       margin-bottom: 5px;
+      margin-right: 5%;
     }
-    p {
-      width: 30%;
-      font-size: 12px;
+    .state {
       color: #cee5ff;
       font-weight: bold;
-      margin-left: 31%;
+      position: absolute;
+      top: 26%;
+      right: 35%;
+      font-size: 14px;
     }
     #index_net {
       width: 82%;
@@ -443,8 +410,7 @@ export default {
   }
 }
 .endMidder {
-  width: 91.25%;
-  margin-left: 4%;
+  // width: 91.25%;
   margin-top: 1.5%;
   // height: 450px;
   .idSpan2 {
@@ -459,7 +425,7 @@ export default {
 }
 .buttom {
   width: 150px;
-  color: #c7cfd5;
+  color: #b1c0cb;
   text-align: right;
 }
 .buttom:hover {
@@ -527,14 +493,14 @@ export default {
 }
 #list {
   display: flex;
-  width: 91.25%;
+  // width: 91.25%;
   height: 85px;
   margin-left: 4%;
   margin-top: 1.5%;
   li {
-    background-color: #f2f8fc;
+    background-color: #fff;
     width: 16.6%;
-    height: 170px;
+    height: 190px;
     list-style-type: none;
     border-right: 1px solid;
     border-right-color: #e8e8e8;
@@ -573,12 +539,12 @@ export default {
   flex-direction: column;
   .v-show {
     width: 91.25%;
-    height: 85px;
+    height: 185px;
     margin-left: 4%;
     margin-top: 1.5%;
     color: #6f6868;
     display: flex;
-    background-color: #f2f8fc;
+    background-color: black;
     justify-content: center;
     align-items: center;
   }
@@ -604,34 +570,29 @@ export default {
   text-align: left;
 }
 .pilot {
-  width: 91.25%;
+  padding: 0 5%;
   height: 22%;
   display: flex;
   align-items: center;
-  margin-left: 4%;
   margin-top: 6%;
+  margin-bottom: 1%;
   justify-content: space-between;
 }
 .endTop {
-  width: 91.25%;
   height: 22%;
   display: flex;
   align-items: center;
-  margin-left: 4%;
-  margin-top: 10%;
+  margin-top: 8%;
   justify-content: space-between;
 }
 .endEnd {
   position: relative;
-  // top: 270px;
   display: flex;
   background: #1850d7;
   align-items: center;
-  // width: 91.25%;
-  padding: 0 4% 40px;
-  margin: 0;
+  padding: 30px 5%;
+  margin-top: 80px;
   justify-content: space-between;
-  // margin-top: 5%;
   .endEndLeft {
     display: flex;
     align-items: center;
@@ -658,12 +619,21 @@ export default {
     align-items: center;
     font-size: 14px;
     color: #6b9eff;
-    span {
-      width: 100px;
-    }
+    text-align: right;
+    // margin-left:100px;
+    // span {
+    //   width: 100px;
+    // }
     span:hover {
       color: #18c9dd;
       cursor: pointer;
+    }
+    div {
+      margin: 0 20px;
+      width: 2px;
+      height: 14px;
+      background: #eef1fe;
+      border-radius: 1px;
     }
   }
 }
