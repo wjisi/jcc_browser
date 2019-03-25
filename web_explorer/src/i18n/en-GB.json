@@ -53,7 +53,9 @@
     "results": "Transaction Results",
     "effect": "Transaction Effect",
     "successtrade": "success trade",
-    "ismatch": "is match"
+    "ismatch": "is match",
+    "tradeVolume": "trade volume",
+    "tradeRecord": "trade record"
   },
   "blockList": {
     "blockheight": "block Height",
@@ -86,7 +88,7 @@
     "currentblock": "current Block",
     "blockhashnumber": "block hash",
     "closetime": "close Time",
-    "lasthash": "last Hash",
+    "lasthash": "lastBlockHashValue",
     "Transactionvolume": "Transaction Volume",
     "total": "total",
     "sorry": "sorry",
@@ -102,6 +104,7 @@
     "allCurrency": "all currency",
     "alltype": "all type",
     "allMode": "all mode",
+    "tradeArea": "trade area",
     "dateRange": "date range",
     "startTime": "start time",
     "endTime": "end time",
@@ -115,6 +118,7 @@
     "transferaccounts": "trans account",
     "Send": "支出",
     "Receive": "收入",
-    "unknown": "unknown"
+    "unknown": "unknown",
+    "tradePrice": "tradePrice"
   }
 }

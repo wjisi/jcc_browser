@@ -18,8 +18,14 @@
             <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
-          <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column>
-           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
+          <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
+           <el-table-column prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
+          <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
+            <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
              <template slot-scope="scope">
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
             </template>
@@ -34,16 +40,18 @@
               <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="time"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="21%">
-              <template slot-scope="scope">
-            <span v-show="scope.row.takerPaysValue" class="pays">
-                 <span>{{scope.row.takerPaysValue}}</span>
-                 <span>{{scope.row.takerPaysCurrency}}</span>
-                 <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
-                 <span>{{scope.row.takerGetsValue}}</span>
-                 <span>{{scope.row.takerGetsCurrency}}</span>
-            </span>
-            <span v-show="!scope.row.takerPaysValue">{{defaultValue}}</span>
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="center"  min-width="14%" >
+            <template slot-scope="scope">
+                <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
+                </span>
+                <span v-show="!scope.row.takerPaysValue">
+                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                </span>
             </template>
           </el-table-column>
           <el-table-column width="30px"></el-table-column>
@@ -125,6 +133,7 @@ export default {
       for (; i < res.length; i++) {
         list.push({
           sort: (this.currentPage - 1) * 20 + i + 1,
+          // seq: res[i].seq || "----",
           _id: res[i]._id,
           type: getTransactionType(res[i].type) || "---",
           flag: getTransactionMode(res[i].flag) || "----",
@@ -134,7 +143,10 @@ export default {
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
           takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
             .currency,
-          takerGetsValue: this.displayDefaultValues(res[i].takerGets).value,
+          takerGetsValue:
+            this.displayDefaultValues(res[i].takerGets).value || "----",
+          takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
+          takerValue: this.displayDefaultValues(res[i].amount).value || "----",
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
           // displayDifferentCircles: getType(res.data.list[i].flag) || "",
           // transNum: this.handleData(res[i].transNum, 1),

@@ -37,6 +37,10 @@
       <span @click="goback">返回上一页</span>
     </div> -->
     <div class="title">
+       <span class="titleItem1">{{$t('message.blockDetailList.transactiontype')}}</span>
+      <el-select v-model="selectTypeValue"  @change="changeTransactionType" style="width:100px">
+        <el-option v-for="item in  transactionType" :key="item.selectTypeValue" :label="item.label" :value="item.selectTypeValue"></el-option>
+      </el-select>
       <span class="titleItem">{{$t('message.blockDetailList.transactionmode')}}</span>
       <el-select v-model="selectModeValue"  @change="changeTransactionMode" style="width:100px">
         <el-option v-for="item in transactionMode" :key="item.selectModeValue" :label="item.label" :value="item.selectModeValue"></el-option>
@@ -45,9 +49,9 @@
       <el-select v-model="selectCurrencyValue"  @change="changeTransactionCurrency" style="width:100px">
         <el-option v-for="item in  transactionCurrency" :key="item.selectCurrencyValue" :label="item.label" :value="item.selectCurrencyValue"></el-option>
       </el-select>
-       <span class="titleItem1">{{$t('message.blockDetailList.transactiontype')}}</span>
-      <el-select v-model="selectTypeValue"  @change="changeTransactionType" style="width:100px">
-        <el-option v-for="item in  transactionType" :key="item.selectTypeValue" :label="item.label" :value="item.selectTypeValue"></el-option>
+       <span><i class="iconfont"  icon-jiaoyijineshuliangzhuanhuan></i></span>
+      <el-select v-model="selectCurrencyCounterValue"  @change="changeTransactionCounterType" style="width:100px">
+        <el-option v-for="item in  transactionCounterType" :key="item.selectCurrencyCounterValue" :label="item.label" :value="item.selectCurrencyCounterValue"></el-option>
       </el-select>
       <span class="selctionData">{{$t('message.wallet.dateRange')}}
         <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')"></el-date-picker>至
@@ -62,27 +66,41 @@
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
+           <el-table-column prop="matchFlag"  width="30px">
              <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
+             <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
+           </el-table-column>
+          <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" min-width="15%">
+            <template slot-scope="scope">
+             <span>{{scope.row.time}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
           </el-table-column>
           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
                <template slot-scope="scope">
-                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
+                  <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
           </el-table-column>
-          <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="center" min-width="15%">
-          </el-table-column>
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
-                <template slot-scope="scope">
-                  <span>
-                  <span>{{scope.row.transactionAmount.matchPaysValue}}</span>
-                  <span>{{scope.row.transactionAmount.matchPaysCurrency}}</span>
-                  <span>{{scope.row.transactionAmount.matchGetsValue}}</span>
-                  <span>{{scope.row.transactionAmount.matchPaysCurrency}}</span>
+            <template slot-scope="scope">
+                <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
-               </template>
+                <span v-show="!scope.row.takerPaysValue">
+                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                </span>
+            </template>
+          </el-table-column>
+           <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+            <template slot-scope="scope">
+              <span>{{scope.row.tradePrice}}</span>
+            </template> -->
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
@@ -94,6 +112,7 @@
               <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
+          <el-table-column  width="30px"></el-table-column>
         </el-table>
       </div>
        <ul class="pagination">
@@ -122,7 +141,8 @@ import {
   getTransactionType,
   getTransactionMode,
   getMatchFlag,
-  getType
+  getType,
+  getFlagColor
 } from "@/js/utils";
 export default {
   name: "wallet",
@@ -145,23 +165,6 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      transactionMode: [
-        { selectModeValue: "", label: this.$t("message.wallet.allMode") },
-        { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
-        { selectModeValue: 2, label: this.$t("message.wallet.Sale") },
-        { selectModeValue: 3, label: this.$t("message.wallet.Income") },
-        { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
-      ],
-      transactionCurrency: [
-        {
-          selectCurrencyValue: "",
-          label: this.$t("message.wallet.allCurrency")
-        },
-        { selectCurrencyValue: "CNT", label: "CNT" },
-        { selectCurrencyValue: "ETH", label: "ETH" },
-        { selectCurrencyValue: "SWTC-CNY", label: "SWTC" },
-        { selectCurrencyValue: "MOAC", label: "MOAC" }
-      ],
       transactionType: [
         { selectTypeValue: "", label: this.$t("message.wallet.alltype") },
         {
@@ -189,10 +192,37 @@ export default {
         //   label: this.$t("message.wallet.transferaccounts")
         // }
       ],
+      transactionMode: [
+        { selectModeValue: "", label: this.$t("message.wallet.allMode") },
+        { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
+        { selectModeValue: 2, label: this.$t("message.wallet.Sale") },
+        { selectModeValue: 3, label: this.$t("message.wallet.Income") },
+        { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+      ],
+      transactionCurrency: [
+        {
+          selectCurrencyValue: "",
+          label: this.$t("message.wallet.allCurrency")
+        },
+        { selectCurrencyValue: "SWTC", label: "SWTC" },
+        { selectCurrencyValue: "JCC", label: "JCC" },
+        { selectCurrencyValue: "ETH", label: "ETH" },
+        { selectCurrencyValue: "MOAC", label: "MOAC" }
+      ],
+      // transactionCounterType: [
+      //   {
+      //     selectCurrencyCounterValue: "",
+      //     label: this.$t("message.wallet.tradeArea")
+      //   },
+      //   { selectCurrencyCounterValue: "SWTC", label: "SWTC" },
+      //   { selectCurrencyCounterValue: "CNT", label: "CNT" },
+      //   { selectCurrencyCounterValue: "ETH", label: "ETH" }
+      // ],
       historicalList: [],
       walletlist: [],
       selectModeValue: "",
       selectCurrencyValue: "",
+      selectCurrencyCounterValue: "",
       selectTypeValue: "",
       startTime: "",
       endTime: "",
@@ -222,6 +252,30 @@ export default {
     //   wallet: this.wallet
     // };
     this.getHistoricalList();
+  },
+  computed: {
+    transactionCounterType() {
+      if (this.selectCurrencyValue === "SWTC") {
+        return [
+          {
+            selectCurrencyCounterValue: "",
+            label: this.$t("message.wallet.tradeArea")
+          },
+          { selectCurrencyCounterValue: "CNT", label: "CNT" },
+          { selectCurrencyCounterValue: "ETH", label: "ETH" }
+        ];
+      } else {
+        return [
+          {
+            selectCurrencyCounterValue: "",
+            label: this.$t("message.wallet.tradeArea")
+          },
+          { selectCurrencyCounterValue: "SWTC", label: "SWTC" },
+          { selectCurrencyCounterValue: "CNT", label: "CNT" },
+          { selectCurrencyCounterValue: "ETH", label: "ETH" }
+        ];
+      }
+    }
   },
   methods: {
     clearGopage() {
@@ -276,7 +330,7 @@ export default {
         end: this.endTime || "",
         type: this.selectTypeValue || "",
         buyOrSell: this.selectModeValue || "",
-        pair: this.selectCurrencyValue || "",
+        pair: `${this.selectCurrencyValue}-${this.selectCurrencyCounterValue}`,
         wallet: this.wallet || ""
       };
       console.log(data);
@@ -391,6 +445,9 @@ export default {
       // };
       this.getHistoricalList();
     },
+    changeTransactionCounterType() {
+      this.getHistoricalList();
+    },
     changeTransactionType() {
       // let data = {
       //   page: this.currentPage || "0",
@@ -427,20 +484,38 @@ export default {
             type: getTransactionType(res.data.list[i].type) || "----",
             flag: getTransactionMode(res.data.list[i].flag) || "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
-            transactionAmount: {
-              matchPaysCurrency: this.displayDefaultCurrency(
-                res.data.list[i].matchPays
-              ).currency,
-              matchPaysValue: this.displayDefaultValues(
-                res.data.list[i].matchPays
-              ).value,
-              matchGetsCurrency: this.displayDefaultCurrency(
-                res.data.list[i].matchGets
-              ).currency,
-              matchGetsValue: this.displayDefaultValues(
-                res.data.list[i].matchGets
-              ).value
-            },
+            // transactionAmount: {
+            //   matchPaysCurrency: this.displayDefaultCurrency(
+            //     res.data.list[i].matchPays
+            //   ).currency,
+            //   matchPaysValue: this.displayDefaultValues(
+            //     res.data.list[i].matchPays
+            //   ).value,
+            //   matchGetsCurrency: this.displayDefaultCurrency(
+            //     res.data.list[i].matchGets
+            //   ).currency,
+            //   matchGetsValue: this.displayDefaultValues(
+            //     res.data.list[i].matchGets
+            //   ).value
+            // },
+            displayDifferentColor: getFlagColor(res.data.list[i].flag) || "",
+            takerPaysCurrency: this.displayDefaultCurrency(
+              res.data.list[i].takerPays
+            ).currency,
+            takerPaysValue: this.displayDefaultValues(
+              res.data.list[i].takerPays
+            ).value,
+            takerGetsCurrency: this.displayDefaultCurrency(
+              res.data.list[i].takerGets
+            ).currency,
+            takerGetsValue:
+              this.displayDefaultValues(res.data.list[i].takerGets).value ||
+              "----",
+            takerCurreny: this.displayDefaultCurrency(res.data.list[i].amount)
+              .currency,
+            takerValue:
+              this.displayDefaultValues(res.data.list[i].amount).value ||
+              "----",
             account: res.data.list[i].account || "----",
             hash: res.data.list[i].hash || "----",
             matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
@@ -455,6 +530,7 @@ export default {
         this.allpage = 0;
         this.gopage = 0;
       }
+      // this.defaultValue = "---";
       return list;
     },
     displayDefaultValues(value) {
@@ -468,7 +544,7 @@ export default {
       if (value) {
         return value;
       } else {
-        return { currency: undefined };
+        return { currency: "undefined" };
       }
     },
     jumpDetail(hash) {

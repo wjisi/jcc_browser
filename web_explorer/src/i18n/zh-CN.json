@@ -53,7 +53,9 @@
     "results": "交易结果",
     "effect": "交易效果",
     "successtrade": "交易成功",
-    "ismatch": "多方撮合"
+    "ismatch": "多方撮合",
+    "tradeVolume": "交易数额",
+    "tradeRecord": "交易记录"
   },
   "blockList": {
     "blockheight": "区块高度",
@@ -86,7 +88,7 @@
     "currentblock": "当前区块",
     "blockhashnumber": "区块哈希值",
     "closetime": "关闭时间",
-    "lasthash": "上一块哈希值",
+    "lasthash": "上一区块哈希值",
     "Transactionvolume": "交易数量",
     "total": "总量",
     "sorry": "抱歉",
@@ -102,6 +104,7 @@
     "allCurrency": "全部币种",
     "allMode": "全部方式",
     "alltype": "全部类型",
+    "tradeArea": "交易区",
     "dateRange": "日期范围",
     "startTime": "开始时间",
     "endTime": "结束时间",
@@ -115,6 +118,7 @@
     "transferaccounts": "转账",
     "Send": "支出",
     "Receive": "收入",
-    "unknown": "未知"
+    "unknown": "未知",
+    "tradePrice": "交易价格"
   }
 }

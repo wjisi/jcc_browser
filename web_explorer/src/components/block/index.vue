@@ -35,7 +35,7 @@
           </el-table-column>
           <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="20%"  header-align="center" align="center">
           </el-table-column>
-          <el-table-column prop="transNum" min-width="10%"  :label="$t('message.blockList.transctionNums')"  header-align="right" align="right">
+          <el-table-column prop="transNum" min-width="7%"  :label="$t('message.blockList.transctionNums')"  header-align="center" align="center">
             <template slot-scope="scope">
               <span class="transNumSpan">{{scope.row.transNum}}</span>
             </template>

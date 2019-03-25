@@ -14,24 +14,24 @@
     </div>
     <div class="bockList">
       <div class="bockListData">
-        <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
+        <div class="title">{{$t('message.trade.tradeRecord')}}</div>
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
             <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{scope.row.seq}}</span>
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
             </template>
           </el-table-column>
-          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
+          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="11%">
             <template slot-scope="scope">
               <span style="color:#6f6868;font-size:12px;">{{scope.row.type}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
             <template slot-scope="scope">
                  <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
           </template>
@@ -39,19 +39,19 @@
           <!-- <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
           </el-table-column> -->
-          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="25%">
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="32%">
             <template slot-scope="scope">
               <span class="spanAccount" @click="jumpDetail(scope.row._id)">{{scope.row._id}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
+          <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="28%">
             <template slot-scope="scope">
               <span  class="spanAccount"  @click="jumpDetail(scope.row._id)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="10%">
+          <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="11%">
              <template slot-scope="scope">
-              <span >{{scope.row.fee}}SWTC</span>
+              <span >{{scope.row.fee}}swtc</span>
             </template>
           </el-table-column>
           <el-table-column  width="30px"></el-table-column>
@@ -74,7 +74,12 @@
 </template>
 <script>
 import { getBlockDetail, getTransListByHash } from "../../js/fetch";
-import { getTransactionType, getTransactionMode, getType } from "@/js/utils";
+import {
+  getTransactionType,
+  getTransactionMode,
+  getType,
+  getMatchFlag
+} from "@/js/utils";
 export default {
   name: "blockdetail",
   data() {
@@ -154,6 +159,7 @@ export default {
       if (res && res.data && res.data.list.length > 0) {
         for (; i < res.data.list.length; i++) {
           list.push({
+            matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
             seq: res.data.list[i].seq || "----",
             type: getTransactionType(res.data.list[i].type) || "未知交易",
             flag: getTransactionMode(res.data.list[i].flag) || "----",
