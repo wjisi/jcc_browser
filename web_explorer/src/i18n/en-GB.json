@@ -1,5 +1,5 @@
 {
-  "homeTitle": "Weidex Blockchain Explorer",
+  "homeTitle": "SWTC Public Link Browser",
   "login": "LOGIN",
   "searchPlaceholder": "Serach by Address/blockHash/transHash",
   "indexPage": "HOME",
@@ -37,7 +37,8 @@
     "dealhash": "deal hash",
     "time": "deal time",
     "nodata": "No Data",
-    "notransaction": "No Transaction"
+    "notransaction": "No Transaction",
+    "Update": "Update"
   },
   "trade": {
     "number": "Current Transaction Number",
