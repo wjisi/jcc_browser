@@ -17,16 +17,36 @@
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
-          <el-table-column  width="46px"></el-table-column>
-          <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
-          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
+          <el-table-column  width="30px"></el-table-column>
+          <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column>
+           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
+             <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="10%" align="center">
+               <template slot-scope="scope">
+                <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
+              </template>
+          </el-table-column>
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="47%">
             <template slot-scope="scope">
               <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="time"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="18%">
+          <el-table-column prop="time"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="21%">
+              <template slot-scope="scope">
+            <span v-show="scope.row.takerPaysValue" class="pays">
+                 <span>{{scope.row.takerPaysValue}}</span>
+                 <span>{{scope.row.takerPaysCurrency}}</span>
+                 <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                 <span>{{scope.row.takerGetsValue}}</span>
+                 <span>{{scope.row.takerGetsCurrency}}</span>
+            </span>
+            <span v-show="!scope.row.takerPaysValue">{{defaultValue}}</span>
+            </template>
           </el-table-column>
-          <el-table-column width="46px"></el-table-column>
+          <el-table-column width="30px"></el-table-column>
         </el-table>
       </div>
         <ul class="pagination">
@@ -46,6 +66,11 @@
 </template>
 <script>
 import { getTranslist } from "../../js/fetch";
+import {
+  getTransactionType,
+  getTransactionMode,
+  getFlagColor
+} from "@/js/utils";
 export default {
   name: "trade",
   data() {
@@ -59,6 +84,7 @@ export default {
       tranList: [],
       // getRowClass: String,
       index: String,
+      defaultValue: "",
       // labelclass: String,
       // hashtime: String,
       total: 0,
@@ -81,7 +107,7 @@ export default {
       }
       this.loading = true;
       let res = await getTranslist(data);
-      console.log(res);
+      console.log(res, "jiao yi");
 
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
@@ -100,13 +126,38 @@ export default {
         list.push({
           sort: (this.currentPage - 1) * 20 + i + 1,
           _id: res[i]._id,
+          type: getTransactionType(res[i].type) || "---",
+          flag: getTransactionMode(res[i].flag) || "----",
+          displayDifferentColor: getFlagColor(res[i].flag) || "",
+          takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
+            .currency,
+          takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
+          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
+            .currency,
+          takerGetsValue: this.displayDefaultValues(res[i].takerGets).value,
+          // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
+          // displayDifferentCircles: getType(res.data.list[i].flag) || "",
           // transNum: this.handleData(res[i].transNum, 1),
           // hash: res[i].hash,
           time: this.handleHashtime(res[i].time)
         });
       }
-      console.log(list);
+      this.defaultValue = "---";
       return list;
+    },
+    displayDefaultValues(value) {
+      if (value) {
+        return value;
+      } else {
+        return { value: undefined };
+      }
+    },
+    displayDefaultCurrency(value) {
+      if (value) {
+        return value;
+      } else {
+        return { currency: undefined };
+      }
     },
     handleHashtime(time) {
       let { fillZero } = this;
@@ -184,6 +235,12 @@ export default {
   text-align: center;
   padding: 0 70px;
   min-width: 768px;
+  // .pays {
+  //   background: red;
+  // }
+  .paysI {
+    font-size: 12px;
+  }
 }
 .pagination {
   display: flex;

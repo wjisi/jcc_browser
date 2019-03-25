@@ -21,30 +21,26 @@
                <div></div>
             </div>
           </div>
-          <el-table-column  width="36px"></el-table-column>
-          <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="15%"></el-table-column>
-          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="18%"  align="left" header-align="left">
+          <el-table-column  width="30px"></el-table-column>
+          <!-- <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="17%"></el-table-column> -->
+          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="17%"  align="left" header-align="left">
             <template slot-scope="scope">
               <span class="idSpan" @click="jumpDetail(scope.row.hash)">{{scope.row._id}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="25%"  header-align="left" align="left">
-            <!-- <template slot-scope="scope">
-              <span style="margin-right:10px;">{{scope.row.time.time}}</span>
-              <span>{{scope.row.time.date}}</span>
-            </template> -->
-          </el-table-column>
-          <el-table-column prop="transNum" min-width="13%"  :label="$t('message.blockList.transctionNums')"  header-align="left" align="left">
-            <template slot-scope="scope">
-              <span class="transNumSpan">{{scope.row.transNum}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="hash"  :label="$t('message.hash')"  id="ellipsis" align="right" header-align="center" min-width="42%">
+            <el-table-column prop="hash"  :label="$t('message.blockDetailList.blockhashnumber')"  id="ellipsis" align="center" header-align="center" min-width="57%">
             <template slot-scope="scope">
               <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
-          <el-table-column  width="46px" ></el-table-column>
+          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="20%"  header-align="center" align="center">
+          </el-table-column>
+          <el-table-column prop="transNum" min-width="10%"  :label="$t('message.blockList.transctionNums')"  header-align="right" align="right">
+            <template slot-scope="scope">
+              <span class="transNumSpan">{{scope.row.transNum}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column  width="30px" ></el-table-column>
         </el-table>
       </div>
       <ul class="pagination">

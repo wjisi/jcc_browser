@@ -59,7 +59,7 @@
     "blockheight": "区块高度",
     "dateTime": "时间",
     "parentHash": "父哈希",
-    "transctionNums": "交易数量",
+    "transctionNums": "交易量",
     "sort": "排序",
     "goto": "跳至",
     "page": "页",

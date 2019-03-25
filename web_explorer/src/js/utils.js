@@ -164,6 +164,15 @@ export const getTransactionMode = (key) => {
   ])
   return map.get(key);
 }
+export const getFlagColor = (key) => {
+  let map = new Map([
+    [1, "#EF5617"],
+    [2, "#18C79E"],
+    [3, "#EEA200"],
+    [4, "#0AB1F2"]
+  ])
+  return map.get(key);
+}
 export const getMatchFlag = (key) => {
   let map = new Map([
     [3, "icon-sanfang"],
