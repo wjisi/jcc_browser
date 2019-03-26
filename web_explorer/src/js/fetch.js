@@ -101,7 +101,7 @@ export const getBlockDetail = async (hash) => {
   })
   return resSuccess(res);
 }
-
+// `${data.amount}`
 // 根据区块HASH查询其包含的交易列表
 export const getTransListByHash = async (data) => {
   let res = await service({

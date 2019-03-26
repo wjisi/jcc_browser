@@ -1,5 +1,9 @@
 <template>
   <div id="transnumDetail" class="blo">
+      <div class="walletHeader">
+        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
+        <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
+      </div>
       <component  :transnumkList="transnumkList"  :is="currentView"></component>
     <div class="transnum">
       <div class="title">{{$t('message.trade.effect')}}</div>
@@ -8,48 +12,27 @@
            <span>{{item.message}}</span><span>{{item.message}}</span>
           </li>
         </ul>
-       <!-- <ul class="pagination">
-        <li>
-          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
-        </li>
-        <li style="min-width: 1.08rem">{{$t('message.blockList.goto')}}
-          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
-          {{$t('message.blockList.page')}}
-        </li>
-        <li>
-          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
-        </li>
-      </ul> -->
     </div>
   </div>
 </template>
 <script>
-import {
-  // queryDelegateWallet,
-  // queryWalletIncome,
-  getBlockDetail
-} from "../../js/fetch";
+import { getBlockDetail } from "../../js/fetch";
 import offerCancel from "./offerCancel";
 import offerCreate from "./offerCreate";
 import payment from "./payment";
-import { getTransactionType } from "@/js/utils";
+// queryDelegateWallet,
+// queryWalletIncome,
+import { getTransactionType, getTransactionMode } from "@/js/utils";
 export default {
   name: "transnumDetail",
   components: { offerCancel, offerCreate, payment },
   data() {
     return {
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
-      },
-      hashtime: {},
-      bash: {},
-      transactionNumber: "",
+      transactionNumber:
+        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55",
       loading: false,
-      currentView: offerCreate,
+      currentView: payment,
       transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
-      defaultValue: "",
       affectedNodes: [],
       index: 0
     };
@@ -69,8 +52,6 @@ export default {
         this.$route.params.hash ||
         "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
       let res = await getBlockDetail(this.hash);
-      console.log(res);
-
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "99999999");
         // this.total = res.data.count;
@@ -96,35 +77,29 @@ export default {
           block: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
-          realPaysCurrency: this.displayDefaultCurrency(res.realPays).currency,
-          realPaysValue: this.displayDefaultValues(res.realPays).value,
-          realGetsCurrency: this.displayDefaultCurrency(res.realGets).currency,
-          realGetsValue: this.displayDefaultValues(res.realGets).value,
+          amountCurrency: this.displayDefaultCurrency(res.amount).currency,
+          amountValue: this.displayDefaultValues(res.amount).value || "---",
+          time: this.handleHashtime(res.time) || "---",
+          // realPaysCurrency: this.displayDefaultCurrency(res.realPays).currency,
+          // realPaysValue: this.displayDefaultValues(res.realPays).value,
+          // realGetsCurrency: this.displayDefaultCurrency(res.realGets).currency,
+          // realGetsValue: this.displayDefaultValues(res.realGets).value,
+          takerPaysCurrency:
+            this.displayDefaultCurrency(res.takerPays).currency || "---",
+          takerPaysValue: this.displayDefaultValues(res.takerPays).value,
+          takerGetsCurrency: this.displayDefaultCurrency(res.takerGets)
+            .currency,
+          takerGetsValue: this.displayDefaultValues(res.takerGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
+          flag:
+            getTransactionMode(res.flag) ||
+            getTransactionMode(res.type) ||
+            "----",
           dest: res.dest || "----",
-          succ: this.judgeDealSuccess(res.succ) || "---",
-          matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
-            .currency,
-          matchPaysValue: this.displayDefaultValues(res.matchPays).value,
-          matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
-            .currency,
-          matchGetsValue: this.displayDefaultValues(res.matchGets).value,
-          matchFlag: this.judgeIsMatch(res.matchFlag) || "---",
-          affectedNodes: res.affectedNodes || []
-          // [{ Memo: { MemoData: "---" } }]
-          // { final:
-          //        {takerGets: {currency: "",  value: ""},
-          //         takerPays: {currency: "", value: ""}
-          //        }
-          //  },
-          // takerPaysCurrency: this.displayDefaultCurrency(res.takerPays)
-          //   .currency,
-          // takerPaysValue: this.displayDefaultValues(res.takerPays).value,
-          // takerGetsCurrency: this.displayDefaultCurrency(res.takerGets)
-          //   .currency
+          succ: this.judgeDealSuccess(res.succ) || "---"
         };
       }
-      this.defaultValue = "---";
+      // this.defaultValue = "---";
       return list;
     },
     // jumpSizeChange() {
@@ -218,9 +193,8 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
-}
-.transnumDetailTitle {
-  text-align: left;
+  // .transnumDetailTitle {
+  // text-align: left;
   .tille {
     display: flex;
     align-items: center;
@@ -234,6 +208,7 @@ export default {
     color: #18c9dd;
   }
   .walletHeader {
+    // background: red;
     display: flex;
     align-items: center;
     justify-content: space-between;

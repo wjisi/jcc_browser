@@ -61,7 +61,9 @@
     "transferAmount": "转账金额",
     "turnoveramount": "成交金额",
     "multipartymatch": "多方撮合",
-    "turnoverprice": "成交价格"
+    "turnoverprice": "成交价格",
+    "amount": "交易金额",
+    "detail": "交易明细"
   },
   "blockList": {
     "blockheight": "区块高度",

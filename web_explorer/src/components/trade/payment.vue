@@ -1,10 +1,6 @@
 <template>
   <div id="payment" class="blo">
     <div class="paymentTitle">
-      <div class="walletHeader">
-        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
-        <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
-      </div>
       <Ul>
         <li>
            <div><span>{{$t('message.trade.type')}}</span>  <span>{{transnumkList.type}}</span></div>
@@ -17,12 +13,7 @@
          <li>
            <div>
                <span>{{$t('message.trade.transferAmount')}}</span>
-               <span v-show="transnumkList.realPaysValue">
-                 <span>{{transnumkList.realPaysValue}}</span>
-                 <span>{{transnumkList.realPaysCurrency}}</span>
-                 <span>{{transnumkList.realGetsValue}}</span>
-                 <span>{{transnumkList.realGetsCurrency}}</span>
-               </span>
+               <span> <span>{{transnumkList.amountCurrency}}</span> <span> {{transnumkList.amountValue}}</span></span>
           </div>
            <div class="note">
              <span>{{$t('message.home.time')}}</span>
@@ -36,7 +27,7 @@
          <li>
            <div>
              <span>{{$t('message.blockDetailList.transactionmode')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.note')}}</span><span></span></div>
+           <div><span>{{$t('message.trade.note')}}</span><span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
         </li>
       </Ul>
       </div>
@@ -45,10 +36,11 @@
 <script>
 export default {
   name: "payment",
+  props: {
+    transnumkList: {}
+  },
   data() {
-    return {
-      transnumkList: {}
-    };
+    return {};
   }
 };
 </script>
@@ -56,8 +48,6 @@ export default {
 #payment {
   text-align: center;
   min-width: 768px;
-  padding: 0 70px;
-  padding-bottom: 110px;
   background: #f2f8fc;
 }
 .paymentTitle {

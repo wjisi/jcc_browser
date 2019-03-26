@@ -78,8 +78,12 @@
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
              <template slot-scope="scope">
-               <!-- <img :src="" > -->
-                <span>{{scope.row.type}}</span>
+               <!-- <img :src= "`${scope.row.displayDifferentBg}`"> -->
+               <!-- <img :src="'../../images/'+" /> -->
+               <img :src="offerCancelBg">
+              <!-- <img :src=scope.row.displayDifferentBg> -->
+              <span>{{scope.row.type}}</span>
+              <!-- <img src=`../../images/${data.size}`/> -->
             </template>
           </el-table-column>
           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
@@ -103,8 +107,13 @@
           </el-table-column>
            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-              <span>{{scope.row.tradePrice}}</span>
-            </template> -->
+               <span v-if="scope.row.judgeTrade === 1">
+                   <span>{{parseInt(scope.row.takerGetsValue)}}</span>
+                   <span>{{scope.row.takerGetsCurrency}}</span>
+              </span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+              <span v-else>---</span>
+            </template>
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
@@ -145,13 +154,14 @@ import {
   getTransactionType,
   getTransactionMode,
   getMatchFlag,
-  getType,
-  getFlagColor
+  // getType,
+  getFlagColor,
+  getTypeBg
 } from "@/js/utils";
-import OfferAffectBg from "@/images/OfferAffect.png";
-import OfferCancelBg from "@/images/OfferCancel.png";
-import OfferCreateBg from "@/images/OfferCreate.png";
-import transferBg from "@/images/transfer.png";
+import offerAffectBg from "../../images/OfferAffect.png";
+import offerCancelBg from "../../images/OfferCancel.png";
+import offerCreateBg from "../../images/OfferCreate.png";
+import transferBg from "../../images/transfer.png";
 // import transferFailureBg from "@/images/transferFailure.png";
 export default {
   name: "wallet",
@@ -249,9 +259,9 @@ export default {
       loading: false,
       walletBalance: {},
       wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
-      OfferAffectBg,
-      OfferCancelBg,
-      OfferCreateBg,
+      offerAffectBg,
+      offerCancelBg,
+      offerCreateBg,
       transferBg
     };
   },
@@ -492,6 +502,9 @@ export default {
       // };
       this.getHistoricalList();
     },
+    jujn(value) {
+      return typeof value;
+    },
     getHistoryData(res) {
       let i = 0;
       let list = [];
@@ -501,7 +514,10 @@ export default {
             type:
               getTransactionType(res.data.list[i].type) ||
               this.$t("message.wallet.unknown"),
-            flag: getTransactionMode(res.data.list[i].flag) || "----",
+            flag:
+              getTransactionMode(res.data.list[i].flag) ||
+              getTransactionMode(res.data.list[i].type) ||
+              "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
             // transactionAmount: {
             //   matchPaysCurrency: this.displayDefaultCurrency(
@@ -517,7 +533,12 @@ export default {
             //     res.data.list[i].matchGets
             //   ).value
             // },
-            displayDifferentColor: getFlagColor(res.data.list[i].flag) || "",
+            displayDifferentColor:
+              getFlagColor(res.data.list[i].flag) ||
+              getFlagColor(res.data.list[i].type) ||
+              "",
+            // tradePriceCurrent:getFlagColor(res.data.list[i].flag),
+            displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
             takerPaysCurrency: this.displayDefaultCurrency(
               res.data.list[i].takerPays
             ).currency,
@@ -538,7 +559,8 @@ export default {
             account: res.data.list[i].account || "----",
             hash: res.data.list[i].hash || "----",
             matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
-            displayDifferentCircles: getType(res.data.list[i].flag) || ""
+            judgeTrade: res.data.list[i].flag
+            // displayDifferentCircles: getType(res.data.list[i].flag) || ""
           });
         }
         this.total = res.data.count;
@@ -552,6 +574,13 @@ export default {
       // this.defaultValue = "---";
       return list;
     },
+    // handleTradePrice(value,flag=""){
+    //   let tradePice={}
+    //    if(flag===1)
+    //    {
+    //      tradePice.value=
+    //    }
+    // },
     displayDefaultValues(value) {
       if (value) {
         return value;

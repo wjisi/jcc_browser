@@ -1,10 +1,6 @@
 <template>
   <div id="offerCreate" class="blo">
     <div class="offerCreateTitle">
-      <div class="walletHeader">
-        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
-        <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
-      </div>
       <Ul>
         <li>
            <div><span>{{$t('message.trade.type')}}</span>  <span>{{transnumkList.type}}</span></div>
@@ -17,11 +13,11 @@
          <li>
            <div>
                <span>{{$t('message.trade.entrustAmount')}}</span>
-               <span v-show="transnumkList.realPaysValue">
-                 <span>{{transnumkList.realPaysValue}}</span>
-                 <span>{{transnumkList.realPaysCurrency}}</span>
-                 <span>{{transnumkList.realGetsValue}}</span>
-                 <span>{{transnumkList.realGetsCurrency}}</span>
+               <span v-show="transnumkList.takerPaysValue">
+                 <span>{{transnumkList.takerPaysValue}}</span>
+                 <span>{{transnumkList.takerPaysCurrency}}</span>
+                 <span>{{transnumkList.takerGetsValue}}</span>
+                 <span>{{transnumkList.takerGetsCurrency}}</span>
                </span>
           </div>
            <div class="note">
@@ -59,10 +55,11 @@
 <script>
 export default {
   name: "offerCreate",
+  props: {
+    transnumkList: {}
+  },
   data() {
-    return {
-      transnumkList: {}
-    };
+    return {};
   }
 };
 </script>

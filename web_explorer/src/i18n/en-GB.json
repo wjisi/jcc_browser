@@ -61,7 +61,9 @@
     "transferAmount": "transfer amount",
     "turnoveramount": "turnover amount",
     "multipartymatch": "multipartymatch",
-    "turnoverprice": "turnover price"
+    "turnoverprice": "turnover price",
+    "amount": "tradeAmount",
+    "detail": "trade detail"
   },
   "blockList": {
     "blockheight": "block Height",

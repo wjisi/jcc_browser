@@ -156,21 +156,23 @@ export const getTransactionType = (key) => {
   ])
   return map.get(key);
 }
-// export const getTransactionWalletType = (key) => {
-//   let map = new Map([
-//     ["OfferCreate", "创建委托"],
-//     ["OfferAffect", "被动成交"],
-//     ["OfferCancel", "撤消委托"],
-//     // ["Payment", "转账"]
-//     ["Send", "支出"],
-//     ["Receive", "收入"]
-//   ])
-//   return map.get(key);
-// }
+export const getTypeBg = (key) => {
+  let map = new Map([
+    ["OfferCreate", "OfferAffect.png"],
+    ["OfferAffect", "OfferAffect.png"],
+    ["OfferCancel", "OfferAffect.png"],
+    ["Payment", "transferBg"],
+    ["Send", "transferBg"],
+    ["Receive", "transferBg"]
+  ])
+  return map.get(key);
+}
 export const getTransactionMode = (key) => {
   let map = new Map([
     [1, "买入"],
-    [2, "卖出"]
+    [2, "卖出"],
+    ["Send", "支出"],
+    ["Receive", "收入"]
   ])
   return map.get(key);
 }
@@ -178,8 +180,8 @@ export const getFlagColor = (key) => {
   let map = new Map([
     [1, "#EF5617"],
     [2, "#18C79E"],
-    [3, "#EEA200"],
-    [4, "#0AB1F2"]
+    ["Send", "#EEA200"],
+    ["Receive", "#0AB1F2"]
   ])
   return map.get(key);
 }
