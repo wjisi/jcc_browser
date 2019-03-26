@@ -94,16 +94,16 @@ export default {
       min-width: 320px;
       border-bottom: 1px solid #e0e8ed;
       div {
-        min-width: 280px;
+        // min-width: 280px;
         display: flex;
         justify-content: space-between;
         flex: 1;
         span:nth-child(2) {
-          min-width: 280px;
+          // min-width: 280px;
           display: inline-block;
           white-space: nowrap;
           overflow: hidden;
-          margin-left: 20px;
+          // margin-left: 20px;
           text-overflow: ellipsis;
           text-align: right;
         }

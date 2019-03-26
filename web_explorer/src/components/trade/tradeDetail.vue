@@ -5,13 +5,57 @@
         <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
       <component  :transnumkList="transnumkList"  :is="currentView"></component>
-    <div class="transnum">
-      <div class="title">{{$t('message.trade.effect')}}</div>
-        <ul class="transnumList" >
-          <li v-for="(item,index) of  affectedNodes" :key="index"  >
-           <span>{{item.message}}</span><span>{{item.message}}</span>
-          </li>
-        </ul>
+    <div class="bockList">
+      <div class="bockListData">
+        <div class="title">{{$t('message.trade.detail')}}</div>
+        <el-table :data="tradeDetailList" style="width:100%"  row-class-name="transnumDetailrowClass" header-row-class-name="transnumDetailHeaderRowclass">
+           <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else ><img src='../../images/not _found_list.png' /></div>
+          </div>
+          <el-table-column  width="30px"></el-table-column>
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+            <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
+            <template slot-scope="scope">
+                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
+          </template>
+          </el-table-column>
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+            <template slot-scope="scope">
+                <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
+                </span>
+                <span v-show="!scope.row.takerPaysValue">
+                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                </span>
+            </template>
+          </el-table-column>
+           <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+            <template slot-scope="scope">
+               <span v-if="scope.row.judgeTrade === 1">
+                   <span>{{parseInt(scope.row.takerGetsValue)}}</span>
+                   <span>{{scope.row.takerGetsCurrency}}</span>
+              </span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+              <span v-else>---</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
+            <template slot-scope="scope">
+              <span class="hashSpan">{{scope.row.account}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column  width="30px"></el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -22,7 +66,11 @@ import offerCreate from "./offerCreate";
 import payment from "./payment";
 // queryDelegateWallet,
 // queryWalletIncome,
-import { getTransactionType, getTransactionMode } from "@/js/utils";
+import {
+  getTransactionType,
+  getTransactionMode,
+  SelectTypeComponents
+} from "@/js/utils";
 export default {
   name: "transnumDetail",
   components: { offerCancel, offerCreate, payment },
@@ -33,7 +81,7 @@ export default {
       loading: false,
       currentView: payment,
       transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
-      affectedNodes: [],
+      tradeDetailList: [],
       index: 0
     };
   },
@@ -54,13 +102,13 @@ export default {
       let res = await getBlockDetail(this.hash);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "99999999");
-        // this.total = res.data.count;
         this.transnumkList = this.handelDealHashData(res);
-        // this.bash = res.data.info;
+        this.tradeDetailList =
+          this.handelTradeDetailList(res.data.affectedNodes) || [];
       } else {
         this.transnumkList = [];
       }
-      // this.loading = false;
+      this.loading = false;
     },
     // clearGopage() {
     //   this.gopage = "";
@@ -68,10 +116,46 @@ export default {
     handleData(value) {
       return value;
     },
+    handelTradeDetailList(res) {
+      let list = [];
+      if (res && res.length > 0) {
+        let i = 0;
+        for (; i < res.length; i++) {
+          list.push({
+            seq: res[i].seq || "---",
+            account: res[i].account || "---",
+            judgeTrade: res[i].flag,
+            // amountCurrency: this.displayDefaultCurrency(res[i].amount).currency,
+            // amountValue:
+            //   this.displayDefaultValues(res[i].amount).value || "---",
+            // realPaysCurrency: this.displayDefaultCurrency(res[i].realPays).currency,
+            // realPaysValue: this.displayDefaultValues(res[i].realPays).value,
+            // realGetsCurrency: this.displayDefaultCurrency(res[i].realGets).currency,
+            // realGetsValue: this.displayDefaultValues(res[i].realGets).value,
+            takerPaysCurrency:
+              this.displayDefaultCurrency(res[i].final.takerPays).currency ||
+              "---",
+            takerPaysValue: this.displayDefaultValues(res[i].final.takerPays)
+              .value,
+            takerGetsCurrency: this.displayDefaultCurrency(
+              res[i].final.takerGets
+            ).currency,
+            takerGetsValue: this.displayDefaultValues(res[i].final.takerGets)
+              .value,
+            flag:
+              getTransactionMode(res[i].flag) ||
+              getTransactionMode(res[i].type) ||
+              "----"
+          });
+        }
+      }
+      return list;
+    },
     handelDealHashData(res) {
       let list = {};
       if (res && res.data) {
         res = res.data;
+        this.currentView = SelectTypeComponents(res.type);
         list = {
           type: getTransactionType(res.type) || "---",
           block: res.seq || "---",
@@ -80,10 +164,13 @@ export default {
           amountCurrency: this.displayDefaultCurrency(res.amount).currency,
           amountValue: this.displayDefaultValues(res.amount).value || "---",
           time: this.handleHashtime(res.time) || "---",
-          // realPaysCurrency: this.displayDefaultCurrency(res.realPays).currency,
-          // realPaysValue: this.displayDefaultValues(res.realPays).value,
-          // realGetsCurrency: this.displayDefaultCurrency(res.realGets).currency,
-          // realGetsValue: this.displayDefaultValues(res.realGets).value,
+          matchFlag: res.matchFlag || "",
+          matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
+            .currency,
+          matchPaysValue: this.displayDefaultValues(res.matchPays).value,
+          matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
+            .currency,
+          matchGetsValue: this.displayDefaultValues(res.matchGets).value,
           takerPaysCurrency:
             this.displayDefaultCurrency(res.takerPays).currency || "---",
           takerPaysValue: this.displayDefaultValues(res.takerPays).value,
@@ -247,5 +334,51 @@ export default {
       }
     }
   }
+}
+</style>
+<style  lang="scss" >
+.el-table {
+  th {
+    border-bottom: 1px solid #e0e8ed;
+  }
+}
+.transnumDetailHeaderRowclass {
+  color: #3b3f4c;
+  font-size: 14px;
+  height: 40px;
+}
+#blockdetail .transnumDetailrowClass {
+  font-size: 12px;
+  height: 40px;
+}
+#blockdetail .pagination .is-background {
+  .el-pager li:not(.disabled).active {
+    background: #18c9dd;
+    color: #ffffff;
+  }
+  .el-pager li {
+    background: #ffffff;
+    min-width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #959595;
+  }
+  .btn-next,
+  .btn-prev {
+    background: #ffffff;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #959595;
+  }
+}
+#blockdetail .el-pager .el-icon-more {
+  display: none;
 }
 </style>

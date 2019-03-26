@@ -65,12 +65,6 @@ export default {
   name: "block",
   data() {
     return {
-      // pickerOptions: {
-      //   disabledDate(time) {
-      //     return time.getTime() > Date.now();
-      //   }
-      // },
-      // selectedDate: "",
       blockList: [],
       total: 0,
       loading: false,

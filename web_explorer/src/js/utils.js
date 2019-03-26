@@ -148,11 +148,26 @@ export const getStyle = (key) => {
 export const getTransactionType = (key) => {
   let map = new Map([
     ["OfferCreate", "创建委托"],
+    // ["OfferCreate", "message.offerCreateUtils"],
+    // ["OfferCreate", this.$t('message.wallet.offerCreate')],
     ["OfferAffect", "被动成交"],
     ["OfferCancel", "撤消委托"],
     ["Payment", "转账"],
     ["Send", "转账"],
     ["Receive", "转账"]
+  ])
+  return map.get(key);
+}
+export const SelectTypeComponents = (key) => {
+  let map = new Map([
+    ["OfferCreate", "offerCreate"],
+    // ["OfferCreate", "message.offerCreateUtils"],
+    // ["OfferCreate", this.$t('message.wallet.offerCreate')],
+    ["OfferAffect", "0fferCreate"],
+    ["OfferCancel", "offerCreate"],
+    ["Payment", "payment"],
+    ["Send", "payment"],
+    ["Receive", "payment"]
   ])
   return map.get(key);
 }

@@ -30,9 +30,9 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
             </template>
           </el-table-column>
-          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="10%" align="center">
+           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
                <template slot-scope="scope">
-                <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
+                  <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
           </el-table-column>
           <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="47%">
@@ -92,7 +92,7 @@ export default {
       tranList: [],
       // getRowClass: String,
       index: String,
-      defaultValue: "",
+      // defaultValue: "",
       // labelclass: String,
       // hashtime: String,
       total: 0,
@@ -137,8 +137,12 @@ export default {
           // seq: res[i].seq || "----",
           _id: res[i]._id,
           type: getTransactionType(res[i].type) || "---",
-          flag: getTransactionMode(res[i].flag) || "----",
-          displayDifferentColor: getFlagColor(res[i].flag) || "",
+          flag:
+            getTransactionMode(res[i].flag) ||
+            getTransactionMode(res[i].type) ||
+            "----",
+          displayDifferentColor:
+            getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
           takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
             .currency,
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
@@ -155,7 +159,7 @@ export default {
           time: this.handleHashtime(res[i].time)
         });
       }
-      this.defaultValue = "---";
+      // this.defaultValue = "---";
       return list;
     },
     displayDefaultValues(value) {

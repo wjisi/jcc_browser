@@ -13,11 +13,11 @@
          <li>
            <div>
                <span>{{$t('message.trade.entrustAmount')}}</span>
-               <span v-show="transnumkList.takerPaysValue">
-                 <span>{{transnumkList.takerPaysValue}}</span>
-                 <span>{{transnumkList.takerPaysCurrency}}</span>
-                 <span>{{transnumkList.takerGetsValue}}</span>
-                 <span>{{transnumkList.takerGetsCurrency}}</span>
+               <span v-show="transnumkList.matchPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
+                 <span>{{transnumkList.matchPaysValue}}</span>
+                 <span>{{transnumkList.matchPaysCurrency}}</span>
+                 <span>{{transnumkList.matchGetsValue}}</span>
+                 <span>{{transnumkList.matchGetsCurrency}}</span>
                </span>
           </div>
            <div class="note">
@@ -36,17 +36,24 @@
          <li>
            <div>
              <span>{{$t('message.trade.turnoveramount')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.multipartymatch')}}</span><span></span></div>
+           <div><span>{{$t('message.trade.multipartymatch')}}</span><span>{{transnumkList.matchFlag}}</span></div>
         </li>
         <li>
            <div>
-             <span>{{$t('message.trade.turnoverprice')}}</span><span>{{transnumkList.flag}}</span></div>
+             <span>{{$t('message.trade.turnoverprice')}}</span>
+             <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
+                 <span>{{transnumkList.takerPaysValue}}</span>
+                 <span>{{transnumkList.takerPaysCurrency}}</span>
+                 <span>{{transnumkList.takerGetsValue}}</span>
+                 <span>{{transnumkList.takerGetsCurrency}}</span>
+               </span>
+          </div>
            <div><span>{{$t('message.trade.note')}}</span><span></span></div>
         </li>
         <li>
            <div>
              <span>{{$t('message.blockDetailList.transactionmode')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.note')}}</span><span></span></div>
+           <div><span></span><span></span></div>
         </li>
       </Ul>
       </div>
@@ -118,11 +125,11 @@ export default {
         justify-content: space-between;
         flex: 1;
         span:nth-child(2) {
-          min-width: 280px;
+          // min-width: 280px;
           display: inline-block;
           white-space: nowrap;
           overflow: hidden;
-          margin-left: 20px;
+          // margin-left: 20px;
           text-overflow: ellipsis;
           text-align: right;
         }
