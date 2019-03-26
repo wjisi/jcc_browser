@@ -1,51 +1,6 @@
 <template>
   <div id="transnumDetail" class="blo">
-    <div class="transnumDetailTitle">
-      <div class="walletHeader">
-        <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
-        <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
-      </div>
-      <Ul>
-        <li>
-           <div><span>{{$t('message.trade.type')}}</span>  <span>{{transnumkList.type}}</span></div>
-           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>{{transnumkList.block}}</span></div>
-        </li>
-          <li>
-           <div><span>{{$t('message.trade.initiator')}}</span>  <span>{{transnumkList.account}}</span></div>
-           <div><span>{{$t('message.trade.costs')}}</span>  <span>{{transnumkList.fee}}</span></div>
-        </li>
-         <li>
-           <div>
-               <span>{{$t('message.trade.amount')}}</span>
-               <span v-show="transnumkList.realPaysValue">
-                 <span>{{transnumkList.realPaysValue}}</span>
-                 <span>{{transnumkList.realPaysCurrency}}</span>
-                 <span>{{transnumkList.realGetsValue}}</span>
-                 <span>{{transnumkList.realGetsCurrency}}</span>
-               </span>
-               <span v-show="!transnumkList.realPaysValue">{{defaultValue}}</span>
-          </div>
-           <div class="note"><span>{{$t('message.trade.note')}}</span>  <span class="asciiC">{{asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span></div>
-        </li>
-        <li>
-           <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div>
-           <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
-        </li>
-         <li>
-           <div>
-             <span>{{$t('message.trade.dealamount')}}</span>
-             <span v-show="transnumkList.matchPaysValue">
-               <span>{{transnumkList.matchPaysValue}}</span>
-               <span>{{transnumkList.matchPaysCurrency}}</span>
-               <span>{{transnumkList.matchGetsValue}}</span>
-               <span>{{transnumkList.matchGetsCurrency}}</span>
-            </span>
-            <span v-show="!transnumkList.matchPaysValue">{{defaultValue}}</span>
-          </div>
-           <div><span>{{$t('message.trade.ismatch')}}</span>  <span>{{transnumkList.matchFlag}}</span></div>
-        </li>
-      </Ul>
-      </div>
+      <component  :transnumkList="transnumkList"  :is="currentView"></component>
     <div class="transnum">
       <div class="title">{{$t('message.trade.effect')}}</div>
         <ul class="transnumList" >
@@ -74,10 +29,13 @@ import {
   // queryWalletIncome,
   getBlockDetail
 } from "../../js/fetch";
+import offerCancel from "./offerCancel";
+import offerCreate from "./offerCreate";
+import payment from "./payment";
 import { getTransactionType } from "@/js/utils";
-// , getTransactionMode
 export default {
   name: "transnumDetail",
+  components: { offerCancel, offerCreate, payment },
   data() {
     return {
       pickerOptions: {
@@ -89,9 +47,7 @@ export default {
       bash: {},
       transactionNumber: "",
       loading: false,
-      // total: 0,
-      // currentPage: 1,
-      // gopage: 100,
+      currentView: offerCreate,
       transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
       defaultValue: "",
       affectedNodes: [],
@@ -229,25 +185,6 @@ export default {
         return { currency: undefined };
       }
     },
-    // handleCurrentChange(val) {
-    //   this.currentPage = val;
-
-    //   this.loading = false;
-    //   this.getTransnumDetail();
-    // },
-    // handlegettransnumDetail(res) {
-    //   let i = 0;
-    //   let list = [];
-    //   for (; i < res.length; i++) {
-    //     list.push({
-    //       _id: res[i]._id,
-    //       transNum: res[i].transNum,
-    //       hash: res[i].hash,
-    //       time: this.handleHashtime(res[i].time)
-    //     });
-    //   }
-    //   return list;
-    // },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -275,9 +212,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-// .note {
-//   min-width: 320px;
-// }
 #transnumDetail {
   text-align: center;
   min-width: 768px;
@@ -307,84 +241,7 @@ export default {
     color: #3e3f45;
     padding: 10px 0;
   }
-
-  ul {
-    width: 100%;
-    display: flex;
-    flex-flow: column;
-    border: 2px solid #c1e9f1;
-    border-radius: 8px;
-    background: #ffffff;
-    margin-bottom: 20px;
-    li {
-      display: flex;
-      justify-content: space-between;
-      height: 40px;
-      line-height: 40px;
-      padding: 0 20px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: #5f5d5d;
-      font-size: 14px;
-      min-width: 320px;
-      border-bottom: 1px solid #e0e8ed;
-      div {
-        min-width: 280px;
-        display: flex;
-        justify-content: space-between;
-        flex: 1;
-        span:nth-child(2) {
-          min-width: 280px;
-          display: inline-block;
-          white-space: nowrap;
-          overflow: hidden;
-          margin-left: 20px;
-          text-overflow: ellipsis;
-          text-align: right;
-        }
-      }
-      div:nth-child(1) {
-        padding-right: 20px;
-      }
-      div:nth-child(2) {
-        border-left: 1px solid #e0e8ed;
-        padding-left: 20px;
-      }
-    }
-  }
 }
-// .pagination {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   font-size: 14px;
-//   padding-top: 20px;
-//   padding-bottom: 110px;
-//   .sortButton {
-//     border: 1px solid #959595;
-//     border-radius: 6px;
-//     height: 36px;
-//     line-height: 36px;
-//     width: 50px;
-//     margin-left: 20px;
-//     background: #f2f8fc;
-//     padding: 0 3px;
-//   }
-//   li .inputDiv {
-//     width: 36px;
-//     height: 36px;
-//     border: 1px solid #959595;
-//     display: inline-block;
-//     margin: 0 10px;
-//     border-radius: 6px;
-//   }
-//   li div input {
-//     border-radius: 6px;
-//     width: 36px;
-//     height: 36px;
-//     border: 0;
-//   }
-// }
 .title {
   background: linear-gradient(right, #0ab1f2, #26e0cc);
   height: 40px;
@@ -416,67 +273,4 @@ export default {
     }
   }
 }
-// .pagination {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   background: #ffffff;
-//   font-size: 14px;
-//   .sortButton {
-//     border: 1px solid #959595;
-//     border-radius: 6px;
-//     height: 36px;
-//     line-height: 36px;
-//     width: 50px;
-//     margin-left: 20px;
-//     background: #f2f8fc;
-//   }
-//   li .input {
-//     width: 36px;
-//     height: 36px;
-//     border: 1px solid #959595;
-//     display: inline-block;
-//     border-radius: 6px;
-//     margin: 0 10px;
-//   }
-//   li div input {
-//     border-radius: 6px;
-//     width: 36px;
-//     height: 36px;
-//     border: 0;
-//   }
-// }
-</style>
-
-// <style  lang="scss" >
-// #transnumDetail .pagination .is-background {
-//   .el-pager li:not(.disabled).active {
-//     background: #18c9dd;
-//     color: #ffffff;
-//   }
-//   .el-pager li {
-//     background: #ffffff;
-//     width: 40px;
-//     height: 40px;
-//     line-height: 40px;
-//     margin-right: 10px;
-//     border-radius: 6px;
-//     font-size: 14px;
-//     color: #959595;
-//   }
-//   .btn-next,
-//   .btn-prev {
-//     background: #ffffff;
-//     width: 40px;
-//     height: 40px;
-//     line-height: 40px;
-//     margin-right: 10px;
-//     border-radius: 6px;
-//     font-size: 14px;
-//     color: #959595;
-//   }
-// }
-// #transnumDetail .el-pager .el-icon-more {
-//   display: none;
-// }
 </style>

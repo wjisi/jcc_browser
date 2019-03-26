@@ -161,7 +161,9 @@ export default {
           list.push({
             matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
             seq: res.data.list[i].seq || "----",
-            type: getTransactionType(res.data.list[i].type) || "未知交易",
+            type:
+              getTransactionType(res.data.list[i].type) ||
+              this.$t("message.wallet.unknown"),
             flag: getTransactionMode(res.data.list[i].flag) || "----",
             displayDifferentCircles: getType(res.data.list[i].flag) || "",
             // time: this.handleHashtime(res.data.list[i].time) || "----",

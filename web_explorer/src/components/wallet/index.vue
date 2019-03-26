@@ -77,6 +77,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
+             <template slot-scope="scope">
+               <!-- <img :src="" > -->
+                <span>{{scope.row.type}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
                <template slot-scope="scope">
@@ -144,6 +148,11 @@ import {
   getType,
   getFlagColor
 } from "@/js/utils";
+import OfferAffectBg from "@/images/OfferAffect.png";
+import OfferCancelBg from "@/images/OfferCancel.png";
+import OfferCreateBg from "@/images/OfferCreate.png";
+import transferBg from "@/images/transfer.png";
+// import transferFailureBg from "@/images/transferFailure.png";
 export default {
   name: "wallet",
   // beforeRouteEnter(to, from, next) {
@@ -176,17 +185,21 @@ export default {
           label: this.$t("message.wallet.offerAffect")
         },
         {
-          selectTypeValue: "fferAffect",
+          selectTypeValue: "offerCancel",
           label: this.$t("message.wallet.offerCancel")
         },
         {
-          selectTypeValue: "Send",
-          label: this.$t("message.wallet.Send")
-        },
-        {
-          selectTypeValue: "Receive",
-          label: this.$t("message.wallet.Receive")
+          selectTypeValue: "Payment",
+          label: this.$t("message.wallet.Payment")
         }
+        // {
+        //   selectTypeValue: "Send",
+        //   label: this.$t("message.wallet.Send")
+        // },
+        // {
+        //   selectTypeValue: "Receive",
+        //   label: this.$t("message.wallet.Receive")
+        // }
         // {
         //   selectTypeValue: 4,
         //   label: this.$t("message.wallet.transferaccounts")
@@ -195,9 +208,9 @@ export default {
       transactionMode: [
         { selectModeValue: "", label: this.$t("message.wallet.allMode") },
         { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
-        { selectModeValue: 2, label: this.$t("message.wallet.Sale") },
-        { selectModeValue: 3, label: this.$t("message.wallet.Income") },
-        { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+        { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
+        // { selectModeValue: 3, label: this.$t("message.wallet.Income") },
+        // { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
       ],
       transactionCurrency: [
         {
@@ -235,7 +248,11 @@ export default {
       clearTitle: "清除定时器",
       loading: false,
       walletBalance: {},
-      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe"
+      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
+      OfferAffectBg,
+      OfferCancelBg,
+      OfferCreateBg,
+      transferBg
     };
   },
   created() {
@@ -481,7 +498,9 @@ export default {
       if (res && res.data && res.data.list.length > 0) {
         for (; i < res.data.list.length; i++) {
           list.push({
-            type: getTransactionType(res.data.list[i].type) || "----",
+            type:
+              getTransactionType(res.data.list[i].type) ||
+              this.$t("message.wallet.unknown"),
             flag: getTransactionMode(res.data.list[i].flag) || "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
             // transactionAmount: {

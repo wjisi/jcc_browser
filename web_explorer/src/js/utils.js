@@ -150,13 +150,23 @@ export const getTransactionType = (key) => {
     ["OfferCreate", "创建委托"],
     ["OfferAffect", "被动成交"],
     ["OfferCancel", "撤消委托"],
-    ["Payment", "主动成交"],
-    ["Send", "支出"],
-    ["Receive", "收入"],
-    ["其它", "未知"]
+    ["Payment", "转账"],
+    ["Send", "转账"],
+    ["Receive", "转账"]
   ])
   return map.get(key);
 }
+// export const getTransactionWalletType = (key) => {
+//   let map = new Map([
+//     ["OfferCreate", "创建委托"],
+//     ["OfferAffect", "被动成交"],
+//     ["OfferCancel", "撤消委托"],
+//     // ["Payment", "转账"]
+//     ["Send", "支出"],
+//     ["Receive", "收入"]
+//   ])
+//   return map.get(key);
+// }
 export const getTransactionMode = (key) => {
   let map = new Map([
     [1, "买入"],

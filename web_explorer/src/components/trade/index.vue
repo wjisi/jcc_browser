@@ -110,6 +110,7 @@ export default {
   },
   methods: {
     async getAllList(data) {
+      this.tranList = [];
       if (this.loading) {
         return;
       }

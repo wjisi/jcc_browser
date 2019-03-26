@@ -45,18 +45,23 @@
     "narrationAndOthers": "narration and others",
     "type": "Transaction Type",
     "initiator": "Transaction Initiator",
-    "amount": "Transaction Amount",
+    "entrustAmount": "entrust amount",
+    "entrustprice": "entrust price",
     "to": "Transaction To",
-    "dealamount": "Clinch a deal amount",
+    "entrustamount": "entrust amount",
     "booknumber": "Book number",
-    "costs": "Transaction Costs",
+    "fuelCosts": "fuelCosts",
     "note": "Tradnsaction Note",
     "results": "Transaction Results",
     "effect": "Transaction Effect",
     "successtrade": "success trade",
     "ismatch": "is match",
     "tradeVolume": "trade volume",
-    "tradeRecord": "trade record"
+    "tradeRecord": "trade record",
+    "transferAmount": "transfer amount",
+    "turnoveramount": "turnover amount",
+    "multipartymatch": "multipartymatch",
+    "turnoverprice": "turnover price"
   },
   "blockList": {
     "blockheight": "block Height",
@@ -120,6 +125,7 @@
     "Send": "支出",
     "Receive": "收入",
     "unknown": "unknown",
-    "tradePrice": "tradePrice"
+    "tradePrice": "tradePrice",
+    "Payment": "Payment"
   }
 }

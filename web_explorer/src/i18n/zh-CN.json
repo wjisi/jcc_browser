@@ -45,18 +45,23 @@
     "narrationAndOthers": "叙述与其它",
     "type": "交易类型",
     "initiator": "交易发起方",
-    "amount": "交易金额",
+    "entrustAmount": "委托金额",
+    "entrustprice": "委托价格",
     "to": "交易对家",
-    "dealamount": "成交金额",
+    "entrustamount": "成交金额",
     "booknumber": "账本号",
-    "costs": "交易费用",
+    "fuelCosts": "燃料费用",
     "note": "交易备注",
     "results": "交易结果",
     "effect": "交易效果",
     "successtrade": "交易成功",
     "ismatch": "多方撮合",
     "tradeVolume": "交易数额",
-    "tradeRecord": "交易记录"
+    "tradeRecord": "交易记录",
+    "transferAmount": "转账金额",
+    "turnoveramount": "成交金额",
+    "multipartymatch": "多方撮合",
+    "turnoverprice": "成交价格"
   },
   "blockList": {
     "blockheight": "区块高度",
@@ -120,6 +125,7 @@
     "Send": "支出",
     "Receive": "收入",
     "unknown": "未知",
-    "tradePrice": "交易价格"
+    "tradePrice": "交易价格",
+    "Payment": "转账"
   }
 }

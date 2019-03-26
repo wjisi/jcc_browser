@@ -426,7 +426,9 @@ export default {
       if (res && res.data && res.data.list.length > 0) {
         for (; i < res.data.list.length; i++) {
           list.push({
-            type: getTransactionType(res.data.list[i].type) || "----",
+            type:
+              getTransactionType(res.data.list[i].type) ||
+              this.$t("message.wallet.unknown"),
             flag: getTransactionMode(res.data.list[i].flag) || "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
             transactionAmount: {
