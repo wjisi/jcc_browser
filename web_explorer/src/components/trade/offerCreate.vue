@@ -28,27 +28,43 @@
         <li>
             <div>
              <span>{{$t('message.trade.entrustprice')}}</span>
-             <span>{{transnumkList.price}}</span>
+              <span>
+                  <span v-if="transnumkList.judgeTrade === 1">
+                   <span>{{parseInt(transnumkList.matchGetsValue)/parseInt(transnumkList.matchPaysValue)}}</span>
+                   <span>{{transnumkList.matchGetsCurrency}}</span>
+              </span>
+               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.matchPaysValue)/parseInt(transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
+              <span v-else>---</span>
+            </span>
           </div>
            <!-- <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div> -->
            <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
         </li>
          <li>
            <div>
-             <span>{{$t('message.trade.turnoveramount')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.multipartymatch')}}</span><span>{{transnumkList.matchFlag}}</span></div>
-        </li>
-        <li>
-           <div>
-             <span>{{$t('message.trade.turnoverprice')}}</span>
-             <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
+             <span>{{$t('message.trade.turnoveramount')}}</span>
+              <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
                  <span>{{transnumkList.takerPaysValue}}</span>
                  <span>{{transnumkList.takerPaysCurrency}}</span>
                  <span>{{transnumkList.takerGetsValue}}</span>
                  <span>{{transnumkList.takerGetsCurrency}}</span>
                </span>
           </div>
-           <div><span>{{$t('message.trade.note')}}</span><span></span></div>
+           <div><span>{{$t('message.trade.multipartymatch')}}</span><span>{{transnumkList.matchFlag}}</span></div>
+        </li>
+        <li>
+           <div>
+             <span>{{$t('message.trade.turnoverprice')}}</span>
+              <span>
+                  <span v-if="transnumkList.judgeTrade === 1">
+                   <span>{{parseInt(transnumkList.matchGetsValue)/parseInt(transnumkList.matchPaysValue)}}</span>
+                   <span>{{transnumkList.matchGetsCurrency}}</span>
+              </span>
+               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.matchPaysValue)/parseInt(transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
+              <span v-else>---</span>
+            </span>
+          </div>
+           <div><span>{{$t('message.trade.note')}}</span><span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
         </li>
         <li>
            <div>
@@ -126,12 +142,13 @@ export default {
         flex: 1;
         span:nth-child(2) {
           // min-width: 280px;
-          display: inline-block;
+          // display: inline-block;
           white-space: nowrap;
           overflow: hidden;
           // margin-left: 20px;
+          background: red;
           text-overflow: ellipsis;
-          text-align: right;
+          // text-align: right;
         }
       }
       div:nth-child(1) {

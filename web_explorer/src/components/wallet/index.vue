@@ -54,8 +54,8 @@
         <el-option v-for="item in  transactionCounterType" :key="item.selectCurrencyCounterValue" :label="item.label" :value="item.selectCurrencyCounterValue"></el-option>
       </el-select>
       <span class="selctionData">{{$t('message.wallet.dateRange')}}
-        <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')"></el-date-picker>至
-        <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')"></el-date-picker>
+        <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')" style="width:100px"></el-date-picker>至
+        <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')" style="width:100px"></el-date-picker>
         <span class="sure" @click="selectTimerange">确认</span>
       </span>
     </div>
@@ -108,10 +108,10 @@
            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
                <span v-if="scope.row.judgeTrade === 1">
-                   <span>{{parseInt(scope.row.takerGetsValue)}}</span>
+                   <span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span>
                    <span>{{scope.row.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerPaysValue)/parseInt(scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
               <span v-else>---</span>
             </template>
           </el-table-column>
@@ -703,10 +703,10 @@ export default {
         }
         span:nth-child(2) {
           // min-width: 290px;
-          display: inline-block;
+          // display: inline-block;
           white-space: nowrap;
           overflow: hidden;
-          margin-left: 20px;
+          // margin-left: 20px;
           // background: red;
           text-overflow: ellipsis;
           text-align: right;

@@ -38,13 +38,13 @@
                 </span>
             </template>
           </el-table-column>
-           <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
                <span v-if="scope.row.judgeTrade === 1">
-                   <span>{{parseInt(scope.row.takerGetsValue)}}</span>
+                   <span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span>
                    <span>{{scope.row.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerPaysValue)/parseInt(scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
               <span v-else>---</span>
             </template>
           </el-table-column>
@@ -164,7 +164,7 @@ export default {
           amountCurrency: this.displayDefaultCurrency(res.amount).currency,
           amountValue: this.displayDefaultValues(res.amount).value || "---",
           time: this.handleHashtime(res.time) || "---",
-          matchFlag: res.matchFlag || "",
+          matchFlag: res.matchFlag || "---",
           matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
             .currency,
           matchPaysValue: this.displayDefaultValues(res.matchPays).value,
@@ -183,7 +183,8 @@ export default {
             getTransactionMode(res.type) ||
             "----",
           dest: res.dest || "----",
-          succ: this.judgeDealSuccess(res.succ) || "---"
+          succ: this.judgeDealSuccess(res.succ) || "---",
+          judgeTrade: res.flag
         };
       }
       // this.defaultValue = "---";
@@ -193,6 +194,10 @@ export default {
     //   this.currentPage = this.gopage;
     //   this.loading = false;
     //   this.getTransnumDetail();
+    // },
+    // judge(value) {
+    //   console.log(value);
+    //   return value;
     // },
     judgeDealSuccess(value) {
       if (value === "tesSUCCESS") {
@@ -280,8 +285,17 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
-  // .transnumDetailTitle {
-  // text-align: left;
+  .hashSpan {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #3b3f4c;
+    font-size: 14px;
+  }
+  .hashSpan:hover {
+    color: #06aaf9;
+    cursor: pointer;
+  }
   .tille {
     display: flex;
     align-items: center;

@@ -100,12 +100,13 @@ export default {
         flex: 1;
         span:nth-child(2) {
           // min-width: 280px;
-          display: inline-block;
+          // display: inline-block;
           white-space: nowrap;
           overflow: hidden;
           // margin-left: 20px;
+          background: red;
           text-overflow: ellipsis;
-          text-align: right;
+          // text-align: right;
         }
       }
       div:nth-child(1) {

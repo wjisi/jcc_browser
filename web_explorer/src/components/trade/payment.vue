@@ -13,7 +13,7 @@
          <li>
            <div>
                <span>{{$t('message.trade.transferAmount')}}</span>
-               <span> <span>{{transnumkList.amountCurrency}}</span> <span> {{transnumkList.amountValue}}</span></span>
+               <span> <span>{{transnumkList.amountValue}}</span> <span> {{transnumkList.amountCurrency}}</span></span>
           </div>
            <div class="note">
              <span>{{$t('message.home.time')}}</span>
@@ -99,13 +99,14 @@ export default {
         justify-content: space-between;
         flex: 1;
         span:nth-child(2) {
-          min-width: 280px;
-          display: inline-block;
+          // min-width: 280px;
+          // display: inline-block;
           white-space: nowrap;
           overflow: hidden;
-          margin-left: 20px;
+          // margin-left: 20px;
+          background: red;
           text-overflow: ellipsis;
-          text-align: right;
+          // text-align: right;
         }
       }
       div:nth-child(1) {
