@@ -250,6 +250,12 @@ export default {
     display: inline-block;
     margin: 0 10px;
     border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
   }
   li div input {
     border-radius: 6px;
@@ -329,7 +335,7 @@ export default {
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;

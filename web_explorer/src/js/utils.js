@@ -129,6 +129,9 @@ export const toThousands = (n) => {
   }
   return result
 }
+// export const getClientHeight = () => {
+//   return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+// }
 export const getStyle = (key) => {
   let map = new Map([
     ["disconnected", "background:#fbded1"],
@@ -145,18 +148,73 @@ export const getStyle = (key) => {
 export const getTransactionType = (key) => {
   let map = new Map([
     ["OfferCreate", "创建委托"],
+    // ["OfferCreate", "message.offerCreateUtils"],
+    // ["OfferCreate", this.$t('message.wallet.offerCreate')],
     ["OfferAffect", "被动成交"],
     ["OfferCancel", "撤消委托"],
-    ["Send", "支付"],
-    ["Receive", "收到"],
-    ["其它", "未知"]
+    ["Payment", "转账"],
+    ["Send", "转账"],
+    ["Receive", "转账"]
+  ])
+  return map.get(key);
+}
+export const SelectTypeComponents = (key) => {
+  let map = new Map([
+    ["OfferCreate", "offerCreate"],
+    // ["OfferCreate", "message.offerCreateUtils"],
+    // ["OfferCreate", this.$t('message.wallet.offerCreate')],
+    ["OfferAffect", "0fferCreate"],
+    ["OfferCancel", "offerCreate"],
+    ["Payment", "payment"],
+    ["Send", "payment"],
+    ["Receive", "payment"]
+  ])
+  return map.get(key);
+}
+export const getTypeBg = (key) => {
+  let map = new Map([
+    ["OfferCreate", "OfferAffect.png"],
+    ["OfferAffect", "OfferAffect.png"],
+    ["OfferCancel", "OfferAffect.png"],
+    ["Payment", "transferBg"],
+    ["Send", "transferBg"],
+    ["Receive", "transferBg"]
   ])
   return map.get(key);
 }
 export const getTransactionMode = (key) => {
   let map = new Map([
-    [1, "买"],
-    [2, "卖"]
+    [1, "买入"],
+    [2, "卖出"],
+    ["Send", "支出"],
+    ["Receive", "收入"]
+  ])
+  return map.get(key);
+}
+export const getFlagColor = (key) => {
+  let map = new Map([
+    [1, "#EF5617"],
+    [2, "#18C79E"],
+    ["Send", "#EEA200"],
+    ["Receive", "#0AB1F2"]
+  ])
+  return map.get(key);
+}
+export const getMatchFlag = (key) => {
+  let map = new Map([
+    [3, "icon-sanfang"],
+    [4, "icon-sifang"],
+    [5, "icon-Group1"],
+    [6, "icon-Group"]
+  ])
+  return map.get(key);
+}
+export const getType = (key) => {
+  let map = new Map([
+    [1, "icon-mairu"],
+    [2, "icon-maichu"],
+    ["支出", "icon-zhichu"],
+    ["收入", "icon-shouru"]
   ])
   return map.get(key);
 }

@@ -101,6 +101,16 @@ export const getBlockDetail = async (hash) => {
   })
   return resSuccess(res);
 }
+// `${data.amount}`
+// 根据区块HASH查询其包含的交易列表
+export const getTransListByHash = async (data) => {
+  let res = await service({
+    // url: getInfoHost() + `/block/all/${getUUID()}?p=${(data.page-1)}&s=${data.size}`,
+    url: getInfoHost() + '/hash/trans/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size + '&n=' + data.total + '&h=' + data.hash,
+    method: "get"
+  })
+  return resSuccess(res);
+}
 
 // Balance query for specified Wallet
 export const querySpecifiedWallet = async (wallet) => {
@@ -124,7 +134,7 @@ export const queryDelegateWallet = async (data) => {
 export const queryHistoricalWallet = async (data) => {
   let res = await service({
     // url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + (data.page-1) + '&s=' + data.size ,
-    url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size + '&b=' + data.start + '&e=' + data.end + '&t=' + data.type + '&bs=' + data.buyOrSell + '&c=' + data.pair + '&w=' + data.wallet,
+    url: getInfoHost() + '/wallet/trans/' + getUUID() + '?p=' + (data.page - 1) + '&s=' + data.size + '&b=' + data.begin + '&e=' + data.end + '&t=' + data.type + '&bs=' + data.buyOrSell + '&c=' + data.pair + '&w=' + data.wallet,
     method: "get"
   })
   return resSuccess(res);

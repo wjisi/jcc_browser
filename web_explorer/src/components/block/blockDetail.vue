@@ -14,42 +14,46 @@
     </div>
     <div class="bockList">
       <div class="bockListData">
-        <div class="title">{{$t('message.blockDetailList.latestdeal')}}</div>
+        <div class="title">{{$t('message.trade.tradeRecord')}}</div>
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
-            <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{handleData(scope.row.seq)}}</span>
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+             <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
             </template>
           </el-table-column>
-          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="10%">
+          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="11%">
             <template slot-scope="scope">
               <span style="color:#6f6868;font-size:12px;">{{scope.row.type}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="hashType"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="10%">
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
             <template slot-scope="scope">
-              <span class="spanHashType">{{scope.row.hashType}}</span>
-            </template>
+                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
+          </template>
           </el-table-column>
-          <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
+          <!-- <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
-          </el-table-column>
-          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="25%">
+          </el-table-column> -->
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center"  min-width="32%">
             <template slot-scope="scope">
-              <span class="spanUpperHash">{{handleData(scope.row._id)}}</span>
+              <span class="spanAccount" @click="jumpDetail(scope.row._id)">{{scope.row._id}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="24%">
+          <el-table-column prop="account"  :label="$t('message.blockDetailList.sender')"  id="ellipsis" align="center"  min-width="28%">
             <template slot-scope="scope">
-              <span  class="spanAccount">{{handleData(scope.row.account)}}</span>
+              <span  class="spanAccount"  @click="jumpDetail(scope.row._id)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="6%"></el-table-column>
+          <el-table-column prop="fee" :label="$t('message.blockDetailList.servicecharge')"  align="center"  min-width="11%">
+             <template slot-scope="scope">
+              <span >{{scope.row.fee}}swtc</span>
+            </template>
+          </el-table-column>
           <el-table-column  width="30px"></el-table-column>
         </el-table>
       </div>
@@ -61,7 +65,7 @@
           <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
           {{$t('message.blockList.page')}}
         </li>
-        <li>flag
+        <li>
           <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
         </li>
       </ul>
@@ -69,8 +73,13 @@
   </div>
 </template>
 <script>
-import { getBlockDetail } from "../../js/fetch";
-import { getTransactionType, getTransactionMode } from "@/js/utils";
+import { getBlockDetail, getTransListByHash } from "../../js/fetch";
+import {
+  getTransactionType,
+  getTransactionMode,
+  getType,
+  getMatchFlag
+} from "@/js/utils";
 export default {
   name: "blockdetail",
   data() {
@@ -83,50 +92,79 @@ export default {
       blockList: [],
       hashtime: {},
       bash: {},
-      hash: "",
+      hash: "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713",
       loading: false,
       total: 0,
       currentPage: 1,
-      gopage: 100
+      gopage: 1
     };
   },
   created() {
     this.getData();
   },
   methods: {
+    async getTranstionListByHash() {
+      this.blockList = [];
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
+      let data = {
+        page: this.currentPage || "1",
+        size: 20,
+        total: this.total,
+        hash: this.hash || ""
+      };
+      let res = await getTransListByHash(data);
+      console.log(res, "blockdata1");
+      if (res.result === true && (res.code === 0 || res.code === "0")) {
+        this.blockList = this.handleHistoryData(res);
+      } else {
+        this.blockList = [];
+        this.total = 0;
+        this.gopage = 0;
+      }
+      this.loading = false;
+    },
     async getData() {
       if (this.loading) {
         return;
       }
       this.loading = true;
-      this.hash = this.$route.params.hash;
+      this.hash =
+        this.$route.params.hash ||
+        "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713";
       let res = await getBlockDetail(this.hash);
-      console.log(res);
-
+      console.log(res, "blockdata2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        console.log(res, "111111");
         this.total = res.data.count;
-        this.blockList = this.getHistoryData(res);
+        this.blockList = this.handleHistoryData(res);
         this.bash = res.data.info;
+      } else {
+        this.blockList = [];
+        this.bash = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
     clearGopage() {
       this.gopage = "";
     },
-    handleData(value) {
-      return value;
-    },
-    getHistoryData(res) {
+    handleHistoryData(res) {
       let i = 0;
       let list = [];
       if (res && res.data && res.data.list.length > 0) {
         for (; i < res.data.list.length; i++) {
           list.push({
+            matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
             seq: res.data.list[i].seq || "----",
-            type: getTransactionType(res.data.list[i].type) || "未知交易",
+            type:
+              getTransactionType(res.data.list[i].type) ||
+              this.$t("message.wallet.unknown"),
             flag: getTransactionMode(res.data.list[i].flag) || "----",
-            time: this.handleHashtime(res.data.list[i].time) || "----",
+            displayDifferentCircles: getType(res.data.list[i].flag) || "",
+            // time: this.handleHashtime(res.data.list[i].time) || "----",
             fee: res.data.list[i].fee || "----",
             account: res.data.list[i].account || "----",
             _id: res.data.list[i]._id || "----"
@@ -145,12 +183,12 @@ export default {
     jumpSizeChange() {
       this.currentPage = this.gopage;
       this.loading = false;
-      this.getData();
+      this.getTranstionListByHash();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.loading = false;
-      this.getData();
+      this.getTranstionListByHash();
     },
     handleGetData(res) {
       let i = 0;
@@ -165,22 +203,30 @@ export default {
       }
       return list;
     },
+    jumpDetail(hash) {
+      this.$router.push({
+        name: "tradeDetail",
+        params: { hash: hash }
+      });
+    },
     handleHashtime(time) {
-      let { fillZero } = this;
-      let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = "";
-      // fillZero(dateIn.getDate());
-      hashTime =
-        fillZero(dateIn.getFullYear()) +
-        "-" +
-        fillZero(dateIn.getMonth() + 1) +
-        "-" +
-        fillZero(dateIn.getDate()) +
-        " " +
-        fillZero(dateIn.getHours()) +
-        ":" +
-        fillZero(dateIn.getMinutes());
-      return hashTime;
+      if (time) {
+        let { fillZero } = this;
+        let dateIn = new Date((time + 946684800) * 1000);
+        let hashTime = "";
+        // fillZero(dateIn.getDate());
+        hashTime =
+          fillZero(dateIn.getFullYear()) +
+          "-" +
+          fillZero(dateIn.getMonth() + 1) +
+          "-" +
+          fillZero(dateIn.getDate()) +
+          " " +
+          fillZero(dateIn.getHours()) +
+          ":" +
+          fillZero(dateIn.getMinutes());
+        return hashTime;
+      }
     },
     fillZero(value) {
       if (value < 10) {
@@ -223,6 +269,12 @@ export default {
     display: inline-block;
     margin: 0 10px;
     border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
   }
   li div input {
     border-radius: 6px;
@@ -253,6 +305,7 @@ export default {
     width: calc(50% - 20px);
   }
   .tilleIcon {
+    width: 20px;
     font-size: 14px;
     float: right;
     padding: 16px 0;
@@ -318,11 +371,11 @@ export default {
   background-color: #f2f8fc;
   border: 1px solid #d0eef5;
 }
-.spanUpperHash {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+// ..spanAccount { {
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
 .spanAccount {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -331,6 +384,7 @@ export default {
 .spanAccount:hover {
   color: #06aaf9;
   font-size: 12px;
+  cursor: pointer;
 }
 .pagination {
   display: flex;
@@ -387,7 +441,7 @@ export default {
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;

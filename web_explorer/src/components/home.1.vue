@@ -1,10 +1,12 @@
 <template>
    <div id="home" >
-     <section>
-       <span style="height:24.3%;bottom:50px;padding:0;margin:0;"><img src="../images/index_top.png" style="width:100%height:100%;"></span>
-     </section>
-     <section class="init">
-       <div class="top">
+     <span>
+       <span style="height:24.3%;bottom:5px;"><img src="../images/index_top.png"></span>
+       <span style="height:38.4%;top:10px;"><img src="../images/index_show.png"></span>
+       <div></div>
+     </span>
+     <div class="init" >
+      <div class="top">
          <div class="topLeft">
             <div class="index" ><img src="../images/logo_index.png"></div>
             <p class="browser">{{$t("message.homeTitle")}}</p>
@@ -15,62 +17,73 @@
               </span>
             </div>
          </div>
-         <div class="topRight" style="position:relative">
-          <div id="changelan">
-            <el-dropdown @command="switchLanguage" trigger="click">
-              <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
-                <i class="iconfont icon-yuyanqiehuan"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+         <div class="topRight" >
+           <div id="changelan">
+              <p>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</p>
+              <el-dropdown @command="switchLanguage" trigger="click">
+                <span class="el-dropdown-link">{{languageList[currentLanguage].name}}
+                  <i class="iconfont icon-yuyanqiehuan"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command="item.label" v-for="(item,index) in languageList" :key="index">{{item.name}}</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
            </div>
-          <div class="state">
-             <span>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</span>
-          </div>
-          <span id="index_net"><img src="../images/index_net.png" style="width:100%height:100%"></span>
-         </div>
+           <span id="index_net"><img src="../images/index_net.png"></span>
         </div>
-        <div style="position:absolute;top:100%;right:5%;display:flex;align-items:center;">
-          <span  style="color:#828f90;font-size:16px;">{{$t('message.home.Update')}}</span>
-          <el-switch style="width:42px;height:42px;margin-left:10px" v-model="showSwitch" active-color="#18c79e" inactive-color="#cbd1d2"  @change="isrefreshData"></el-switch>
-        </div>
-     </section>
-     <section >
-      <div class="pilot">
-        <div style="display:flex;align-items:center;">
-          <img src="../images/block_height_title.png" style="height:60px;width:50px;">
-          <span class="block">{{$t("message.blockList.blockheight")}}</span>
-        </div>
-        <span class="buttom" @click="searchAll('block')">
-          <i class="iconfont icon-chakangengduoicon"></i>
-          {{$t("message.viewall")}}</span>
       </div>
-      <div id="list"   v-show="listnum.length !==0">
-          <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
-            <div style="display:flex;">
-              <div id="erect">
-                <div :class="'className'+index"></div>
-              </div>
-              <div id="listValue">
-                <div>
-                  <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
-                  <span>
-                    <p style="font-size:20px;">{{item.transNum}}</p>
-                    <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
-                  </span>
+        <div class="show">
+          <div class="showTop">
+            <div class="showTopLeft">
+              <div class="showTopLeftValue"><span>{{$t("message.home.providefunction ")}}</span></div>
+            </div>
+            <div class="showTopRight">
+              <div style="width:50%;margin-left:42%">
+                <p id="title">{{$t("message.home.donot")}}</p>
+                <p id="value">{{$t("message.home.donotvalue")}}</p>
+                <div style="margin-left:10%;">
+                  <p id="title">{{$t("message.home.realtime")}}</p>
+                  <p id="value">{{$t("message.home.realtimevalue")}}</p>
                 </div>
-                  <p class="hash"  style="font-size:12px;" @click="jumpDetail('blockDetail',item.hash)" >{{item.hash}}</p>
-                  <p class="time" >{{handleHashtime(item.time)}}</p>
+                <p id="title">{{$t("message.home.recordquery")}}</p>
+                <p id="value">{{$t("message.home.recordqueryvalue")}}</p>
               </div>
             </div>
-          </li>
-        </div>
-        <div v-show="listnum.length === 0" class="v-show" style="background-color:#fff;margin:0 5%;padding:40px 0;">{{$t('message.home.nodata')}}</div>
-     </section>
-     <section>
-      <div class="end" style="margin:0 5%;">
+          </div>
+          <div class="showEnd">
+            <div class="pilot">
+              <div style="display:flex;align-items:center;">
+                <img src="../images/block_height_title.png" style="height:60px;width:50px;">
+                <span class="block">{{$t("message.blockList.blockheight")}}</span>
+              </div>
+              <span class="buttom" @click="searchAll('block')">
+                <i class="iconfont icon-chakangengduoicon"></i>
+                {{$t("message.viewall")}}</span>
+            </div>
+               <div id="list"   v-show="listnum.length !==0">
+                <li v-for="(item,index) of  listnum" :key="index" :class="'class'+index" >
+                  <div style="display:flex;">
+                    <div id="erect">
+                      <div :class="'className'+index"></div>
+                    </div>
+                    <div id="listValue">
+                      <div>
+                        <div id="_id">{{$t("message.home.height")}}:{{item._id}}</div>
+                        <span>
+                          <p style="font-size:20px;">{{item.transNum}}</p>
+                          <p style="font-size:15px;">{{$t("message.home.dealNums")}}</p>
+                        </span>
+                      </div>
+                        <p class="hash"  style="font-size:12px;" @click="jumpDetail('blockDetail',item.hash)" >{{item.hash}}</p>
+                        <p class="time" >{{handleHashtime(item.time)}}</p>
+                    </div>
+                  </div>
+                </li>
+              </div>
+              <div v-show="listnum.length === 0" class="v-show">{{$t('message.home.nodata')}}</div>
+          </div>
+       </div>
+      <div class="end">
         <div class="endTop" >
           <div style="display:flex;align-items:center;">
             <img src="../images/latest_trade_title.png" style="height:60px;width:50px;">
@@ -81,77 +94,46 @@
             {{$t("message.viewall")}}</span>
         </div>
         <div class="endMidder">
-           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
-           <!-- <div slot="empty" style="font-size:18px;">
-            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /></div>
-          </div> -->
-          <el-table-column  width="30px"></el-table-column>
-          <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
-           <el-table-column type="index" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
-          <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
-            <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
-            </template>
-          </el-table-column> -->
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
-             <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
-            </template>
-          </el-table-column>
-           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+            <el-table :data="latestdeal"  style="fit:false;" :row-style="rowStyle"  :header-row-style="headerRowStyle" >
+            <el-table-column  width="36px"  align="center" header-align="center">
+            </el-table-column>
+            <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="15%"  align="center" header-align="center">
+            </el-table-column>
+            <el-table-column id="hash" prop="_id" :label="$t('message.home.dealhash')" min-width="65%"  align="center" header-align="center">
                <template slot-scope="scope">
-                  <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
-              </template>
-          </el-table-column>
-          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="47%">
-            <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail('tradeDetail',scope.row._id)">{{handleData(scope.row._id)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="center"  min-width="14%" >
-            <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
-                    <span>{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
-                    <span>{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
-                </span>
-                <span v-show="!scope.row.takerPaysValue">
-                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
-                </span>
-            </template>
-          </el-table-column>
-          <el-table-column width="30px"></el-table-column>
-        </el-table>
-        </div>
-    </div>
-     </section>
-     <section>
-      <div class="endEnd">
-        <div class="endEndLeft" >
-          <img src="../images/logo_footer.png">
-          <span>{{$t("message.homeTitle")}}</span>
-          <div></div>
-          <span>{{$t("message.home.anhui")}}</span>
-        </div>
-        <div class="endEndRignt">
-          <span>{{$t("message.home.officialwebsite")}}</span>
-          <div></div>
-          <span>{{$t("message.home.Contactus")}}</span>
-        </div>
+                  <span class="hash" @click="jumpDetail('tradeDetail',scope.row._id)">{{scope.row._id}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="time" :label="$t('message.home.time')" min-width="20%"  align="center" header-align="center">
+               <template slot-scope="scope">
+                  <span class="hashSpan" >{{handleHashtime(scope.row.time)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column  width="36px"  align="center" header-align="center">
+            </el-table-column>
+            </el-table>
+         </div>
       </div>
-     </section>
+    </div>
+    <div class="endEnd">
+            <div class="endEndLeft" >
+              <img src="../images/logo_footer.png">
+              <span>{{$t("message.homeTitle")}}</span>
+              <div></div>
+              <span>{{$t("message.home.anhui")}}</span>
+            </div>
+            <div class="endEndRignt">
+              <span>{{$t("message.home.officialwebsite")}}</span>|
+              <span>{{$t("message.home.cooperation")}}</span>|
+              <span>{{$t("message.home.partners")}}</span>|
+              <span>{{$t("message.home.Contactus")}}</span>
+          </div>
+        </div>
    </div>
 </template>
+
 <script>
 import { getlastBlocklist, getLatestDeal, getBlockDetail } from "../js/fetch";
-import {
-  getTransactionType,
-  getTransactionMode,
-  getFlagColor
-} from "@/js/utils";
 var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "home",
@@ -165,8 +147,6 @@ export default {
       listnum: [],
       latestdeal: [],
       showLanguage: false,
-      showSwitch: false,
-      timer: "",
       languageList: {
         zh: { label: "zh", name: "简体中文" },
         en: { label: "en", name: "English" }
@@ -178,12 +158,28 @@ export default {
       return this.$i18n.locale;
     }
   },
-  beforeDestory() {
-    clearInterval(this.timer);
-  },
   methods: {
+    // getlastBlocklists() {
+    //   getlastBlocklist()
+    //     .then(data => {
+    //       console.log(data, 1);
+    //       this.listnum = data.data.list;
+    //     })
+    //     .catch(error => {
+    //       this.$message.error(error.msg);
+    //     });
+    // },
+    // getLatestDeals() {
+    //   getLatestDeal()
+    //     .then(data => {
+    //       console.log(data, 2);
+    //       this.latestdeal = data.data.list;
+    //     })
+    //     .catch(error => {
+    //       this.$message.error(error.msg);
+    //     });
+    // },
     async getlastBlocklists() {
-      this.listnum = [];
       let res = await getlastBlocklist();
       console.log(res, "shou ye 1");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
@@ -192,11 +188,10 @@ export default {
       }
     },
     async getLatestDeals() {
-      this.latestdeal = [];
       let res = await getLatestDeal();
       console.log(res, "shou ye 2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        this.latestdeal = this.handleGetData(res.data.list);
+        this.latestdeal = res.data.list;
       }
     },
     searchAll(to) {
@@ -221,64 +216,6 @@ export default {
       localStorage.setItem("languageType", lang);
       homeTitle.innerHTML = this.$t("message.homeTitle");
       this.showLanguage = false;
-    },
-    isrefreshData() {
-      clearInterval(this.timer);
-      if (this.showSwitch) {
-        setInterval(() => {
-          this.getlastBlocklists();
-          this.getLatestDeals();
-        }, 10000);
-      }
-      // console.log(this.showSwitch);
-    },
-    handleGetData(res) {
-      let i = 0;
-      let list = [];
-      for (; i < res.length; i++) {
-        list.push({
-          // sort: (this.currentPage - 1) * 20 + i + 1,
-          // seq: res[i].seq || "----",
-          _id: res[i]._id,
-          type: getTransactionType(res[i].type) || "---",
-          flag:
-            getTransactionMode(res[i].flag) ||
-            getTransactionMode(res[i].type) ||
-            "----",
-          displayDifferentColor:
-            getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
-          takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
-            .currency,
-          takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
-            .currency,
-          takerGetsValue:
-            this.displayDefaultValues(res[i].takerGets).value || "----",
-          takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
-          takerValue: this.displayDefaultValues(res[i].amount).value || "----",
-          // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
-          // displayDifferentCircles: getType(res.data.list[i].flag) || "",
-          // transNum: this.handleData(res[i].transNum, 1),
-          // hash: res[i].hash,
-          time: this.handleHashtime(res[i].time)
-        });
-      }
-      // this.defaultValue = "---";
-      return list;
-    },
-    displayDefaultValues(value) {
-      if (value) {
-        return value;
-      } else {
-        return { value: undefined };
-      }
-    },
-    displayDefaultCurrency(value) {
-      if (value) {
-        return value;
-      } else {
-        return { currency: undefined };
-      }
     },
     handleHashtime(time) {
       let { fillZero } = this;
@@ -408,18 +345,17 @@ export default {
     justify-content: center;
     #changelan {
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: space-around;
       margin-top: 6%;
       margin-bottom: 5px;
-      margin-right: 5%;
     }
-    .state {
+    p {
+      width: 30%;
+      font-size: 12px;
       color: #cee5ff;
       font-weight: bold;
-      position: absolute;
-      top: 26%;
-      right: 35%;
-      font-size: 14px;
+      margin-left: 31%;
     }
     #index_net {
       width: 82%;
@@ -507,7 +443,8 @@ export default {
   }
 }
 .endMidder {
-  // width: 91.25%;
+  width: 91.25%;
+  margin-left: 4%;
   margin-top: 1.5%;
   // height: 450px;
   .idSpan2 {
@@ -522,7 +459,7 @@ export default {
 }
 .buttom {
   width: 150px;
-  color: #b1c0cb;
+  color: #c7cfd5;
   text-align: right;
 }
 .buttom:hover {
@@ -595,9 +532,9 @@ export default {
   margin-left: 4%;
   margin-top: 1.5%;
   li {
-    background-color: #fff;
+    background-color: #f2f8fc;
     width: 16.6%;
-    height: 190px;
+    height: 170px;
     list-style-type: none;
     border-right: 1px solid;
     border-right-color: #e8e8e8;
@@ -636,12 +573,12 @@ export default {
   flex-direction: column;
   .v-show {
     width: 91.25%;
-    height: 185px;
+    height: 85px;
     margin-left: 4%;
     margin-top: 1.5%;
     color: #6f6868;
     display: flex;
-    background-color: black;
+    background-color: #f2f8fc;
     justify-content: center;
     align-items: center;
   }
@@ -667,29 +604,34 @@ export default {
   text-align: left;
 }
 .pilot {
-  padding: 0 5%;
+  width: 91.25%;
   height: 22%;
   display: flex;
   align-items: center;
+  margin-left: 4%;
   margin-top: 6%;
-  margin-bottom: 1%;
   justify-content: space-between;
 }
 .endTop {
+  width: 91.25%;
   height: 22%;
   display: flex;
   align-items: center;
-  margin-top: 11%;
+  margin-left: 4%;
+  margin-top: 10%;
   justify-content: space-between;
 }
 .endEnd {
   position: relative;
+  // top: 270px;
   display: flex;
   background: #1850d7;
   align-items: center;
-  padding: 30px 5%;
-  margin-top: 80px;
+  // width: 91.25%;
+  padding: 0 4% 40px;
+  margin: 0;
   justify-content: space-between;
+  // margin-top: 5%;
   .endEndLeft {
     display: flex;
     align-items: center;
@@ -716,21 +658,12 @@ export default {
     align-items: center;
     font-size: 14px;
     color: #6b9eff;
-    text-align: right;
-    // margin-left:100px;
-    // span {
-    //   width: 100px;
-    // }
+    span {
+      width: 100px;
+    }
     span:hover {
       color: #18c9dd;
       cursor: pointer;
-    }
-    div {
-      margin: 0 20px;
-      width: 2px;
-      height: 14px;
-      background: #eef1fe;
-      border-radius: 1px;
     }
   }
 }
@@ -778,16 +711,5 @@ export default {
 .class5 {
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
-}
-.hashSpan {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #3b3f4c;
-  font-size: 14px;
-  cursor: pointer;
-}
-.hashSpan:hover {
-  color: #06aaf9;
 }
 </style>

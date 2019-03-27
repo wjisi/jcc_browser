@@ -1,5 +1,5 @@
 {
-  "homeTitle": "井畅区块链浏览器",
+  "homeTitle": "SWTC公链浏览器",
   "login": "登录",
   "searchPlaceholder": "请输入地址/交易哈希/区块哈希",
   "indexPage": "首页",
@@ -36,29 +36,40 @@
     "Contactus": "联系我们",
     "dealhash": "交易哈希",
     "time": "交易时间",
-    "nodata": "暂无数据"
+    "nodata": "暂无数据",
+    "notransaction": "暂无交易",
+    "Update": "实时更新"
   },
   "trade": {
     "number": "当前交易编号",
     "narrationAndOthers": "叙述与其它",
     "type": "交易类型",
     "initiator": "交易发起方",
-    "amount": "交易金额",
+    "entrustAmount": "委托金额",
+    "entrustprice": "委托价格",
     "to": "交易对家",
-    "dealamount": "成交金额",
+    "entrustamount": "成交金额",
     "booknumber": "账本号",
-    "costs": "交易费用",
+    "fuelCosts": "燃料费用",
     "note": "交易备注",
     "results": "交易结果",
     "effect": "交易效果",
     "successtrade": "交易成功",
-    "ismatch": "多方撮合"
+    "ismatch": "多方撮合",
+    "tradeVolume": "交易数额",
+    "tradeRecord": "交易记录",
+    "transferAmount": "转账金额",
+    "turnoveramount": "成交金额",
+    "multipartymatch": "多方撮合",
+    "turnoverprice": "成交价格",
+    "amount": "交易金额",
+    "detail": "交易明细"
   },
   "blockList": {
     "blockheight": "区块高度",
     "dateTime": "时间",
     "parentHash": "父哈希",
-    "transctionNums": "交易数量",
+    "transctionNums": "交易量",
     "sort": "排序",
     "goto": "跳至",
     "page": "页",
@@ -85,7 +96,7 @@
     "currentblock": "当前区块",
     "blockhashnumber": "区块哈希值",
     "closetime": "关闭时间",
-    "lasthash": "上一块哈希值",
+    "lasthash": "上一区块哈希值",
     "Transactionvolume": "交易数量",
     "total": "总量",
     "sorry": "抱歉",
@@ -101,6 +112,7 @@
     "allCurrency": "全部币种",
     "allMode": "全部方式",
     "alltype": "全部类型",
+    "tradeArea": "交易区",
     "dateRange": "日期范围",
     "startTime": "开始时间",
     "endTime": "结束时间",
@@ -112,6 +124,10 @@
     "offerAffect": "被动成交",
     "offerCancel": "撤消委托",
     "transferaccounts": "转账",
-    "unknown": "未知"
+    "Send": "支出",
+    "Receive": "收入",
+    "unknown": "未知",
+    "tradePrice": "交易价格",
+    "Payment": "转账"
   }
 }

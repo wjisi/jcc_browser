@@ -5,43 +5,42 @@
         <img src='../../images/block_height_title.png' />
         <span>{{$t('message.blockList.blockheight')}}</span>
       </div>
-      <div class="selectionButton">
+      <!-- <div class="selectionButton">
         {{$t("message.screendate")}}
         <el-date-picker v-model="selectedDate" align="right"  type="date" :picker-options="pickerOptions"  value-format="yyyy-MM-dd" @change="setDatetiem"></el-date-picker>
         <Button>{{$t('message.blockList.confirm')}}</Button>
-      </div>
+      </div> -->
     </div>
     <div class="bockList">
       <div class="bockListData">
         <el-table :data="blockList" style="width:100%"  row-class-name="blockRowClass" header-row-class-name="blockHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >暂无数据</div>
+            <div v-else >
+               <img src='../../images/not _found_list.png' />
+               <div></div>
+            </div>
           </div>
-          <el-table-column  width="46px"></el-table-column>
-          <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="15%"></el-table-column>
-          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="18%"  align="center" header-align="center">
+          <el-table-column  width="30px"></el-table-column>
+          <!-- <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="17%"></el-table-column> -->
+          <el-table-column prop="_id" :label="$t('message.blockList.blockheight')"  min-width="17%"  align="left" header-align="left">
             <template slot-scope="scope">
-              <span class="idSpan" @click="jumpDetail(scope.row.hash)">{{handleData(scope.row._id)}}</span>
+              <span class="idSpan" @click="jumpDetail(scope.row.hash)">{{scope.row._id}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="22%"  header-align="center" align="center">
+            <el-table-column prop="hash"  :label="$t('message.blockDetailList.blockhashnumber')"  id="ellipsis" align="center" header-align="center" min-width="57%">
             <template slot-scope="scope">
-              <span style="margin-right:10px;">{{scope.row.time.time}}</span>
-              <span>{{scope.row.time.date}}</span>
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="transNum" min-width="13%"  :label="$t('message.blockList.transctionNums')"  align="center" header-align="center">
+          <el-table-column prop="time" :label="$t('message.blockList.dateTime')"  min-width="20%"  header-align="center" align="center">
+          </el-table-column>
+          <el-table-column prop="transNum" min-width="7%"  :label="$t('message.blockList.transctionNums')"  header-align="center" align="center">
             <template slot-scope="scope">
-              <span class="transNumSpan">{{handleData(scope.row.transNum)}}</span>
+              <span class="transNumSpan">{{scope.row.transNum}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="hash"  :label="$t('message.hash')"  id="ellipsis" align="right" header-align="center" min-width="32%">
-            <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{handleData(scope.row.hash)}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column  width="46px" ></el-table-column>
+          <el-table-column  width="30px" ></el-table-column>
         </el-table>
       </div>
       <ul class="pagination">
@@ -66,17 +65,11 @@ export default {
   name: "block",
   data() {
     return {
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
-      },
-      selectedDate: "",
       blockList: [],
       total: 0,
       loading: false,
       currentPage: 1,
-      gopage: 100
+      gopage: 1
     };
   },
   created() {
@@ -88,20 +81,28 @@ export default {
   },
   methods: {
     async getAllList(data) {
+      this.blockList = [];
+      // this.total = 0;
+      // this.gopage = 1;
       if (this.loading) {
         return;
       }
       this.loading = true;
       let res = await getBlocklist(data);
+      console.log(res, "区块首页");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.blockList = this.handleGetData(res.data.list);
+      } else {
+        this.blockList = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
     },
-    setDatetiem(val) {
-      this.selectedDate = val;
-    },
+    // setDatetiem(val) {
+    //   this.selectedDate = val;
+    // },
     clearGopage() {
       this.gopage = "";
     },
@@ -135,26 +136,24 @@ export default {
           time: this.handleHashtime(res[i].time)
         });
       }
-      console.log(list);
       return list;
     },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = {};
-      fillZero(dateIn.getDate());
-      hashTime.time =
-        fillZero(dateIn.getHours()) + ":" + fillZero(dateIn.getMinutes());
-      hashTime.date =
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
       return hashTime;
-    },
-    handleData(value) {
-      return value;
     },
     jumpDetail(hash) {
       this.$router.push({
@@ -206,14 +205,14 @@ export default {
       background: linear-gradient(right, #04abf9, #23dccd);
     }
   }
-  .selectionButton {
-    float: left;
-    height: 30px;
-    margin-right: 20%;
-    button {
-      height: 37px;
-    }
-  }
+  // .selectionButton {
+  //   float: left;
+  //   height: 30px;
+  //   margin-right: 20%;
+  //   button {
+  //     height: 37px;
+  //   }
+  // }
 }
 .pagination {
   display: flex;
@@ -243,6 +242,12 @@ export default {
     display: inline-block;
     margin: 0 10px;
     border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
   }
   li div input {
     border-radius: 6px;
@@ -297,7 +302,7 @@ export default {
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;
@@ -332,7 +337,7 @@ export default {
   background: #f2f8fc;
   height: 40px;
 }
-.selectionButton .el-date-editor {
-  width: 150px;
-}
+// .selectionButton .el-date-editor {
+//   width: 150px;
+// }
 </style>

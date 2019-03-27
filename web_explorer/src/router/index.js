@@ -4,6 +4,10 @@ const _import = file => () => import('@/components/' + file + '.vue');
 Vue.use(Router)
 
 export default new Router({
+  scrollBehavior: () => ({
+    x: 0,
+    y: 0
+  }),
   routes: [{
     path: '/',
     redirect: '/home'

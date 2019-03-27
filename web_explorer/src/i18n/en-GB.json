@@ -1,7 +1,7 @@
 {
-  "homeTitle": "Weidex Blockchain Explorer",
+  "homeTitle": "SWTC Public Link Browser",
   "login": "LOGIN",
-  "searchPlaceholder": "Serach by Address/Txhash",
+  "searchPlaceholder": "Serach by Address/blockHash/transHash",
   "indexPage": "HOME",
   "blockchain": "BLOCK",
   "hashInfo": "HASH",
@@ -36,23 +36,34 @@
     "Contactus": "Contact us",
     "dealhash": "deal hash",
     "time": "deal time",
-    "nodata": "No Data"
+    "nodata": "No Data",
+    "notransaction": "No Transaction",
+    "Update": "Update"
   },
   "trade": {
     "number": "Current Transaction Number",
     "narrationAndOthers": "narration and others",
     "type": "Transaction Type",
     "initiator": "Transaction Initiator",
-    "amount": "Transaction Amount",
+    "entrustAmount": "entrust amount",
+    "entrustprice": "entrust price",
     "to": "Transaction To",
-    "dealamount": "Clinch a deal amount",
-    "booknumber": "book number",
-    "costs": "Transaction Costs",
+    "entrustamount": "entrust amount",
+    "booknumber": "Book number",
+    "fuelCosts": "fuelCosts",
     "note": "Tradnsaction Note",
     "results": "Transaction Results",
     "effect": "Transaction Effect",
     "successtrade": "success trade",
-    "ismatch": "is match"
+    "ismatch": "is match",
+    "tradeVolume": "trade volume",
+    "tradeRecord": "trade record",
+    "transferAmount": "transfer amount",
+    "turnoveramount": "turnover amount",
+    "multipartymatch": "multipartymatch",
+    "turnoverprice": "turnover price",
+    "amount": "tradeAmount",
+    "detail": "trade detail"
   },
   "blockList": {
     "blockheight": "block Height",
@@ -85,7 +96,7 @@
     "currentblock": "current Block",
     "blockhashnumber": "block hash",
     "closetime": "close Time",
-    "lasthash": "last Hash",
+    "lasthash": "lastBlockHashValue",
     "Transactionvolume": "Transaction Volume",
     "total": "total",
     "sorry": "sorry",
@@ -101,6 +112,7 @@
     "allCurrency": "all currency",
     "alltype": "all type",
     "allMode": "all mode",
+    "tradeArea": "trade area",
     "dateRange": "date range",
     "startTime": "start time",
     "endTime": "end time",
@@ -112,6 +124,10 @@
     "offerAffect": "offerAffect",
     "offerCancel": "offerCancel",
     "transferaccounts": "trans account",
-    "unknown": "unknown"
+    "Send": "支出",
+    "Receive": "收入",
+    "unknown": "unknown",
+    "tradePrice": "tradePrice",
+    "Payment": "Payment"
   }
 }

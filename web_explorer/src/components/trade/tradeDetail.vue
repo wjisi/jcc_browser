@@ -1,86 +1,89 @@
 <template>
   <div id="transnumDetail" class="blo">
-    <div class="transnumDetailTitle">
       <div class="walletHeader">
         <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
         <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
-      <Ul>
-        <li>
-           <div><span>{{$t('message.trade.type')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.booknumber')}}</span>  <span>2</span></div>
-        </li>
-          <li>
-           <div><span>{{$t('message.trade.initiator')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.costs')}}</span>  <span>2</span></div>
-        </li>
-         <li>
-           <div><span>{{$t('message.trade.amount')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.note')}}</span>  <span>2</span></div>
-        </li>
-        <li>
-           <div><span>{{$t('message.trade.to')}}</span>  <span>1</span></div>
-           <div><span>{{$t('message.trade.results')}}</span>  <span>2</span></div>
-        </li>
-         <li>
-           <div><span>{{$t('message.trade.dealamount')}}</span>  <span>1</span></div>
-           <div><span></span>  <span>2</span></div>
-        </li>
-      </Ul>
+      <component  :transnumkList="transnumkList"  :is="currentView"></component>
+    <div class="bockList">
+      <div class="bockListData">
+        <div class="title">{{$t('message.trade.detail')}}</div>
+        <el-table :data="tradeDetailList" style="width:100%"  row-class-name="transnumDetailrowClass" header-row-class-name="transnumDetailHeaderRowclass">
+           <div slot="empty" style="font-size:18px;">
+            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else ><img src='../../images/not _found_list.png' /></div>
+          </div>
+          <el-table-column  width="30px"></el-table-column>
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+            <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
+            <template slot-scope="scope">
+                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
+          </template>
+          </el-table-column>
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+            <template slot-scope="scope">
+                <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
+                </span>
+                <span v-show="!scope.row.takerPaysValue">
+                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                </span>
+            </template>
+          </el-table-column>
+            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+            <template slot-scope="scope">
+               <span v-if="scope.row.judgeTrade === 1">
+                   <span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span>
+                   <span>{{scope.row.takerGetsCurrency}}</span>
+              </span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerPaysValue)/parseInt(scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+              <span v-else>---</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
+            <template slot-scope="scope">
+              <span class="hashSpan">{{scope.row.account}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column  width="30px"></el-table-column>
+        </el-table>
       </div>
-    <div class="transnum">
-      <div class="title">{{$t('message.trade.effect')}}</div>
-        <ul class="transnumList">
-          <li v-for="(item,index) of  transnumDetail" :key="index"  >
-           <span>{{item.message}}</span><span>{{item.message}}</span>
-          </li>
-        </ul>
-       <ul class="pagination">
-        <li>
-          <el-pagination background layout="prev, pager, next" :total="total" :page-size="20" :current-page="parseInt(currentPage)" @current-change="handleCurrentChange"></el-pagination>
-        </li>
-        <li style="min-width: 1.08rem">{{$t('message.blockList.goto')}}
-          <div class="inputDiv"><input type="text"  v-model="gopage" @focus="clearGopage"></div>
-          {{$t('message.blockList.page')}}
-        </li>
-        <li>
-          <div class="sortButton" @click="jumpSizeChange">{{$t('message.blockList.confirm')}}</div>
-        </li>
-      </ul>
     </div>
   </div>
 </template>
 <script>
+import { getBlockDetail } from "../../js/fetch";
+import offerCancel from "./offerCancel";
+import offerCreate from "./offerCreate";
+import payment from "./payment";
+import { getMatchFlag } from "../../js/utils";
+// queryDelegateWallet,
+// queryWalletIncome,
 import {
-  // queryDelegateWallet,
-  // queryWalletIncome,
-  getBlockDetail
-} from "../../js/fetch";
-import { getTransactionType } from "@/js/utils";
-// , getTransactionMode
+  getTransactionType,
+  getTransactionMode,
+  SelectTypeComponents
+} from "@/js/utils";
 export default {
   name: "transnumDetail",
+  components: { offerCancel, offerCreate, payment },
   data() {
     return {
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
-      },
-      hashtime: {},
-      bash: {},
-      transactionNumber: "",
+      transactionNumber:
+        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55",
       loading: false,
-      total: 0,
-      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
-      currentPage: 1,
-      gopage: 100,
-      transnumDetail: [
-        { message: "foo" },
-        { message: "boo" },
-        { message: "coo" },
-        { message: "doo" }
-      ]
+      currentView: payment,
+      transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
+      tradeDetailList: [],
+      index: 0
     };
   },
   created() {
@@ -94,77 +97,134 @@ export default {
       //   return;
       // }
       this.loading = true;
-      this.hash = this.$route.params.hash;
+      this.hash =
+        this.$route.params.hash ||
+        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
       let res = await getBlockDetail(this.hash);
-      console.log(res);
-
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "99999999");
-        // this.total = res.data.count;
-        this.blockList = this.handelDealHashData(res);
-        console.log(this.blockList);
-        // this.bash = res.data.info;
+        this.transnumkList = this.handelDealHashData(res);
+        this.tradeDetailList =
+          this.handelTradeDetailList(res.data.affectedNodes) || [];
+      } else {
+        this.transnumkList = [];
       }
-      // this.loading = false;
+      this.loading = false;
     },
-    // async getTransnumDetail() {
-    //   if (this.loading) {
-    //     return;
-    //   }
-    //   this.loading = true;
-    //   let data = {
-    //     page: this.page || 0,
-    //     size: 20,
-    //     buyOrSell: "",
-    //     pair: "",
-    //     wallet: this.wallet
-    //   };
-    //   let res = await queryDelegateWallet(data);
-    //   let res2 = await queryWalletIncome(this.wallet);
-    //   console.log(res, "211111");
-    //   console.log(res2, "111112");
-    //   if (res.result === true && (res.code === 0 || res.code === "0")) {
-    //     console.log(res, "111111");
-    //     this.transnumDetail = res.data.list;
-    //   }
-    //   this.loading = false;
+    // clearGopage() {
+    //   this.gopage = "";
     // },
-    clearGopage() {
-      this.gopage = "";
-    },
     handleData(value) {
       return value;
+    },
+    handelTradeDetailList(res) {
+      let list = [];
+      if (res && res.length > 0) {
+        let i = 0;
+        for (; i < res.length; i++) {
+          list.push({
+            seq: res[i].seq || "---",
+            account: res[i].account || "---",
+            judgeTrade: res[i].flag,
+            matchFlag: getMatchFlag(res[i].matchFlag) || "",
+            // amountCurrency: this.displayDefaultCurrency(res[i].amount).currency,
+            // amountValue:
+            //   this.displayDefaultValues(res[i].amount).value || "---",
+            // realPaysCurrency: this.displayDefaultCurrency(res[i].realPays).currency,
+            // realPaysValue: this.displayDefaultValues(res[i].realPays).value,
+            // realGetsCurrency: this.displayDefaultCurrency(res[i].realGets).currency,
+            // realGetsValue: this.displayDefaultValues(res[i].realGets).value,
+            takerPaysCurrency:
+              this.displayDefaultCurrency(res[i].final.takerPays).currency ||
+              "---",
+            takerPaysValue: this.displayDefaultValues(res[i].final.takerPays)
+              .value,
+            takerGetsCurrency: this.displayDefaultCurrency(
+              res[i].final.takerGets
+            ).currency,
+            takerGetsValue: this.displayDefaultValues(res[i].final.takerGets)
+              .value,
+            flag:
+              getTransactionMode(res[i].flag) ||
+              getTransactionMode(res[i].type) ||
+              "----"
+          });
+        }
+      }
+      return list;
     },
     handelDealHashData(res) {
       let list = {};
       if (res && res.data) {
-        debugger;
         res = res.data;
+        this.currentView = SelectTypeComponents(res.type);
         list = {
           type: getTransactionType(res.type) || "---",
+          block: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
-          dest: res.dest || "---",
-          realPays: res.realPays || "---",
-          memos: this.displayDefaultMemoData(res.memos[0]).MemoData || "---",
-          succ: this.judgeDealSuccess(res.type) || "---",
-          matchFlag: this.judgeIsMatch(this.matchFlag) || "---"
+          amountCurrency: this.displayDefaultCurrency(res.amount).currency,
+          amountValue: this.displayDefaultValues(res.amount).value || "---",
+          time: this.handleHashtime(res.time) || "---",
+          matchFlag: res.matchFlag || "---",
+          matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
+            .currency,
+          matchPaysValue: this.displayDefaultValues(res.matchPays).value,
+          matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
+            .currency,
+          matchGetsValue: this.displayDefaultValues(res.matchGets).value,
+          takerPaysCurrency:
+            this.displayDefaultCurrency(res.takerPays).currency || "---",
+          takerPaysValue: this.displayDefaultValues(res.takerPays).value,
+          takerGetsCurrency: this.displayDefaultCurrency(res.takerGets)
+            .currency,
+          takerGetsValue: this.displayDefaultValues(res.takerGets).value,
+          memos: res.memos || [{ Memo: { MemoData: "---" } }],
+          flag:
+            getTransactionMode(res.flag) ||
+            getTransactionMode(res.type) ||
+            "----",
+          dest: res.dest || "----",
+          succ: this.judgeDealSuccess(res.succ) || "---",
+          judgeTrade: res.flag
         };
       }
-      debugger;
+      // this.defaultValue = "---";
       return list;
     },
-    jumpSizeChange() {
-      this.currentPage = this.gopage;
-      this.loading = false;
-      this.getTransnumDetail();
-    },
+    // jumpSizeChange() {
+    //   this.currentPage = this.gopage;
+    //   this.loading = false;
+    //   this.getTransnumDetail();
+    // },
+    // judge(value) {
+    //   console.log(value);
+    //   return value;
+    // },
     judgeDealSuccess(value) {
-      if (value === "tesSUCCESS") {
+      if (value && value === "tesSUCCESS") {
         return this.$t("message.trade.successtrade");
       } else {
         return undefined;
       }
+    },
+    asciiConverString(value) {
+      let dd = "";
+      if (value && value !== "---") {
+        for (var i = 0; i < value.length; i++) {
+          dd += String.fromCharCode(value.charCodeAt(i));
+        }
+      }
+      // console.log(value, "12");
+      return dd || "---";
+    },
+
+    judgeObject(value) {
+      // let value = [].slice.call([{ Memo: { MemoData: "---" } }])[0];
+      // return typeof value;
+      // return value;
+      console.log(value instanceof Array);
+      return value[0];
     },
     judgeIsMatch(value) {
       if (value) {
@@ -175,10 +235,8 @@ export default {
     },
     displayDefaultMemoData(value) {
       if (value) {
-        debugger;
         return value;
       } else {
-        debugger;
         return { MemoData: undefined };
       }
     },
@@ -189,39 +247,29 @@ export default {
         return { value: undefined };
       }
     },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-
-      this.loading = false;
-      this.getTransnumDetail();
+    displayDefaultCurrency(value) {
+      if (value) {
+        return value;
+      } else {
+        return { currency: undefined };
+      }
     },
-    // handlegettransnumDetail(res) {
-    //   let i = 0;
-    //   let list = [];
-    //   for (; i < res.length; i++) {
-    //     list.push({
-    //       _id: res[i]._id,
-    //       transNum: res[i].transNum,
-    //       hash: res[i].hash,
-    //       time: this.handleHashtime(res[i].time)
-    //     });
-    //   }
-    //   return list;
-    // },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
-      let hashTime = {};
-      fillZero(dateIn.getDate());
-      hashTime.time =
-        fillZero(dateIn.getHours()) + ":" + fillZero(dateIn.getMinutes());
-      hashTime.date =
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
         fillZero(dateIn.getFullYear()) +
         "-" +
         fillZero(dateIn.getMonth() + 1) +
         "-" +
-        fillZero(dateIn.getDate());
-      return hashTime.date;
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
+      return hashTime;
     },
     fillZero(value) {
       if (value < 10) {
@@ -239,9 +287,17 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
-}
-.transnumDetailTitle {
-  text-align: left;
+  .hashSpan {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #3b3f4c;
+    font-size: 14px;
+  }
+  // // .hashSpan:hover {
+  // //   color: #06aaf9;
+  // //   cursor: pointer;
+  // }
   .tille {
     display: flex;
     align-items: center;
@@ -255,81 +311,13 @@ export default {
     color: #18c9dd;
   }
   .walletHeader {
+    // background: red;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 16px;
     color: #3e3f45;
     padding: 10px 0;
-  }
-
-  ul {
-    width: 100%;
-    display: flex;
-    flex-flow: column;
-    border: 2px solid #c1e9f1;
-    border-radius: 8px;
-    background: #ffffff;
-    margin-bottom: 20px;
-    li {
-      display: flex;
-      justify-content: space-between;
-      height: 40px;
-      line-height: 40px;
-      padding: 0 20px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: #5f5d5d;
-      font-size: 14px;
-      border-bottom: 1px solid #e0e8ed;
-      div {
-        display: flex;
-        justify-content: space-between;
-        flex: 1;
-        span:nth-child(2) span {
-          margin: 10px;
-        }
-      }
-      div:nth-child(1) {
-        padding-right: 20px;
-      }
-      div:nth-child(2) {
-        border-left: 1px solid #e0e8ed;
-        padding-left: 20px;
-      }
-    }
-  }
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  padding-top: 20px;
-  padding-bottom: 110px;
-  .sortButton {
-    border: 1px solid #959595;
-    border-radius: 6px;
-    height: 36px;
-    line-height: 36px;
-    width: 50px;
-    margin-left: 20px;
-    background: #f2f8fc;
-    padding: 0 3px;
-  }
-  li .inputDiv {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #959595;
-    display: inline-block;
-    margin: 0 10px;
-    border-radius: 6px;
-  }
-  li div input {
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    border: 0;
   }
 }
 .title {
@@ -363,47 +351,30 @@ export default {
     }
   }
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #ffffff;
-  font-size: 14px;
-  .sortButton {
-    border: 1px solid #959595;
-    border-radius: 6px;
-    height: 36px;
-    line-height: 36px;
-    width: 50px;
-    margin-left: 20px;
-    background: #f2f8fc;
-  }
-  li .input {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #959595;
-    display: inline-block;
-    border-radius: 6px;
-    margin: 0 10px;
-  }
-  li div input {
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    border: 0;
+</style>
+<style  lang="scss" >
+.el-table {
+  th {
+    border-bottom: 1px solid #e0e8ed;
   }
 }
-</style>
-
-<style  lang="scss" >
-#transnumDetail .pagination .is-background {
+.transnumDetailHeaderRowclass {
+  color: #3b3f4c;
+  font-size: 14px;
+  height: 40px;
+}
+#blockdetail .transnumDetailrowClass {
+  font-size: 12px;
+  height: 40px;
+}
+#blockdetail .pagination .is-background {
   .el-pager li:not(.disabled).active {
     background: #18c9dd;
     color: #ffffff;
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;
@@ -423,7 +394,7 @@ export default {
     color: #959595;
   }
 }
-#transnumDetail .el-pager .el-icon-more {
+#blockdetail .el-pager .el-icon-more {
   display: none;
 }
 </style>

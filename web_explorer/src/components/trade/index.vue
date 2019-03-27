@@ -15,21 +15,46 @@
         <el-table :data="tranList" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >暂无数据</div>
+            <div v-else ><img src='../../images/not _found_list.png' /></div>
           </div>
-          <el-table-column  width="46px"></el-table-column>
-          <el-table-column type="index" :label="$t('message.hashList.sort')" min-width="10%"></el-table-column>
-          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="72%">
+          <el-table-column  width="30px"></el-table-column>
+          <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
+           <el-table-column prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
+          <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
+            <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
+             <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
+            </template>
+          </el-table-column>
+           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+               <template slot-scope="scope">
+                  <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
+              </template>
+          </el-table-column>
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="47%">
             <template slot-scope="scope">
               <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="transNum"  :label="$t('message.transaction')"  align="right" header-align="right"   min-width="18%">
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="center"  min-width="14%" >
             <template slot-scope="scope">
-              <span class="transNumSpan">{{handleData(scope.row.transNum,1)}}</span>
+                <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
+                </span>
+                <span v-show="!scope.row.takerPaysValue">
+                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                </span>
             </template>
           </el-table-column>
-          <el-table-column width="46px"></el-table-column>
+          <el-table-column width="30px"></el-table-column>
         </el-table>
       </div>
         <ul class="pagination">
@@ -49,6 +74,11 @@
 </template>
 <script>
 import { getTranslist } from "../../js/fetch";
+import {
+  getTransactionType,
+  getTransactionMode,
+  getFlagColor
+} from "@/js/utils";
 export default {
   name: "trade",
   data() {
@@ -58,16 +88,17 @@ export default {
           return time.getTime() > Date.now();
         }
       },
-      selectedDate: "",
+      // selectedDate: "",
       tranList: [],
-      getRowClass: String,
+      // getRowClass: String,
       index: String,
-      labelclass: String,
-      hashtime: String,
+      // defaultValue: "",
+      // labelclass: String,
+      // hashtime: String,
       total: 0,
       loading: false,
       currentPage: 1,
-      gopage: 100
+      gopage: 1
     };
   },
   created() {
@@ -79,18 +110,94 @@ export default {
   },
   methods: {
     async getAllList(data) {
+      this.tranList = [];
       if (this.loading) {
         return;
       }
       this.loading = true;
       let res = await getTranslist(data);
-      console.log(res);
+      console.log(res, "jiao yi");
 
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
-        this.tranList = res.data.list;
+        this.tranList = this.handleGetData(res.data.list);
+      } else {
+        this.tranList = [];
+        this.total = 0;
+        this.gopage = 0;
       }
       this.loading = false;
+    },
+    handleGetData(res) {
+      let i = 0;
+      let list = [];
+      for (; i < res.length; i++) {
+        list.push({
+          sort: (this.currentPage - 1) * 20 + i + 1,
+          // seq: res[i].seq || "----",
+          _id: res[i]._id,
+          type: getTransactionType(res[i].type) || "---",
+          flag:
+            getTransactionMode(res[i].flag) ||
+            getTransactionMode(res[i].type) ||
+            "----",
+          displayDifferentColor:
+            getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
+          takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
+            .currency,
+          takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
+          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
+            .currency,
+          takerGetsValue:
+            this.displayDefaultValues(res[i].takerGets).value || "----",
+          takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
+          takerValue: this.displayDefaultValues(res[i].amount).value || "----",
+          // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
+          // displayDifferentCircles: getType(res.data.list[i].flag) || "",
+          // transNum: this.handleData(res[i].transNum, 1),
+          // hash: res[i].hash,
+          time: this.handleHashtime(res[i].time)
+        });
+      }
+      // this.defaultValue = "---";
+      return list;
+    },
+    displayDefaultValues(value) {
+      if (value) {
+        return value;
+      } else {
+        return { value: undefined };
+      }
+    },
+    displayDefaultCurrency(value) {
+      if (value) {
+        return value;
+      } else {
+        return { currency: undefined };
+      }
+    },
+    handleHashtime(time) {
+      let { fillZero } = this;
+      let dateIn = new Date((time + 946684800) * 1000);
+      let hashTime = "";
+      // fillZero(dateIn.getDate());
+      hashTime =
+        fillZero(dateIn.getFullYear()) +
+        "-" +
+        fillZero(dateIn.getMonth() + 1) +
+        "-" +
+        fillZero(dateIn.getDate()) +
+        " " +
+        fillZero(dateIn.getHours()) +
+        ":" +
+        fillZero(dateIn.getMinutes());
+      return hashTime;
+    },
+    fillZero(value) {
+      if (value < 10) {
+        value = "0" + value;
+      }
+      return value;
     },
     clearGopage() {
       this.gopage = "";
@@ -119,9 +226,9 @@ export default {
         params: { hash: hash }
       });
     },
-    setDatetiem(val) {
-      this.selectedDate = val;
-    },
+    // setDatetiem(val) {
+    //   this.selectedDate = val;
+    // },
     rowStyle({ row, rowIndex }) {
       return "height:40px";
     },
@@ -145,6 +252,12 @@ export default {
   text-align: center;
   padding: 0 70px;
   min-width: 768px;
+  // .pays {
+  //   background: red;
+  // }
+  .paysI {
+    font-size: 12px;
+  }
 }
 .pagination {
   display: flex;
@@ -170,6 +283,12 @@ export default {
     display: inline-block;
     margin: 0 10px;
     border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
   }
   li div input {
     border-radius: 6px;
@@ -230,6 +349,7 @@ export default {
     white-space: nowrap;
     color: #3b3f4c;
     font-size: 14px;
+    cursor: pointer;
   }
   .hashSpan:hover {
     color: #06aaf9;
@@ -245,7 +365,7 @@ export default {
   }
   .el-pager li {
     background: #ffffff;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
     line-height: 40px;
     margin-right: 10px;
