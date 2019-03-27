@@ -11,6 +11,8 @@
   "time": "Time",
   "inputSearchContent": "Please enter the Search content",
   "inputCorrectSearchContent": "Please enter the Search correct content",
+  "hashValueInputError": "hash Value Input Error",
+  "walletAddressInputError": "wallet Address Input Error",
   "transaction": "TRANSACTION",
   "viewall": "View more",
   "hash": "Hash",

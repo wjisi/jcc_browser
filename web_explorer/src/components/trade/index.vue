@@ -15,7 +15,7 @@
         <el-table :data="tranList" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /></div>
+           <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
@@ -25,9 +25,9 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
             </template>
           </el-table-column> -->
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
            <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
@@ -45,7 +45,7 @@
                 <span v-show="scope.row.takerPaysValue" class="pays">
                     <span>{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span>{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
@@ -77,7 +77,8 @@ import { getTranslist } from "../../js/fetch";
 import {
   getTransactionType,
   getTransactionMode,
-  getFlagColor
+  getFlagColor,
+  getTypeBg
 } from "@/js/utils";
 export default {
   name: "trade",
@@ -141,6 +142,7 @@ export default {
             getTransactionMode(res[i].flag) ||
             getTransactionMode(res[i].type) ||
             "----",
+          displayDifferentBg: getTypeBg(res[i].type) || "",
           displayDifferentColor:
             getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
           takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
@@ -252,12 +254,49 @@ export default {
   text-align: center;
   padding: 0 70px;
   min-width: 768px;
+  .offerAffectBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferAffect.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    // position: absolute;
+    // bottom: 20px;
+    // justify-content: center;
+    // align-items: center;
+  }
+  .offerCancelBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferCancel.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .offerCreateBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferCreate.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .transferBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/transfer.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    //  position: absolute;
+    // bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
   // .pays {
   //   background: red;
   // }
-  .paysI {
-    font-size: 12px;
-  }
 }
 .pagination {
   display: flex;

@@ -11,6 +11,8 @@
   "time": "时间",
   "inputSearchContent": "请输入搜索内容",
   "inputCorrectSearchContent": "请输入正确搜索内容",
+  "hashValueInputError": "哈希值输入错误",
+  "walletAddressInputError": "钱包地址输入错误",
   "transaction": "交易",
   "viewall": "查看全部",
   "hash": "哈希值",

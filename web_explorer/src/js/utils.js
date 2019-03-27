@@ -173,9 +173,9 @@ export const SelectTypeComponents = (key) => {
 }
 export const getTypeBg = (key) => {
   let map = new Map([
-    ["OfferCreate", "OfferAffect.png"],
-    ["OfferAffect", "OfferAffect.png"],
-    ["OfferCancel", "OfferAffect.png"],
+    ["OfferCreate", "offerCreateBg"],
+    ["OfferAffect", "offerAffectBg"],
+    ["OfferCancel", "offerCancelBg"],
     ["Payment", "transferBg"],
     ["Send", "transferBg"],
     ["Receive", "transferBg"]

@@ -46,8 +46,8 @@
         <el-option v-for="item in transactionMode" :key="item.selectModeValue" :label="item.label" :value="item.selectModeValue"></el-option>
       </el-select>
       <span class="titleItem1">{{$t('message.wallet.transactionCurrency')}}</span>
-      <el-select v-model="selectCurrencyValue"  @change="changeTransactionCurrency" style="width:100px">
-        <el-option v-for="item in  transactionCurrency" :key="item.selectCurrencyValue" :label="item.label" :value="item.selectCurrencyValue"></el-option>
+      <el-select v-model="base"  @change="changeTransactionCurrency" style="width:100px">
+        <el-option v-for="item in  transactionCurrency" :key="item.base" :label="item.baseTitle" :value="item.base"></el-option>
       </el-select>
        <span><i class="iconfont"  icon-jiaoyijineshuliangzhuanhuan></i></span>
       <el-select v-model="selectCurrencyCounterValue"  @change="changeTransactionCounterType" style="width:100px">
@@ -76,14 +76,9 @@
              <span>{{scope.row.time}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
-               <!-- <img :src= "`${scope.row.displayDifferentBg}`"> -->
-               <!-- <img :src="'../../images/'+" /> -->
-               <img :src="offerCancelBg">
-              <!-- <img :src=scope.row.displayDifferentBg> -->
-              <span>{{scope.row.type}}</span>
-              <!-- <img src=`../../images/${data.size}`/> -->
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
@@ -96,7 +91,7 @@
                 <span v-show="scope.row.takerPaysValue" class="pays">
                     <span>{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span>{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
@@ -158,10 +153,10 @@ import {
   getFlagColor,
   getTypeBg
 } from "@/js/utils";
-import offerAffectBg from "../../images/OfferAffect.png";
-import offerCancelBg from "../../images/OfferCancel.png";
-import offerCreateBg from "../../images/OfferCreate.png";
-import transferBg from "../../images/transfer.png";
+// import offerAffectBg from "../../images/OfferAffect.png";
+// import offerCancelBg from "../../images/OfferCancel.png";
+// import offerCreateBg from "../../images/OfferCreate.png";
+// import transferBg from "../../images/transfer.png";
 // import transferFailureBg from "@/images/transferFailure.png";
 export default {
   name: "wallet",
@@ -224,13 +219,22 @@ export default {
       ],
       transactionCurrency: [
         {
-          selectCurrencyValue: "",
-          label: this.$t("message.wallet.allCurrency")
+          base: "",
+          baseTitle: this.$t("message.wallet.allCurrency")
         },
-        { selectCurrencyValue: "SWTC", label: "SWTC" },
-        { selectCurrencyValue: "JCC", label: "JCC" },
-        { selectCurrencyValue: "ETH", label: "ETH" },
-        { selectCurrencyValue: "MOAC", label: "MOAC" }
+        { base: "SWTC", baseTitle: "SWTC" },
+        { base: "JCC", baseTitle: "JCC" },
+        { base: "ETH", baseTitle: "ETH" },
+        { base: "BIZ", baseTitle: "BIZ" },
+        { base: "MOAC", baseTitle: "MOAC" },
+        { base: "SLASH", baseTitle: "SLASH" },
+        { base: "DABT", baseTitle: "DABT" },
+        { base: "STM", baseTitle: "STM" },
+        { base: "MYT", baseTitle: "MYT" },
+        { base: "CALL", baseTitle: "CALL" },
+        { base: "BIC", baseTitle: "BIC" },
+        { base: "EKT", baseTitle: "EKT" },
+        { base: "YUT", baseTitle: "YUT" }
       ],
       // transactionCounterType: [
       //   {
@@ -244,7 +248,7 @@ export default {
       historicalList: [],
       walletlist: [],
       selectModeValue: "",
-      selectCurrencyValue: "",
+      base: "",
       selectCurrencyCounterValue: "",
       selectTypeValue: "",
       startTime: "",
@@ -259,35 +263,26 @@ export default {
       loading: false,
       walletBalance: {},
       wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
-      offerAffectBg,
-      offerCancelBg,
-      offerCreateBg,
-      transferBg
+      transactionPairs: {},
+      defaultTransactionCurrency: {}
     };
   },
   mounted() {
     setTimeout(() => {
+      this.transactionPairs = this.$store.getters.transactionPairs;
+      // localStorage.setItem("transactionCurrency", this.transactionCurrency);
+      this.defaultTransactionCurrency = this.transactionCurrency;
       console.log("交易对：", this.$store.getters.transactionPairs);
     }, 500);
   },
   created() {
     // this.wallet = this.$route.params.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
-    // let data = {
-    //   page: this.currentPage || 1,
-    //   size: 20,
-    //   begin: this.startTime || "",
-    //   end: this.endTime || "",
-    //   type: "",
-    //   buyOrSell: "0",
-    //   pair: "",
-    //   wallet: this.wallet
-    // };
     this.getHistoricalList();
   },
   computed: {
     transactionCounterType() {
-      if (this.selectCurrencyValue === "SWTC") {
+      if (this.base === "SWTC") {
         return [
           {
             selectCurrencyCounterValue: "",
@@ -295,6 +290,13 @@ export default {
           },
           { selectCurrencyCounterValue: "CNT", label: "CNT" },
           { selectCurrencyCounterValue: "ETH", label: "ETH" }
+        ];
+      } else if (this.selectTypeValue === "Payment") {
+        return [
+          {
+            selectCurrencyCounterValue: "",
+            label: this.$t("message.wallet.tradeArea")
+          }
         ];
       } else {
         return [
@@ -315,40 +317,14 @@ export default {
     },
     jumpSizeChange() {
       this.currentPage = this.gopage;
-      // let data = {
-      //   page: this.currentPage || "0",
-      //   size: 20,
-      //   begin: this.startTime || "",
-      //   end: this.endTime || "",
-      //   type: "",
-      //   buyOrSell: this.selectModeValue || "",
-      //   pair: this.selectCurrencyValue || "",
-      //   wallet: this.wallet || ""
-      // };
       this.loading = false;
       this.getHistoricalList();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      // let data = {
-      //   page: this.currentPage,
-      //   size: 20,
-      //   begin: this.startTime,
-      //   end: this.endTime,
-      //   type: "OfferCreate,OfferAffect",
-      //   buyOrSell: this.selectModeValue,
-      //   pair: this.selectCurrencyValue,
-      //   wallet: this.wallet
-      // };
       this.loading = false;
       this.getHistoricalList();
     },
-    // cellStyle() {
-    //   if (data.columnIndex === 0) {
-    //     return getStyle(data.row.server_state);
-    //   }
-    //   return "";
-    // },
     async getHistoricalList() {
       this.historicalList = [];
       if (this.loading) {
@@ -362,7 +338,7 @@ export default {
         end: this.endTime || "",
         type: this.selectTypeValue || "",
         buyOrSell: this.selectModeValue || "",
-        pair: `${this.selectCurrencyValue}-${this.selectCurrencyCounterValue}`,
+        pair: `${this.base}-${this.selectCurrencyCounterValue}`,
         wallet: this.wallet || ""
       };
       console.log(data);
@@ -381,11 +357,6 @@ export default {
     async getBalanceList(wallet) {
       let res = await querySpecifiedWallet(wallet);
       console.log(res, "walletTail");
-      // let data = {
-      //   page: 0,
-      //   size: 20,
-      //   wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe"
-      // };
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.walletBalance = this.getWalletBalanceData(res);
       } else {
@@ -449,62 +420,54 @@ export default {
     },
     changeTransactionMode() {
       console.log(this.selectModeValue, "123");
-      // let data = {
-      //   page: this.currentPage || "0",
-      //   size: 20,
-      //   begin: this.startTime || "",
-      //   end: this.endTime || "",
-      //   type: "",
-      //   buyOrSell: this.selectModeValue || "",
-      //   pair: this.selectCurrencyValue || "",
-      //   wallet: this.wallet || ""
-      // };
       this.loading = false;
-      this.getHistoricalList();
+      // this.getHistoricalList();
     },
 
     changeTransactionCurrency() {
-      console.log(this.selectCurrencyValue);
-      // let data = {
-      //   page: this.currentPage || "0",
-      //   size: 20,
-      //   begin: this.startTime || "",
-      //   end: this.endTime || "",
-      //   type: "",
-      //   buyOrSell: this.selectModeValue || "",
-      //   pair: this.selectCurrencyValue || "",
-      //   wallet: this.wallet || ""
-      // };
-      this.getHistoricalList();
+      console.log(this.base);
+      if (this.base === "SWTC") {
+      }
+      // this.getHistoricalList();
     },
     changeTransactionCounterType() {
-      this.getHistoricalList();
+      // this.transactionCurrency = localStorage.getItem("transactionCurrency");
+      console.log(this.transactionCurrency);
+      if (this.selectCurrencyCounterValue === "ETH") {
+        this.transactionCurrency = this.transactionPairs.JETH;
+      } else if (this.selectCurrencyCounterValue === "CNY") {
+        this.transactionCurrency = this.transactionPairs.CNY;
+      } else if (this.selectCurrencyCounterValue === "SWTC") {
+        this.transactionCurrency = this.transactionPairs.SWTC;
+      } else {
+        console.log("122");
+        this.transactionCurrency = this.defaultTransactionCurrency;
+      }
     },
     changeTransactionType() {
-      // let data = {
-      //   page: this.currentPage || "0",
-      //   size: 20,
-      //   begin: this.startTime || "",
-      //   end: this.endTime || "",
-      //   type: "",
-      //   buyOrSell: this.selectModeValue || "",
-      //   pair: this.selectCurrencyValue || "",
-      //   wallet: this.wallet || ""
-      // };
-      this.getHistoricalList();
+      if (this.selectTypeValue === "Payment") {
+        this.transactionCurrency = this.defaultTransactionCurrency;
+        // this.transactionCounterType = [];
+        this.transactionMode = [
+          { selectModeValue: "", label: this.$t("message.wallet.allMode") },
+          // { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
+          // { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
+          { selectModeValue: 3, label: this.$t("message.wallet.Income") },
+          { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+        ];
+        // this.transactionCounterType = [];
+      } else {
+        this.transactionMode = [
+          { selectModeValue: "", label: this.$t("message.wallet.allMode") },
+          { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
+          { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
+          // { selectModeValue: 3, label: this.$t("message.wallet.Income") },
+          // { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+        ];
+      }
     },
     selectTimerange() {
       console.log(this.startTime);
-      // let data = {
-      //   page: this.currentPage || "0",
-      //   size: 20,
-      //   begin: this.startTime || "",
-      //   end: this.endTime || "",
-      //   type: "",
-      //   buyOrSell: this.selectModeValue || "",
-      //   pair: this.selectCurrencyValue || "",
-      //   wallet: this.wallet || ""
-      // };
       this.getHistoricalList();
     },
     jujn(value) {
@@ -579,13 +542,6 @@ export default {
       // this.defaultValue = "---";
       return list;
     },
-    // handleTradePrice(value,flag=""){
-    //   let tradePice={}
-    //    if(flag===1)
-    //    {
-    //      tradePice.value=
-    //    }
-    // },
     displayDefaultValues(value) {
       if (value) {
         return value;
@@ -639,6 +595,46 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+  .offerAffectBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferAffect.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    // position: absolute;
+    // bottom: 20px;
+    // justify-content: center;
+    // align-items: center;
+  }
+  .offerCancelBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferCancel.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .offerCreateBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferCreate.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .transferBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/transfer.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    //  position: absolute;
+    // bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
   .hashSpan {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -673,7 +669,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 16px;
+    font-size: 15px;
     color: #3e3f45;
     padding: 10px 0;
   }
