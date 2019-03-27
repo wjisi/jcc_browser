@@ -146,7 +146,7 @@ export default {
           white-space: nowrap;
           overflow: hidden;
           // margin-left: 20px;
-          background: red;
+          // background: red;
           text-overflow: ellipsis;
           // text-align: right;
         }

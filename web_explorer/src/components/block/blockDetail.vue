@@ -22,7 +22,7 @@
           </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
-            <template slot-scope="scope">
+             <template slot-scope="scope">
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
             </template>
           </el-table-column>
@@ -115,11 +115,9 @@ export default {
         total: this.total,
         hash: this.hash || ""
       };
-      console.log(data, "blockdata");
       let res = await getTransListByHash(data);
-      console.log(data, "blockdata");
+      console.log(res, "blockdata1");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        console.log(res, "111111");
         this.blockList = this.handleHistoryData(res);
       } else {
         this.blockList = [];
@@ -137,8 +135,8 @@ export default {
         this.$route.params.hash ||
         "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713";
       let res = await getBlockDetail(this.hash);
+      console.log(res, "blockdata2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        console.log(res, "111111");
         this.total = res.data.count;
         this.blockList = this.handleHistoryData(res);
         this.bash = res.data.info;

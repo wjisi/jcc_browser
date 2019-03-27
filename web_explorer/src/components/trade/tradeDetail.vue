@@ -64,6 +64,7 @@ import { getBlockDetail } from "../../js/fetch";
 import offerCancel from "./offerCancel";
 import offerCreate from "./offerCreate";
 import payment from "./payment";
+import { getMatchFlag } from "../../js/utils";
 // queryDelegateWallet,
 // queryWalletIncome,
 import {
@@ -125,6 +126,7 @@ export default {
             seq: res[i].seq || "---",
             account: res[i].account || "---",
             judgeTrade: res[i].flag,
+            matchFlag: getMatchFlag(res[i].matchFlag) || "",
             // amountCurrency: this.displayDefaultCurrency(res[i].amount).currency,
             // amountValue:
             //   this.displayDefaultValues(res[i].amount).value || "---",
@@ -200,7 +202,7 @@ export default {
     //   return value;
     // },
     judgeDealSuccess(value) {
-      if (value === "tesSUCCESS") {
+      if (value && value === "tesSUCCESS") {
         return this.$t("message.trade.successtrade");
       } else {
         return undefined;
@@ -213,7 +215,7 @@ export default {
           dd += String.fromCharCode(value.charCodeAt(i));
         }
       }
-      console.log(value, "12");
+      // console.log(value, "12");
       return dd || "---";
     },
 
@@ -292,10 +294,10 @@ export default {
     color: #3b3f4c;
     font-size: 14px;
   }
-  .hashSpan:hover {
-    color: #06aaf9;
-    cursor: pointer;
-  }
+  // // .hashSpan:hover {
+  // //   color: #06aaf9;
+  // //   cursor: pointer;
+  // }
   .tille {
     display: flex;
     align-items: center;

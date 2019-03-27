@@ -89,6 +89,7 @@ export default {
       }
       this.loading = true;
       let res = await getBlocklist(data);
+      console.log(res, "区块首页");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.blockList = this.handleGetData(res.data.list);
@@ -135,7 +136,6 @@ export default {
           time: this.handleHashtime(res[i].time)
         });
       }
-      console.log(list);
       return list;
     },
     handleHashtime(time) {
