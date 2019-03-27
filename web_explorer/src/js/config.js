@@ -9,12 +9,15 @@ const getConfigs = async () => {
   let hosts = {
     infoHosts: []
   };
-  let { infoHosts } = res.data;
+  let { infoHosts, transPairs } = res.data;
   if (Array.isArray(infoHosts) && infoHosts.length > 0) {
     hosts.infoHosts = infoHosts;
   }
   store.dispatch("updateHosts", hosts);
-  console.log(store.getters.hosts)
+
+  if (transPairs) {
+    store.dispatch("updateTransactionPairs", transPairs);
+  }
 }
 
 export {

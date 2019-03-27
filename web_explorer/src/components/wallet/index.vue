@@ -265,6 +265,11 @@ export default {
       transferBg
     };
   },
+  mounted() {
+    setTimeout(() => {
+      console.log("交易对：", this.$store.getters.transactionPairs);
+    }, 500);
+  },
   created() {
     // this.wallet = this.$route.params.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");

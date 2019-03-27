@@ -1,5 +1,37 @@
 {
   "infoHosts": [
     "192.168.77.149"
-  ]
+  ],
+  "transPairs": {
+    "CNY": [
+      { "base": "SWTC", "counter": "CNY" },
+      { "base": "JJCC", "counter": "CNY" },
+      { "base": "JMOAC", "counter": "CNY" },
+      { "base": "JETH", "counter": "CNY" },
+      { "base": "JSTM", "counter": "CNY" },
+      { "base": "VCC", "counter": "CNY" },
+      { "base": "JCALL", "counter": "CNY" },
+      { "base": "JSLASH", "counter": "CNY" },
+      { "base": "CSP", "counter": "CNY" }
+    ],
+    "JETH": [
+      { "base": "SWTC", "counter": "JETH" },
+      { "base": "JMOAC", "counter": "JETH" }
+    ],
+    "SWTC": [
+      { "base": "JJCC", "counter": "SWTC" },
+      { "base": "JMOAC", "counter": "SWTC" },
+      { "base": "JBIZ", "counter": "SWTC" },
+      { "base": "JSLASH", "counter": "SWTC" },
+      { "base": "JDABT", "counter": "SWTC" },
+      { "base": "HJT", "counter": "SWTC" },
+      { "base": "JSTM", "counter": "SWTC" },
+      { "base": "JSNRC", "counter": "SWTC" },
+      { "base": "MYT", "counter": "SWTC" },
+      { "base": "JCALL", "counter": "SWTC" },
+      { "base": "JEKT", "counter": "SWTC" },
+      { "base": "BIC", "counter": "SWTC" },
+      { "base": "YUT", "counter": "SWTC" }
+    ]
+  }
 }
