@@ -16,6 +16,7 @@
                <span>
                  <span>{{transnumkList.takerPaysValue}}</span>
                  <span>{{transnumkList.takerPaysCurrency}}</span>
+                  <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                  <span>{{transnumkList.takerGetsValue}}</span>
                  <span>{{transnumkList.takerGetsCurrency}}</span>
                </span>
@@ -28,7 +29,14 @@
         <li>
             <div>
              <span>{{$t('message.trade.entrustprice')}}</span>
-             <span>{{transnumkList.price}}</span>
+              <span>
+                  <span v-if="transnumkList.judgeTrade === 1">
+                   <span>{{parseInt(transnumkList.takerGetsValue)/parseInt(transnumkList.takerPaysValue)}}</span>
+                   <span>{{transnumkList.takerGetsCurrency}}</span>
+              </span>
+               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.takerPaysValue)/parseInt(transnumkList.takerGetsValue)}}</span><span>{{transnumkList.takerGetsCurrency}}</span></span>
+              <span v-else>---</span>
+            </span>
           </div>
            <!-- <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div> -->
            <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>

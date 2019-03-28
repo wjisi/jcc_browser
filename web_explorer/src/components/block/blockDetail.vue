@@ -7,9 +7,13 @@
       <span class="tille" >{{$t('message.blockDetailList.blockhashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
       </span>
       <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
-      <Ul>
+      <Ul v-show="!isEmptyObject(bash)">
         <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{handleHashtime(bash.time)}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
           <span>{{$t('message.blockDetailList.Transactionvolume')}}</span><span>{{bash.transNum}}</span></li><li><span>SWTC{{$t('message.blockDetailList.total')}}</span><span>{{bash.hashType}}</span></li>
+      </Ul>
+      <Ul v-show="isEmptyObject(bash)">
+        <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+        <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px; color: #909399;">{{$t('message.home.notransaction')}}</div>
       </Ul>
     </div>
     <div class="bockList">
@@ -18,7 +22,7 @@
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /></div>
+            <div style="margin:100px 0;" v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
@@ -26,15 +30,15 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
             </template>
           </el-table-column>
-          <el-table-column prop="type"  :label="$t('message.blockDetailList.transactiontype')"  id="ellipsis"  min-width="11%">
-            <template slot-scope="scope">
-              <span style="color:#6f6868;font-size:12px;">{{scope.row.type}}</span>
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
+             <template slot-scope="scope">
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
-            <template slot-scope="scope">
-                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
-          </template>
+           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+               <template slot-scope="scope">
+                  <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
+              </template>
           </el-table-column>
           <!-- <el-table-column prop="time"  :label="$t('message.blockDetailList.transactiontime')"  id="ellipsis" align="center"  min-width="13%">
             <template slot-scope="scope"><span>{{handleHashtime(scope.row.time)}}</span></template>
@@ -77,8 +81,11 @@ import { getBlockDetail, getTransListByHash } from "../../js/fetch";
 import {
   getTransactionType,
   getTransactionMode,
-  getType,
-  getMatchFlag
+  // getType,
+  getMatchFlag,
+  getTypeBg,
+  getFlagColor,
+  isEmptyObject
 } from "@/js/utils";
 export default {
   name: "blockdetail",
@@ -142,7 +149,7 @@ export default {
         this.bash = res.data.info;
       } else {
         this.blockList = [];
-        this.bash = [];
+        this.bash = {};
         this.total = 0;
         this.gopage = 0;
       }
@@ -159,11 +166,14 @@ export default {
           list.push({
             matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
             seq: res.data.list[i].seq || "----",
-            type:
-              getTransactionType(res.data.list[i].type) ||
-              this.$t("message.wallet.unknown"),
-            flag: getTransactionMode(res.data.list[i].flag) || "----",
-            displayDifferentCircles: getType(res.data.list[i].flag) || "",
+            type: this.$t(getTransactionType(res.data.list[i].type)) || "",
+            flag: this.$t(getTransactionMode(res.data.list[i].flag)) || "----",
+            displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
+            displayDifferentColor:
+              getFlagColor(res.data.list[i].flag) ||
+              getFlagColor(res.data.list[i].type) ||
+              "",
+            // displayDifferentCircles: getType(res.data.list[i].flag) || "",
             // time: this.handleHashtime(res.data.list[i].time) || "----",
             fee: res.data.list[i].fee || "----",
             account: res.data.list[i].account || "----",
@@ -179,6 +189,13 @@ export default {
         this.gopage = 0;
       }
       return list;
+    },
+    isEmptyObject(bash) {
+      if (isEmptyObject(bash)) {
+        return true;
+      } else {
+        return false;
+      }
     },
     jumpSizeChange() {
       this.currentPage = this.gopage;
@@ -244,6 +261,46 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+  .offerAffectBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferAffect.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    // position: absolute;
+    // bottom: 20px;
+    // justify-content: center;
+    // align-items: center;
+  }
+  .offerCancelBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferCancel.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .offerCreateBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/OfferCreate.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .transferBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../../images/transfer.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    //  position: absolute;
+    // bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
 }
 .pagination {
   display: flex;

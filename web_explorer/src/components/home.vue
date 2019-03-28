@@ -67,7 +67,10 @@
             </div>
           </li>
         </div>
-        <div v-show="listnum.length === 0" class="v-show" style="background-color:#fff;margin:0 5%;padding:40px 0;">{{$t('message.home.nodata')}}</div>
+        <div v-show="listnum.length === 0" class="v-show" style="background-color:#fff;margin:0 5%;padding:40px 0;">
+           <div v-if="loadingBlock" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div style="margin:15px 0;" v-else ><div>{{$t('message.home.notransaction')}}</div></div>
+        </div>
      </section>
      <section>
       <div class="end" style="margin:0 5%;">
@@ -81,25 +84,25 @@
             {{$t("message.viewall")}}</span>
         </div>
         <div class="endMidder">
-           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
-           <!-- <div slot="empty" style="font-size:18px;">
-            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /></div>
-          </div> -->
+           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle">
+           <ul slot="empty" style="font-size:18px;">
+            <div v-if="loadingTrade" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else ><div>{{$t('message.home.notransaction')}}</div></div>
+           </ul>
           <el-table-column  width="30px"></el-table-column>
           <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
-           <el-table-column type="index" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
           <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
             <template slot-scope="scope">
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
             </template>
           </el-table-column> -->
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="center" header-align="center">
+           <el-table-column  prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%" align="left" header-align="left"></el-table-column>
+           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="left" header-align="left">
              <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.type}}
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
-           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="10%" align="center">
                <template slot-scope="scope">
                   <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
@@ -109,14 +112,14 @@
               <span class="hashSpan" @click="jumpDetail('tradeDetail',scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="center"  min-width="14%" >
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="right" header-align="right"  min-width="22%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
-                    <span>{{scope.row.takerPaysValue}}</span>
+                <span v-show="scope.row.takerPaysValue">
+                    <span style="color: #06aaf9;">{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span>{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span style="color: #06aaf9;">{{scope.row.takerGetsCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
@@ -150,8 +153,10 @@ import { getlastBlocklist, getLatestDeal, getBlockDetail } from "../js/fetch";
 import {
   getTransactionType,
   getTransactionMode,
-  getFlagColor
+  getFlagColor,
+  getTypeBg
 } from "@/js/utils";
+import { jtWallet } from "jcc_wallet";
 var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "home",
@@ -167,6 +172,8 @@ export default {
       showLanguage: false,
       showSwitch: false,
       timer: "",
+      loadingBlock: false,
+      loadingTrade: false,
       languageList: {
         zh: { label: "zh", name: "简体中文" },
         en: { label: "en", name: "English" }
@@ -184,20 +191,34 @@ export default {
   methods: {
     async getlastBlocklists() {
       this.listnum = [];
+      if (this.loadingBlock) {
+        return;
+      }
+      this.loadingBlock = true;
       let res = await getlastBlocklist();
       console.log(res, "shou ye 1");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.listnum = res.data.list;
         console.log(this.listnum);
+      } else {
+        this.listnum = [];
       }
+      this.loadingBlock = false;
     },
     async getLatestDeals() {
       this.latestdeal = [];
+      if (this.loadingTrade) {
+        return;
+      }
+      this.loadingTrade = true;
       let res = await getLatestDeal();
       console.log(res, "shou ye 2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.latestdeal = this.handleGetData(res.data.list);
+      } else {
+        this.latestdeal = [];
       }
+      this.loadingTrade = false;
     },
     searchAll(to) {
       this.$store.dispatch("updateCurrentNav", to);
@@ -223,9 +244,11 @@ export default {
       this.showLanguage = false;
     },
     isrefreshData() {
+      console.log("触发事件");
       clearInterval(this.timer);
       if (this.showSwitch) {
-        setInterval(() => {
+        console.log("触发事件2");
+        this.timer = setInterval(() => {
           this.getlastBlocklists();
           this.getLatestDeals();
         }, 10000);
@@ -237,23 +260,21 @@ export default {
       let list = [];
       for (; i < res.length; i++) {
         list.push({
-          // sort: (this.currentPage - 1) * 20 + i + 1,
+          sort: i + 1,
           // seq: res[i].seq || "----",
           _id: res[i]._id,
-          type: getTransactionType(res[i].type) || "---",
-          flag:
-            getTransactionMode(res[i].flag) ||
-            getTransactionMode(res[i].type) ||
-            "----",
+          type: this.$t(getTransactionType(res[i].type)) || "---",
+          flag: this.$t(getTransactionMode(res[i].flag)) || "----",
+          displayDifferentBg: getTypeBg(res[i].type) || "---",
           displayDifferentColor:
-            getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
+            getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "---",
           takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
             .currency,
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
-            .currency,
+          takerGetsCurrency:
+            this.displayDefaultCurrency(res[i].takerGets).currency || "---",
           takerGetsValue:
-            this.displayDefaultValues(res[i].takerGets).value || "----",
+            this.displayDefaultValues(res[i].takerGets).value || "---",
           takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
           takerValue: this.displayDefaultValues(res[i].amount).value || "----",
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
@@ -336,7 +357,7 @@ export default {
       } else {
         this.$message({
           type: "error",
-          message: this.$t("message.inputCorrectSearchContent"),
+          message: this.$t("message.hashValueInputError"),
           duration: 1600,
           showClose: true
         });
@@ -351,10 +372,19 @@ export default {
           showClose: true
         });
       } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
-        this.$router.push({
-          name: "wallet",
-          params: { wallet: this.searchContent }
-        });
+        if (jtWallet.isValidAddress(this.searchContent)) {
+          this.$router.push({
+            name: "wallet",
+            params: { wallet: this.searchContent }
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: this.$t("message.walletAddressInputError"),
+            duration: 1600,
+            showClose: true
+          });
+        }
       } else if (/^[0-9A-Za-z]{64}$/.test(this.searchContent)) {
         this.jumpDetailByHash(this.searchContent);
       } else {
@@ -375,6 +405,46 @@ export default {
   background: #f2f8fc;
   display: flex;
   flex-direction: column;
+  .offerAffectBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../images/OfferAffect.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    // position: absolute;
+    // bottom: 20px;
+    // justify-content: center;
+    // align-items: center;
+  }
+  .offerCancelBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../images/OfferCancel.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .offerCreateBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../images/OfferCreate.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+  }
+  .transferBg {
+    height: 15.5px;
+    width: 15.5px;
+    background-image: url("../images/transfer.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    //  position: absolute;
+    // bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
   span > span {
     position: relative;
   }

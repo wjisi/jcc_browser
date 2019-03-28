@@ -16,10 +16,7 @@
         <el-table :data="blockList" style="width:100%"  row-class-name="blockRowClass" header-row-class-name="blockHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else >
-               <img src='../../images/not _found_list.png' />
-               <div></div>
-            </div>
+            <div style="margin:100px 0;"  v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <!-- <el-table-column prop="sort" :label="$t('message.blockList.sort')" min-width="17%"></el-table-column> -->

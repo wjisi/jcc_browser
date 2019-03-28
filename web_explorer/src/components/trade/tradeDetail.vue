@@ -4,14 +4,18 @@
         <div> {{$t('message.trade.number')}}:<span style="color:#06aaf9;padding-left:10px;">#{{transactionNumber}}</span></div>
         <div class="tille" >{{$t('message.trade.narrationAndOthers')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
-      <component  :transnumkList="transnumkList"  :is="currentView"></component>
+       <div v-show="!defaultSign" class="walletDetaultLoader" >
+        <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+        <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;">{{$t('message.home.notransaction')}}</div>
+      </div>
+      <component  v-show="defaultSign" :transnumkList="transnumkList"  :is="currentView"></component>
     <div class="bockList">
       <div class="bockListData">
         <div class="title">{{$t('message.trade.detail')}}</div>
         <el-table :data="tradeDetailList" style="width:100%"  row-class-name="transnumDetailrowClass" header-row-class-name="transnumDetailHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /></div>
+            <div style="margin:100px 0;"  v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
@@ -26,10 +30,10 @@
           </el-table-column>
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
+                <span v-show="scope.row.takerPaysValue">
                     <span>{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan paysI"></i>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span>{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
@@ -80,10 +84,11 @@ export default {
       transactionNumber:
         "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55",
       loading: false,
-      currentView: payment,
+      currentView: "",
       transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
       tradeDetailList: [],
-      index: 0
+      index: 0,
+      defaultSign: false
     };
   },
   created() {
@@ -97,17 +102,17 @@ export default {
       //   return;
       // }
       this.loading = true;
-      this.hash =
-        this.$route.params.hash ||
-        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
+      this.hash = this.$route.params.hash;
       let res = await getBlockDetail(this.hash);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "99999999");
         this.transnumkList = this.handelDealHashData(res);
         this.tradeDetailList =
           this.handelTradeDetailList(res.data.affectedNodes) || [];
+        this.defaultSign = true;
       } else {
-        this.transnumkList = [];
+        this.transnumkList = { memos: [{ Memo: { MemoData: "" } }] };
+        this.defaultSign = false;
       }
       this.loading = false;
     },
@@ -145,8 +150,8 @@ export default {
             takerGetsValue: this.displayDefaultValues(res[i].final.takerGets)
               .value,
             flag:
-              getTransactionMode(res[i].flag) ||
-              getTransactionMode(res[i].type) ||
+              this.$t(getTransactionMode(res[i].flag)) ||
+              this.$t(getTransactionMode(res[i].type)) ||
               "----"
           });
         }
@@ -159,7 +164,9 @@ export default {
         res = res.data;
         this.currentView = SelectTypeComponents(res.type);
         list = {
-          type: getTransactionType(res.type) || "---",
+          type:
+            this.$t(getTransactionType(res.type)) ||
+            this.$t("message.wallet.unknown"),
           block: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
@@ -181,8 +188,8 @@ export default {
           takerGetsValue: this.displayDefaultValues(res.takerGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
           flag:
-            getTransactionMode(res.flag) ||
-            getTransactionMode(res.type) ||
+            this.$t(getTransactionMode(res.flag)) ||
+            this.$t(getTransactionMode(res.type)) ||
             "----",
           dest: res.dest || "----",
           succ: this.judgeDealSuccess(res.succ) || "---",
@@ -208,6 +215,15 @@ export default {
         return undefined;
       }
     },
+    // isDefaultObject(obj) {
+    //   if (obj === { memos: [{ Memo: { MemoData: "" } }] }) {
+    //     console.log("1111", obj);
+    //     return true;
+    //   } else {
+    //     console.log("22222", obj);
+    //     return false;
+    //   }
+    // },
     asciiConverString(value) {
       let dd = "";
       if (value && value !== "---") {
@@ -287,6 +303,16 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+  .walletDetaultLoader {
+    width: 100%;
+    // overflow: hidden;
+    // border: 2px solid #c1e9f1;
+    height: 80px;
+    // border-radius: 8px;
+    background: #ffffff;
+    margin-bottom: 20px;
+    color: #909399;
+  }
   .hashSpan {
     overflow: hidden;
     text-overflow: ellipsis;

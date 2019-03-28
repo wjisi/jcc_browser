@@ -34,6 +34,7 @@
 <script>
 import logo from "@/images/logo_NavHead.png";
 import { getBlockDetail } from "../../js/fetch";
+import { jtWallet } from "jcc_wallet";
 var homeTitle = document.getElementById("homepage_title");
 export default {
   name: "headerNav",
@@ -87,7 +88,7 @@ export default {
       } else {
         this.$message({
           type: "error",
-          message: this.$t("message.inputCorrectSearchContent"),
+          message: this.$t("message.hashValueInputError"),
           duration: 1600,
           showClose: true
         });
@@ -102,10 +103,19 @@ export default {
           showClose: true
         });
       } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
-        this.$router.push({
-          name: "wallet",
-          params: { wallet: this.searchContent }
-        });
+        if (jtWallet.isValidAddress(this.searchContent)) {
+          this.$router.push({
+            name: "wallet",
+            params: { wallet: this.searchContent }
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: this.$t("message.walletAddressInputError"),
+            duration: 1600,
+            showClose: true
+          });
+        }
       } else if (/^[0-9A-Za-z]{64}$/.test(this.searchContent)) {
         this.jumpDetailByHash(this.searchContent);
       } else {

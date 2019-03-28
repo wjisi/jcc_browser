@@ -147,14 +147,14 @@ export const getStyle = (key) => {
 }
 export const getTransactionType = (key) => {
   let map = new Map([
-    ["OfferCreate", "创建委托"],
+    ["OfferCreate", "message.wallet.offerCreate"],
     // ["OfferCreate", "message.offerCreateUtils"],
     // ["OfferCreate", this.$t('message.wallet.offerCreate')],
-    ["OfferAffect", "被动成交"],
-    ["OfferCancel", "撤消委托"],
-    ["Payment", "转账"],
-    ["Send", "转账"],
-    ["Receive", "转账"]
+    ["OfferAffect", "message.wallet.offerAffect"],
+    ["OfferCancel", "message.wallet.offerCancel"],
+    ["Payment", "message.wallet.transferaccounts"],
+    ["Send", "message.wallet.transferaccounts"],
+    ["Receive", "message.wallet.transferaccounts"]
   ])
   return map.get(key);
 }
@@ -164,7 +164,7 @@ export const SelectTypeComponents = (key) => {
     // ["OfferCreate", "message.offerCreateUtils"],
     // ["OfferCreate", this.$t('message.wallet.offerCreate')],
     ["OfferAffect", "0fferCreate"],
-    ["OfferCancel", "offerCreate"],
+    ["OfferCancel", "offerCancel"],
     ["Payment", "payment"],
     ["Send", "payment"],
     ["Receive", "payment"]
@@ -173,9 +173,9 @@ export const SelectTypeComponents = (key) => {
 }
 export const getTypeBg = (key) => {
   let map = new Map([
-    ["OfferCreate", "OfferAffect.png"],
-    ["OfferAffect", "OfferAffect.png"],
-    ["OfferCancel", "OfferAffect.png"],
+    ["OfferCreate", "offerCreateBg"],
+    ["OfferAffect", "offerAffectBg"],
+    ["OfferCancel", "offerCancelBg"],
     ["Payment", "transferBg"],
     ["Send", "transferBg"],
     ["Receive", "transferBg"]
@@ -184,10 +184,10 @@ export const getTypeBg = (key) => {
 }
 export const getTransactionMode = (key) => {
   let map = new Map([
-    [1, "买入"],
-    [2, "卖出"],
-    ["Send", "支出"],
-    ["Receive", "收入"]
+    [1, "message.wallet.Purchase"],
+    [2, "message.wallet.Sale"],
+    ["Send", "message.wallet.Send"],
+    ["Receive", "message.wallet.Receive"]
   ])
   return map.get(key);
 }

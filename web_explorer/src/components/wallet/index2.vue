@@ -71,7 +71,7 @@
         <el-table :data="historicalList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" >
           <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
+            <div style="margin:100px 0;" v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="center" header-align="center">
              <template slot-scope="scope">
@@ -427,7 +427,7 @@ export default {
         for (; i < res.data.list.length; i++) {
           list.push({
             type:
-              getTransactionType(res.data.list[i].type) ||
+              this.$t(getTransactionType(res.data.list[i].type)) ||
               this.$t("message.wallet.unknown"),
             flag: getTransactionMode(res.data.list[i].flag) || "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",

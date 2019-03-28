@@ -4,34 +4,145 @@
   ],
   "transPairs": {
     "CNY": [
-      { "base": "SWTC", "counter": "CNY" },
-      { "base": "JJCC", "counter": "CNY" },
-      { "base": "JMOAC", "counter": "CNY" },
-      { "base": "JETH", "counter": "CNY" },
-      { "base": "JSTM", "counter": "CNY" },
-      { "base": "VCC", "counter": "CNY" },
-      { "base": "JCALL", "counter": "CNY" },
-      { "base": "JSLASH", "counter": "CNY" },
-      { "base": "CSP", "counter": "CNY" }
+      {
+        "base": "SWTC",
+        "counter": "CNY",
+        "baseTitle": "SWTC"
+      },
+      {
+        "base": "JJCC",
+        "counter": "CNY",
+        "baseTitle": "JCC"
+      },
+      {
+        "base": "JMOAC",
+        "counter": "CNY",
+        "baseTitle": "MOAC"
+      },
+      {
+        "base": "JETH",
+        "counter": "CNY",
+        "baseTitle": "ETH"
+      },
+      {
+        "base": "JSTM",
+        "counter": "CNY",
+        "baseTitle": "JSTM"
+      },
+      {
+        "base": "VCC",
+        "counter": "CNY",
+        "baseTitle": "VCC"
+      },
+      {
+        "base": "JCALL",
+        "counter": "CNY",
+        "baseTitle": "CALL"
+      },
+      {
+        "base": "JSLASH",
+        "counter": "CNY",
+        "baseTitle": "SLASH"
+      },
+      {
+        "base": "CSP",
+        "counter": "CNY",
+        "baseTitle": "CSP"
+      }
     ],
     "JETH": [
-      { "base": "SWTC", "counter": "JETH" },
-      { "base": "JMOAC", "counter": "JETH" }
+      {
+        "base": "SWTC",
+        "counter": "JETH",
+        "baseTitle": "SWTC"
+      },
+      {
+        "base": "JMOAC",
+        "counter": "JETH",
+        "baseTitle": "MOAC"
+      }
     ],
     "SWTC": [
-      { "base": "JJCC", "counter": "SWTC" },
-      { "base": "JMOAC", "counter": "SWTC" },
-      { "base": "JBIZ", "counter": "SWTC" },
-      { "base": "JSLASH", "counter": "SWTC" },
-      { "base": "JDABT", "counter": "SWTC" },
-      { "base": "HJT", "counter": "SWTC" },
-      { "base": "JSTM", "counter": "SWTC" },
-      { "base": "JSNRC", "counter": "SWTC" },
-      { "base": "MYT", "counter": "SWTC" },
-      { "base": "JCALL", "counter": "SWTC" },
-      { "base": "JEKT", "counter": "SWTC" },
-      { "base": "BIC", "counter": "SWTC" },
-      { "base": "YUT", "counter": "SWTC" }
+      {
+        "base": "JJCC",
+        "counter": "SWTC",
+        "baseTitle": "JCC"
+      },
+      {
+        "base": "JMOAC",
+        "counter": "SWTC",
+        "baseTitle": "MOAC"
+      },
+      {
+        "base": "JBIZ",
+        "counter": "SWTC",
+        "baseTitle": "BIZ"
+      },
+      {
+        "base": "JSLASH",
+        "counter": "SWTC",
+        "baseTitle": "SLASH"
+      },
+      {
+        "base": "JDABT",
+        "counter": "SWTC",
+        "baseTitle": "DABT"
+      },
+      {
+        "base": "HJT",
+        "counter": "SWTC",
+        "baseTitle": "HJT"
+      },
+      {
+        "base": "JSTM",
+        "counter": "SWTC",
+        "baseTitle": "STM"
+      },
+      {
+        "base": "JSNRC",
+        "counter": "SWTC",
+        "baseTitle": "SNRC"
+      },
+      {
+        "base": "MYT",
+        "counter": "SWTC",
+        "baseTitle": "MYT"
+      },
+      {
+        "base": "JCALL",
+        "counter": "SWTC",
+        "baseTitle": "CALL"
+      },
+      {
+        "base": "JEKT",
+        "counter": "SWTC",
+        "baseTitle": "EKT"
+      },
+      {
+        "base": "BIC",
+        "counter": "SWTC",
+        "baseTitle": "BIC"
+      },
+      {
+        "base": "YUT",
+        "counter": "SWTC",
+        "baseTitle": "YUT"
+      },
+      {
+        "base": "JETH",
+        "counter": "SWTC",
+        "baseTitle": "ETH"
+      },
+      {
+        "base": "VCC",
+        "counter": "SWTC",
+        "baseTitle": "VCC"
+      },
+      {
+        "base": "JCKM",
+        "counter": "SWTC",
+        "baseTitle": "CKM"
+      }
     ]
   }
 }

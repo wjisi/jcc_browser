@@ -14,6 +14,7 @@
     "axios": "^0.18.0",
     "compression-webpack-plugin": "^1.1.12",
     "element-ui": "^2.4.11",
+    "jcc_wallet": "^0.3.2",
     "lockr": "^0.8.5",
     "sass-loader": "^7.1.0",
     "store": "^2.0.12",
