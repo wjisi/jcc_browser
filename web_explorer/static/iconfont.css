@@ -54,6 +54,7 @@
 .icon-jiaoyijineshuliangzhuanhuan:before {
   content: "\e6b9";
   font-size:1px;
+  font-weight: 100;
 }
 
 .icon-wujiaoyijilu:before {
@@ -86,5 +87,6 @@
 
 .icon-zhuanzhangshibai:before {
   content: "\e6d0";
+  color: #EE4A4A;
 }
 

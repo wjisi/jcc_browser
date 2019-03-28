@@ -13,7 +13,9 @@
          <li>
            <div>
                <span>{{$t('message.trade.transferAmount')}}</span>
-               <span> <span>{{transnumkList.amountValue}}</span> <span> {{transnumkList.amountCurrency}}</span></span>
+               <span> <span style="color:#18c9dd;">{{transnumkList.amountValue}}</span>
+                      <span> {{transnumkList.amountCurrency}}</span>
+               </span>
           </div>
            <div class="note">
              <span>{{$t('message.home.time')}}</span>
@@ -27,7 +29,7 @@
          <li>
            <div>
              <span>{{$t('message.blockDetailList.transactionmode')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.note')}}</span><span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
+           <div><span>{{$t('message.trade.note')}}</span><span>{{this.asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span></div>
         </li>
       </Ul>
       </div>
@@ -41,6 +43,27 @@ export default {
   },
   data() {
     return {};
+  },
+  methods: {
+    asciiConverString(value) {
+      let dd = "";
+      if (value && value !== "---") {
+        for (var i = 0; i < value.length; i++) {
+          dd += String.fromCharCode(value.charCodeAt(i));
+        }
+      }
+      // console.log(value, "12");
+      return dd;
+    }
+    // AsciiToUnicode(content) {
+    //   let result = "";
+    //   if (content && content !== "---") {
+    //     for (var i = 0; i < content.length; i++) {
+    //       result += "&#" + content.charCodeAt(i) + ";";
+    //     }
+    //   }
+    //   return result;
+    // }
   }
 };
 </script>

@@ -75,10 +75,7 @@
              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
            </el-table-column>
-          <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" min-width="15%">
-            <template slot-scope="scope">
-             <span>{{scope.row.time}}</span>
-            </template>
+           <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" min-width="15%">
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
@@ -90,18 +87,14 @@
                   <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
           </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
-                    <span>{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                    <span>{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
-                </span>
-                <span v-show="!scope.row.takerPaysValue">
-                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
-                </span>
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.account}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="hash" :label="$t('message.home.dealhash')" id="ellipsis" align="center" min-width="13%">
+           <template slot-scope="scope">
+              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
@@ -114,14 +107,19 @@
               <span v-else>---</span>
             </template>
           </el-table-column>
-          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
+           <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"   align="right" header-align="right"  min-width="14%" >
             <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.account}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="hash" :label="$t('message.home.dealhash')" id="ellipsis" align="center" min-width="13%">
-           <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
+                <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                    <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
+                </span>
+                <span v-show="!scope.row.takerPaysValue">
+                      <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
+                      <span>{{scope.row.takerCurreny}}</span>
+                </span>
             </template>
           </el-table-column>
           <el-table-column  width="30px"></el-table-column>
@@ -150,34 +148,15 @@ import {
   queryHistoricalWallet
 } from "@/js/fetch";
 import {
-  // getStyle,
   getTransactionType,
   getTransactionMode,
   getMatchFlag,
-  // getType,
   getFlagColor,
   getTypeBg
 } from "@/js/utils";
-// import offerAffectBg from "../../images/OfferAffect.png";
-// import offerCancelBg from "../../images/OfferCancel.png";
-// import offerCreateBg from "../../images/OfferCreate.png";
-// import transferBg from "../../images/transfer.png";
-// import transferFailureBg from "@/images/transferFailure.png";
 import { BigNumber } from "bignumber.js";
 export default {
   name: "wallet",
-  // beforeRouteEnter(to, from, next) {
-  //   next(vm => {
-  //     vm.$store.dispatch("updateCurrentPage", "historyStatus");
-  //     vm.$store.dispatch("updateCurrentNode", vm.$route.params.wallet);
-  //     vm.getData();
-  //     vm.changeTransactionMode();
-  //   });
-  // },
-  // beforeRouteLeave(to, from, next) {
-  //   clearInterval(this.timer);
-  //   next();
-  // },
   data() {
     return {
       pickerOptions: {
@@ -203,25 +182,11 @@ export default {
           selectTypeValue: "Send,Receive",
           label: this.$t("message.wallet.Payment")
         }
-        // {
-        //   selectTypeValue: "Send,",
-        //   label: this.$t("message.wallet.Send")
-        // },
-        // {
-        //   selectTypeValue: "Receive",
-        //   label: this.$t("message.wallet.Receive")
-        // }
-        // {
-        //   selectTypeValue: 4,
-        //   label: this.$t("message.wallet.transferaccounts")
-        // }
       ],
       transactionMode: [
         { selectModeValue: "", label: this.$t("message.wallet.allMode") },
         { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
         { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
-        // { selectModeValue: 3, label: this.$t("message.wallet.Receive") },
-        // { selectModeValue: 4, label: this.$t("message.wallet.Send") }
       ],
       transactionCurrency: [
         {
@@ -246,15 +211,6 @@ export default {
         { base: "VCC", baseTitle: "VCC" },
         { base: "JCKM", baseTitle: "CKM" }
       ],
-      // transactionCounterType: [
-      //   {
-      //     selectCurrencyCounterValue: "",
-      //     label: this.$t("message.wallet.tradeArea")
-      //   },
-      //   { selectCurrencyCounterValue: "SWTC", label: "SWTC" },
-      //   { selectCurrencyCounterValue: "CNT", label: "CNT" },
-      //   { selectCurrencyCounterValue: "ETH", label: "ETH" }
-      // ],
       historicalList: [],
       walletlist: [],
       selectModeValue: "",
@@ -266,10 +222,8 @@ export default {
       timer: "",
       total: 0,
       allpage: 1,
-      startup_time: {},
       gopage: 100,
       currentPage: 1,
-      clearTitle: "清除定时器",
       loading: false,
       walletBalance: {},
       wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
@@ -328,10 +282,16 @@ export default {
   },
   methods: {
     divided(num1, num2) {
-      return new BigNumber(num1)
-        .dividedBy(new BigNumber(num2))
-        .decimalPlaces(6)
-        .toNumber();
+      if (num1 > 0 && num2 > 0) {
+        return new BigNumber(num1)
+          .dividedBy(new BigNumber(num2))
+          .decimalPlaces(10)
+          .toNumber();
+      } else if (num1 === "0" || num2 === "0") {
+        return "0";
+      } else {
+        return "---";
+      }
     },
     clearGopage() {
       this.gopage = "";
@@ -457,10 +417,13 @@ export default {
         this.pair = this.base;
       } else {
         this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
+        if (this.pair === "-") {
+          this.pair = "";
+        }
       }
-      // this.getHistoricalList();
     },
     changeTransactionCounterType() {
+      this.bash = "";
       // this.transactionCurrency = localStorage.getItem("transactionCurrency");
       this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
       if (this.selectCurrencyCounterValue === "ETH") {
@@ -470,23 +433,18 @@ export default {
       } else if (this.selectCurrencyCounterValue === "SWTC") {
         this.transactionCurrency = this.transactionPairs.SWTC;
       } else {
-        console.log("122");
         this.transactionCurrency = this.defaultTransactionCurrency;
       }
     },
     changeTransactionType() {
-      // this.selectTypeValue = "";
       this.selectModeValue = "";
       this.selectCurrencyCounterValue = "";
+      this.base = "";
       this.pair = "";
-      this.bash = "";
       if (this.selectTypeValue === "Send,Receive") {
         this.transactionCurrency = this.defaultTransactionCurrency;
-        // this.transactionCounterType = [];
         this.transactionMode = [
           { selectModeValue: "", label: this.$t("message.wallet.allMode") },
-          // { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
-          // { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
           {
             selectModeValue: "Receive",
             label: this.$t("message.wallet.Receive")
@@ -496,7 +454,6 @@ export default {
             label: this.$t("message.wallet.Send")
           }
         ];
-        // this.transactionCounterType = [];
       } else {
         this.transactionMode = [
           { selectModeValue: "", label: this.$t("message.wallet.allMode") },
@@ -505,18 +462,9 @@ export default {
             label: this.$t("message.wallet.Purchase")
           },
           { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
-          // { selectModeValue: 3, label: this.$t("message.wallet.Receive") },
-          // { selectModeValue: 4, label: this.$t("message.wallet.Send") }
         ];
       }
     },
-    // isNewEmptyObject(walletBalance) {
-    //   if (isEmptyObject(walletBalance)) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
     isEmptyObject(obj) {
       for (let name in obj) {
         return false;
@@ -527,8 +475,10 @@ export default {
       console.log(this.startTime);
       this.getHistoricalList();
     },
-    jujn(value) {
-      return typeof value;
+    judgeTransferFailure(value) {
+      if (!value) {
+        return "zhuanzhangshiba";
+      }
     },
     getHistoryData(res) {
       let i = 0;
@@ -544,25 +494,10 @@ export default {
               this.$t(getTransactionMode(res.data.list[i].type)) ||
               "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
-            // transactionAmount: {
-            //   matchPaysCurrency: this.displayDefaultCurrency(
-            //     res.data.list[i].matchPays
-            //   ).currency,
-            //   matchPaysValue: this.displayDefaultValues(
-            //     res.data.list[i].matchPays
-            //   ).value,
-            //   matchGetsCurrency: this.displayDefaultCurrency(
-            //     res.data.list[i].matchGets
-            //   ).currency,
-            //   matchGetsValue: this.displayDefaultValues(
-            //     res.data.list[i].matchGets
-            //   ).value
-            // },
             displayDifferentColor:
               getFlagColor(res.data.list[i].flag) ||
               getFlagColor(res.data.list[i].type) ||
               "",
-            // tradePriceCurrent:getFlagColor(res.data.list[i].flag),
             displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
             takerPaysCurrency: this.displayDefaultCurrency(
               res.data.list[i].takerPays
@@ -583,9 +518,10 @@ export default {
               "----",
             account: res.data.list[i].account || "----",
             hash: res.data.list[i].hash || "----",
-            matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
+            matchFlag:
+              getMatchFlag(res.data.list[i].matchFlag) ||
+              getMatchFlag(this.judgeTransferFailure(res.data.list[i].success)),
             judgeTrade: res.data.list[i].flag
-            // displayDifferentCircles: getType(res.data.list[i].flag) || ""
           });
         }
         this.total = res.data.count;
@@ -596,7 +532,6 @@ export default {
         this.allpage = 0;
         this.gopage = 0;
       }
-      // this.defaultValue = "---";
       return list;
     },
     displayDefaultValues(value) {
@@ -659,10 +594,6 @@ export default {
     background-repeat: no-repeat;
     background-size: 100% 100%;
     display: inline-block;
-    // position: absolute;
-    // bottom: 20px;
-    // justify-content: center;
-    // align-items: center;
   }
   .offerCancelBg {
     height: 15.5px;

@@ -14,10 +14,10 @@
            <div>
                <span>{{$t('message.trade.entrustAmount')}}</span>
                <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
-                 <span>{{transnumkList.takerPaysValue}}</span>
+                 <span style="color:#18c9dd;">{{transnumkList.takerPaysValue}}</span>
                  <span>{{transnumkList.takerPaysCurrency}}</span>
                   <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                 <span>{{transnumkList.takerGetsValue}}</span>
+                 <span style="color:#18c9dd;">{{transnumkList.takerGetsValue}}</span>
                  <span>{{transnumkList.takerGetsCurrency}}</span>
                </span>
                <span v-show="!transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
@@ -32,14 +32,12 @@
         <li>
             <div>
              <span>{{$t('message.trade.entrustprice')}}</span>
-              <span>
-                  <span v-if="transnumkList.judgeTrade === 1">
-                   <span>{{parseInt(transnumkList.takerGetsValue)/parseInt(transnumkList.takerPaysValue)}}</span>
+              <span v-if="transnumkList.judgeTrade === 1">
+                   <span style="color:#18c9dd;">{{divided(transnumkList.takerGetsValue,transnumkList.takerPaysValue)}}</span>
                    <span>{{transnumkList.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.takerPaysValue)/parseInt(transnumkList.takerGetsValue)}}</span><span>{{transnumkList.takerGetsCurrency}}</span></span>
+               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{divided(transnumkList.takerPaysValue,transnumkList.takerGetsValue)}}</span><span>{{transnumkList.takerGetsCurrency}}</span></span>
               <span v-else>---</span>
-            </span>
           </div>
            <!-- <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div> -->
            <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
@@ -48,10 +46,10 @@
            <div>
              <span>{{$t('message.trade.turnoveramount')}}</span>
               <span v-show="transnumkList.matchPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
-                 <span>{{transnumkList.matchPaysValue}}</span>
+                 <span style="color:#18c9dd;">{{transnumkList.matchPaysValue}}</span>
                  <span>{{transnumkList.matchPaysCurrency}}</span>
                   <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                 <span>{{transnumkList.matchGetsValue}}</span>
+                 <span style="color:#18c9dd;">{{transnumkList.matchGetsValue}}</span>
                  <span>{{transnumkList.matchGetsCurrency}}</span>
               </span>
               <span v-show="!transnumkList.matchPaysValue">---</span>
@@ -61,14 +59,12 @@
         <li>
            <div>
              <span>{{$t('message.trade.turnoverprice')}}</span>
-              <span>
-                  <span v-if="transnumkList.judgeTrade === 1">
-                   <span>{{parseInt(transnumkList.matchGetsValue)/parseInt(transnumkList.matchPaysValue)}}</span>
+              <span v-if="transnumkList.judgeTrade === 1">
+                   <span style="color:#18c9dd;">{{divided(transnumkList.matchGetsValue,transnumkList.matchPaysValue)}}</span>
                    <span>{{transnumkList.matchGetsCurrency}}</span>
               </span>
-              <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.matchPaysValue)/parseInt(transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
+               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{divided(transnumkList.matchPaysValue,transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
               <span v-else>---</span>
-            </span>
           </div>
            <div><span>{{$t('message.trade.note')}}</span><span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
         </li>
@@ -82,6 +78,7 @@
   </div>
 </template>
 <script>
+import { BigNumber } from "bignumber.js";
 export default {
   name: "offerCreate",
   props: {
@@ -89,6 +86,20 @@ export default {
   },
   data() {
     return {};
+  },
+  methods: {
+    divided(num1, num2) {
+      if (num1 > 0 && num2 > 0) {
+        return new BigNumber(num1)
+          .dividedBy(new BigNumber(num2))
+          .decimalPlaces(10)
+          .toNumber();
+      } else if (num1 === "0" || num2 === "0") {
+        return "0";
+      } else {
+        return "---";
+      }
+    }
   }
 };
 </script>

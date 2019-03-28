@@ -24,11 +24,13 @@
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div style="margin:100px 0;" v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
-          <el-table-column  width="30px"></el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
-             <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+          <el-table-column  width="30px" align="center">
+              <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
+          </el-table-column>
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+             <template slot-scope="scope">{{scope.row.seq}}</template>
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
@@ -164,9 +166,11 @@ export default {
       if (res && res.data && res.data.list.length > 0) {
         for (; i < res.data.list.length; i++) {
           list.push({
-            matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
+            matchFlag:
+              getMatchFlag(res.data.list[i].matchFlag) ||
+              getMatchFlag(this.judgeTransferFailure(res.data.list[i].succ)),
             seq: res.data.list[i].seq || "----",
-            type: this.$t(getTransactionType(res.data.list[i].type)) || "",
+            type: this.$t(getTransactionType(res.data.list[i].type)) || "---",
             flag: this.$t(getTransactionMode(res.data.list[i].flag)) || "----",
             displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
             displayDifferentColor:
@@ -175,9 +179,9 @@ export default {
               "",
             // displayDifferentCircles: getType(res.data.list[i].flag) || "",
             // time: this.handleHashtime(res.data.list[i].time) || "----",
-            fee: res.data.list[i].fee || "----",
-            account: res.data.list[i].account || "----",
-            _id: res.data.list[i]._id || "----"
+            fee: res.data.list[i].fee || "---",
+            account: res.data.list[i].account || "---",
+            _id: res.data.list[i]._id || "---"
           });
         }
         this.total = res.data.count;
@@ -225,6 +229,11 @@ export default {
         name: "tradeDetail",
         params: { hash: hash }
       });
+    },
+    judgeTransferFailure(value) {
+      if (!value) {
+        return "zhuanzhangshiba";
+      }
     },
     handleHashtime(time) {
       if (time) {
