@@ -107,10 +107,10 @@
            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
                <span v-if="scope.row.judgeTrade === 1">
-                   <span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span>
+                   <span>{{divided(scope.row.takerGetsValue,scope.row.takerPaysValue)}}</span>
                    <span>{{scope.row.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerPaysValue)/parseInt(scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{divided(scope.row.takerPaysValue,scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
               <span v-else>---</span>
             </template>
           </el-table-column>
@@ -163,6 +163,7 @@ import {
 // import offerCreateBg from "../../images/OfferCreate.png";
 // import transferBg from "../../images/transfer.png";
 // import transferFailureBg from "@/images/transferFailure.png";
+import { BigNumber } from "bignumber.js";
 export default {
   name: "wallet",
   // beforeRouteEnter(to, from, next) {
@@ -326,6 +327,12 @@ export default {
     }
   },
   methods: {
+    divided(num1, num2) {
+      return new BigNumber(num1)
+        .dividedBy(new BigNumber(num2))
+        .decimalPlaces(6)
+        .toNumber();
+    },
     clearGopage() {
       this.gopage = "";
     },

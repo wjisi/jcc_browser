@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bignumber.js": "^8.1.1",
     "compression-webpack-plugin": "^1.1.12",
     "element-ui": "^2.4.11",
     "jcc_wallet": "^0.3.2",
