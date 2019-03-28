@@ -67,7 +67,10 @@
             </div>
           </li>
         </div>
-        <div v-show="listnum.length === 0" class="v-show" style="background-color:#fff;margin:0 5%;padding:40px 0;">{{$t('message.home.nodata')}}</div>
+        <div v-show="listnum.length === 0" class="v-show" style="background-color:#fff;margin:0 5%;padding:40px 0;">
+           <div v-if="loadingBlock" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div style="margin:15px 0;" v-else ><div>{{$t('message.home.notransaction')}}</div></div>
+        </div>
      </section>
      <section>
       <div class="end" style="margin:0 5%;">
@@ -81,11 +84,11 @@
             {{$t("message.viewall")}}</span>
         </div>
         <div class="endMidder">
-           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
-           <!-- <div slot="empty" style="font-size:18px;">
-            <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
-          </div> -->
+           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle">
+           <ul slot="empty" style="font-size:18px;">
+            <div v-if="loadingTrade" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+            <div v-else ><div>{{$t('message.home.notransaction')}}</div></div>
+           </ul>
           <el-table-column  width="30px"></el-table-column>
           <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
           <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
@@ -169,6 +172,8 @@ export default {
       showLanguage: false,
       showSwitch: false,
       timer: "",
+      loadingBlock: false,
+      loadingTrade: false,
       languageList: {
         zh: { label: "zh", name: "简体中文" },
         en: { label: "en", name: "English" }
@@ -185,21 +190,35 @@ export default {
   },
   methods: {
     async getlastBlocklists() {
-      // this.listnum = [];
+      this.listnum = [];
+      if (this.loadingBlock) {
+        return;
+      }
+      this.loadingBlock = true;
       let res = await getlastBlocklist();
       console.log(res, "shou ye 1");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.listnum = res.data.list;
         console.log(this.listnum);
+      } else {
+        this.listnum = [];
       }
+      this.loadingBlock = false;
     },
     async getLatestDeals() {
-      // this.latestdeal = [];
+      this.latestdeal = [];
+      if (this.loadingTrade) {
+        return;
+      }
+      this.loadingTrade = true;
       let res = await getLatestDeal();
       console.log(res, "shou ye 2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.latestdeal = this.handleGetData(res.data.list);
+      } else {
+        this.latestdeal = [];
       }
+      this.loadingTrade = false;
     },
     searchAll(to) {
       this.$store.dispatch("updateCurrentNav", to);
@@ -244,11 +263,8 @@ export default {
           sort: i + 1,
           // seq: res[i].seq || "----",
           _id: res[i]._id,
-          type: getTransactionType(res[i].type) || "---",
-          flag:
-            getTransactionMode(res[i].flag) ||
-            getTransactionMode(res[i].type) ||
-            "----",
+          type: this.$t(getTransactionType(res[i].type)) || "---",
+          flag: this.$t(getTransactionMode(res[i].flag)) || "----",
           displayDifferentBg: getTypeBg(res[i].type) || "---",
           displayDifferentColor:
             getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "---",

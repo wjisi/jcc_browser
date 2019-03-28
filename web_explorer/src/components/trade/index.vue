@@ -15,7 +15,7 @@
         <el-table :data="tranList" style="width:100%" :row-style="rowStyle"  row-class-name="traderowClass" header-row-class-name="tradeHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-           <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
+           <div v-else style="margin:100px 0;"><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
@@ -137,10 +137,12 @@ export default {
           sort: (this.currentPage - 1) * 20 + i + 1,
           // seq: res[i].seq || "----",
           _id: res[i]._id,
-          type: getTransactionType(res[i].type) || "---",
+          type:
+            this.$t(getTransactionType(res[i].type)) ||
+            this.$t("message.wallet.unknown"),
           flag:
-            getTransactionMode(res[i].flag) ||
-            getTransactionMode(res[i].type) ||
+            this.$t(getTransactionMode(res[i].flag)) ||
+            this.$t(getTransactionMode(res[i].type)) ||
             "----",
           displayDifferentBg: getTypeBg(res[i].type) || "",
           displayDifferentColor:

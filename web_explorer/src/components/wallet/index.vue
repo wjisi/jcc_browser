@@ -5,7 +5,7 @@
         <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">#{{wallet}}</span></div>
         <div class="tille" >{{$t('message.wallet.remainingSum')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
-      <Ul>
+      <Ul v-show="!isEmptyObject(walletBalance)">
         <li>
           <div><span>SWTC<span>{{walletBalance.SWTC_value}}</span></span> <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span></div>
           <div><span>JDBT<span>{{walletBalance.JDBT_value}}</span></span> <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
@@ -30,6 +30,10 @@
           <div><span>VCC<span>{{walletBalance.VCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
            <div><span>JSTM<span>{{walletBalance.JSTM_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
+      </Ul>
+      <Ul v-show="isEmptyObject(walletBalance)">
+        <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
+        <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;color: #909399;">{{$t('message.home.notransaction')}}</div>
       </Ul>
       </div>
     <!-- <div class="previous">
@@ -64,7 +68,7 @@
         <el-table :data="historicalList" style="width:100%" row-class-name="walletrowClass" header-row-class-name="walletHeaderRowclass" >
           <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
+            <div style="margin:100px 0;" v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
            <el-table-column prop="matchFlag"  width="30px">
              <template slot-scope="scope">
@@ -142,6 +146,7 @@
 import {
   querySpecifiedWallet,
   // queryDelegateWallet,
+  // isEmptyObject,
   queryHistoricalWallet
 } from "@/js/fetch";
 import {
@@ -194,11 +199,11 @@ export default {
           label: this.$t("message.wallet.offerCancel")
         },
         {
-          selectTypeValue: "Payment",
+          selectTypeValue: "Send,Receive",
           label: this.$t("message.wallet.Payment")
         }
         // {
-        //   selectTypeValue: "Send",
+        //   selectTypeValue: "Send,",
         //   label: this.$t("message.wallet.Send")
         // },
         // {
@@ -214,8 +219,8 @@ export default {
         { selectModeValue: "", label: this.$t("message.wallet.allMode") },
         { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
         { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
-        // { selectModeValue: 3, label: this.$t("message.wallet.Income") },
-        // { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+        // { selectModeValue: 3, label: this.$t("message.wallet.Receive") },
+        // { selectModeValue: 4, label: this.$t("message.wallet.Send") }
       ],
       transactionCurrency: [
         {
@@ -223,18 +228,22 @@ export default {
           baseTitle: this.$t("message.wallet.allCurrency")
         },
         { base: "SWTC", baseTitle: "SWTC" },
-        { base: "JCC", baseTitle: "JCC" },
-        { base: "ETH", baseTitle: "ETH" },
-        { base: "BIZ", baseTitle: "BIZ" },
-        { base: "MOAC", baseTitle: "MOAC" },
-        { base: "SLASH", baseTitle: "SLASH" },
-        { base: "DABT", baseTitle: "DABT" },
-        { base: "STM", baseTitle: "STM" },
+        { base: "JJCC", baseTitle: "JCC" },
+        { base: "JMOAC", baseTitle: "MOAC" },
+        { base: "JBIZ", baseTitle: "BIZ" },
+        { base: "JSLASH", baseTitle: "SLASH" },
+        { base: "JDABT", baseTitle: "DABT" },
+        { base: "HJT", baseTitle: "HJT" },
+        { base: "JSTM", baseTitle: "STM" },
+        { base: "JSNRC", baseTitle: "SNRC" },
         { base: "MYT", baseTitle: "MYT" },
-        { base: "CALL", baseTitle: "CALL" },
+        { base: "JCALL", baseTitle: "CALL" },
+        { base: "JEKT", baseTitle: "EKT" },
         { base: "BIC", baseTitle: "BIC" },
-        { base: "EKT", baseTitle: "EKT" },
-        { base: "YUT", baseTitle: "YUT" }
+        { base: "YUT", baseTitle: "YUT" },
+        { base: "JETH", baseTitle: "ETH" },
+        { base: "VCC", baseTitle: "VCC" },
+        { base: "JCKM", baseTitle: "CKM" }
       ],
       // transactionCounterType: [
       //   {
@@ -264,7 +273,10 @@ export default {
       walletBalance: {},
       wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
       transactionPairs: {},
-      defaultTransactionCurrency: {}
+      defaultTransactionCurrency: {},
+      type: "",
+      buyOrSell: "",
+      pair: ""
     };
   },
   mounted() {
@@ -282,16 +294,7 @@ export default {
   },
   computed: {
     transactionCounterType() {
-      if (this.base === "SWTC") {
-        return [
-          {
-            selectCurrencyCounterValue: "",
-            label: this.$t("message.wallet.tradeArea")
-          },
-          { selectCurrencyCounterValue: "CNT", label: "CNT" },
-          { selectCurrencyCounterValue: "ETH", label: "ETH" }
-        ];
-      } else if (this.selectTypeValue === "Payment") {
+      if (this.selectTypeValue === "Send,Receive") {
         return [
           {
             selectCurrencyCounterValue: "",
@@ -299,15 +302,26 @@ export default {
           }
         ];
       } else {
-        return [
-          {
-            selectCurrencyCounterValue: "",
-            label: this.$t("message.wallet.tradeArea")
-          },
-          { selectCurrencyCounterValue: "SWTC", label: "SWTC" },
-          { selectCurrencyCounterValue: "CNT", label: "CNT" },
-          { selectCurrencyCounterValue: "ETH", label: "ETH" }
-        ];
+        if (this.base === "SWTC") {
+          return [
+            {
+              selectCurrencyCounterValue: "",
+              label: this.$t("message.wallet.tradeArea")
+            },
+            { selectCurrencyCounterValue: "CNT", label: "CNT" },
+            { selectCurrencyCounterValue: "ETH", label: "ETH" }
+          ];
+        } else {
+          return [
+            {
+              selectCurrencyCounterValue: "",
+              label: this.$t("message.wallet.tradeArea")
+            },
+            { selectCurrencyCounterValue: "SWTC", label: "SWTC" },
+            { selectCurrencyCounterValue: "CNT", label: "CNT" },
+            { selectCurrencyCounterValue: "ETH", label: "ETH" }
+          ];
+        }
       }
     }
   },
@@ -336,9 +350,9 @@ export default {
         size: 20,
         begin: this.startTime || "",
         end: this.endTime || "",
-        type: this.selectTypeValue || "",
-        buyOrSell: this.selectModeValue || "",
-        pair: `${this.base}-${this.selectCurrencyCounterValue}`,
+        type: this.type || this.selectTypeValue || "",
+        buyOrSell: this.buyOrSell || this.selectModeValue || "",
+        pair: this.pair,
         wallet: this.wallet || ""
       };
       console.log(data);
@@ -419,20 +433,29 @@ export default {
       return list;
     },
     changeTransactionMode() {
-      console.log(this.selectModeValue, "123");
-      this.loading = false;
-      // this.getHistoricalList();
+      if (this.selectTypeValue === "Send,Receive") {
+        this.type = this.selectModeValue;
+      } else {
+        this.type = this.selectTypeValue;
+      }
+      if (
+        this.selectModeValue === "Send" ||
+        this.selectModeValue === "Receive"
+      ) {
+        this.buyOrSell = "1";
+      }
     },
-
     changeTransactionCurrency() {
-      console.log(this.base);
-      if (this.base === "SWTC") {
+      if (this.selectTypeValue === "Send,Receive") {
+        this.pair = this.base;
+      } else {
+        this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
       }
       // this.getHistoricalList();
     },
     changeTransactionCounterType() {
       // this.transactionCurrency = localStorage.getItem("transactionCurrency");
-      console.log(this.transactionCurrency);
+      this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
       if (this.selectCurrencyCounterValue === "ETH") {
         this.transactionCurrency = this.transactionPairs.JETH;
       } else if (this.selectCurrencyCounterValue === "CNY") {
@@ -445,26 +468,53 @@ export default {
       }
     },
     changeTransactionType() {
-      if (this.selectTypeValue === "Payment") {
+      // this.selectTypeValue = "";
+      this.selectModeValue = "";
+      this.selectCurrencyCounterValue = "";
+      this.pair = "";
+      this.bash = "";
+      if (this.selectTypeValue === "Send,Receive") {
         this.transactionCurrency = this.defaultTransactionCurrency;
         // this.transactionCounterType = [];
         this.transactionMode = [
           { selectModeValue: "", label: this.$t("message.wallet.allMode") },
           // { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
           // { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
-          { selectModeValue: 3, label: this.$t("message.wallet.Income") },
-          { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+          {
+            selectModeValue: "Receive",
+            label: this.$t("message.wallet.Receive")
+          },
+          {
+            selectModeValue: "Send",
+            label: this.$t("message.wallet.Send")
+          }
         ];
         // this.transactionCounterType = [];
       } else {
         this.transactionMode = [
           { selectModeValue: "", label: this.$t("message.wallet.allMode") },
-          { selectModeValue: 1, label: this.$t("message.wallet.Purchase") },
+          {
+            selectModeValue: 1,
+            label: this.$t("message.wallet.Purchase")
+          },
           { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
-          // { selectModeValue: 3, label: this.$t("message.wallet.Income") },
-          // { selectModeValue: 4, label: this.$t("message.wallet.Expenditure") }
+          // { selectModeValue: 3, label: this.$t("message.wallet.Receive") },
+          // { selectModeValue: 4, label: this.$t("message.wallet.Send") }
         ];
       }
+    },
+    // isNewEmptyObject(walletBalance) {
+    //   if (isEmptyObject(walletBalance)) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    isEmptyObject(obj) {
+      for (let name in obj) {
+        return false;
+      }
+      return true;
     },
     selectTimerange() {
       console.log(this.startTime);
@@ -480,11 +530,11 @@ export default {
         for (; i < res.data.list.length; i++) {
           list.push({
             type:
-              getTransactionType(res.data.list[i].type) ||
+              this.$t(getTransactionType(res.data.list[i].type)) ||
               this.$t("message.wallet.unknown"),
             flag:
-              getTransactionMode(res.data.list[i].flag) ||
-              getTransactionMode(res.data.list[i].type) ||
+              this.$t(getTransactionMode(res.data.list[i].flag)) ||
+              this.$t(getTransactionMode(res.data.list[i].type)) ||
               "----",
             time: this.handleHashtime(res.data.list[i].time) || "----",
             // transactionAmount: {

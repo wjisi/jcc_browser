@@ -13,13 +13,14 @@
          <li>
            <div>
                <span>{{$t('message.trade.entrustAmount')}}</span>
-               <span v-show="transnumkList.matchPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
-                 <span>{{transnumkList.matchPaysValue}}</span>
-                 <span>{{transnumkList.matchPaysCurrency}}</span>
-                 <span>{{transnumkList.matchGetsValue}}</span>
-                 <span>{{transnumkList.matchGetsCurrency}}</span>
+               <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
+                 <span>{{transnumkList.takerPaysValue}}</span>
+                 <span>{{transnumkList.takerPaysCurrency}}</span>
+                  <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                 <span>{{transnumkList.takerGetsValue}}</span>
+                 <span>{{transnumkList.takerGetsCurrency}}</span>
                </span>
-               <span v-show="!transnumkList.matchPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
+               <span v-show="!transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
                   <span>---</span>
                </span>
           </div>
@@ -33,10 +34,10 @@
              <span>{{$t('message.trade.entrustprice')}}</span>
               <span>
                   <span v-if="transnumkList.judgeTrade === 1">
-                   <span>{{parseInt(transnumkList.matchGetsValue)/parseInt(transnumkList.matchPaysValue)}}</span>
-                   <span>{{transnumkList.matchGetsCurrency}}</span>
+                   <span>{{parseInt(transnumkList.takerGetsValue)/parseInt(transnumkList.takerPaysValue)}}</span>
+                   <span>{{transnumkList.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.matchPaysValue)/parseInt(transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
+               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.takerPaysValue)/parseInt(transnumkList.takerGetsValue)}}</span><span>{{transnumkList.takerGetsCurrency}}</span></span>
               <span v-else>---</span>
             </span>
           </div>
@@ -46,12 +47,14 @@
          <li>
            <div>
              <span>{{$t('message.trade.turnoveramount')}}</span>
-              <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
-                 <span>{{transnumkList.takerPaysValue}}</span>
-                 <span>{{transnumkList.takerPaysCurrency}}</span>
-                 <span>{{transnumkList.takerGetsValue}}</span>
-                 <span>{{transnumkList.takerGetsCurrency}}</span>
+              <span v-show="transnumkList.matchPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
+                 <span>{{transnumkList.matchPaysValue}}</span>
+                 <span>{{transnumkList.matchPaysCurrency}}</span>
+                  <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                 <span>{{transnumkList.matchGetsValue}}</span>
+                 <span>{{transnumkList.matchGetsCurrency}}</span>
               </span>
+              <span v-show="!transnumkList.matchPaysValue">---</span>
           </div>
            <div><span>{{$t('message.trade.multipartymatch')}}</span><span>{{transnumkList.matchFlag}}</span></div>
         </li>
@@ -63,7 +66,7 @@
                    <span>{{parseInt(transnumkList.matchGetsValue)/parseInt(transnumkList.matchPaysValue)}}</span>
                    <span>{{transnumkList.matchGetsCurrency}}</span>
               </span>
-               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.matchPaysValue)/parseInt(transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
+              <span v-else-if="transnumkList.judgeTrade === 2"><span>{{parseInt(transnumkList.matchPaysValue)/parseInt(transnumkList.matchGetsValue)}}</span><span>{{transnumkList.matchGetsCurrency}}</span></span>
               <span v-else>---</span>
             </span>
           </div>

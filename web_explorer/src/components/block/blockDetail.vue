@@ -13,7 +13,7 @@
       </Ul>
       <Ul v-show="isEmptyObject(bash)">
         <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-        <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;">{{$t('message.home.notransaction')}}</div>
+        <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px; color: #909399;">{{$t('message.home.notransaction')}}</div>
       </Ul>
     </div>
     <div class="bockList">
@@ -22,7 +22,7 @@
         <el-table :data="blockList" style="width:100%"  row-class-name="BlockDetailrowClass" header-row-class-name="BlockDetailHeaderRowclass">
            <div slot="empty" style="font-size:18px;">
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
-            <div v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
+            <div style="margin:100px 0;" v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
           <el-table-column  width="30px"></el-table-column>
           <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
@@ -166,10 +166,8 @@ export default {
           list.push({
             matchFlag: getMatchFlag(res.data.list[i].matchFlag) || "",
             seq: res.data.list[i].seq || "----",
-            type:
-              getTransactionType(res.data.list[i].type) ||
-              this.$t("message.wallet.unknown"),
-            flag: getTransactionMode(res.data.list[i].flag) || "----",
+            type: this.$t(getTransactionType(res.data.list[i].type)) || "",
+            flag: this.$t(getTransactionMode(res.data.list[i].flag)) || "----",
             displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
             displayDifferentColor:
               getFlagColor(res.data.list[i].flag) ||

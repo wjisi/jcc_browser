@@ -17,7 +17,7 @@
       {
         "base": "JMOAC",
         "counter": "CNY",
-        "baseTitle": "ETH"
+        "baseTitle": "MOAC"
       },
       {
         "base": "JETH",
@@ -101,12 +101,12 @@
       {
         "base": "JSNRC",
         "counter": "SWTC",
-        "baseTitle": "MYT"
+        "baseTitle": "SNRC"
       },
       {
         "base": "MYT",
         "counter": "SWTC",
-        "baseTitle": "CSP"
+        "baseTitle": "MYT"
       },
       {
         "base": "JCALL",
@@ -127,6 +127,21 @@
         "base": "YUT",
         "counter": "SWTC",
         "baseTitle": "YUT"
+      },
+      {
+        "base": "JETH",
+        "counter": "SWTC",
+        "baseTitle": "ETH"
+      },
+      {
+        "base": "VCC",
+        "counter": "SWTC",
+        "baseTitle": "VCC"
+      },
+      {
+        "base": "JCKM",
+        "counter": "SWTC",
+        "baseTitle": "CKM"
       }
     ]
   }
