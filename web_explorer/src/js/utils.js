@@ -15,23 +15,14 @@ export const hex2str = function(hex) {
   let str = "";
   let len = hex.length;
   let i = 0;
-  let tempStr = "";
   if (hex.length % 2 !== 0) {
     return "";
   }
   for (; i < len; i += 2) {
     let s = hex.substr(i, 2);
-    if (parseInt(s, 16) >= 128) {
-      tempStr += "%" + s;
-      if (tempStr.length >= 9) {
-        str += decodeURI(tempStr);
-        tempStr = "";
-      }
-    } else {
-      str += decodeURI("%" + s);
-    }
+    str += "%" + s;
   }
-  return str;
+  return decodeURI(str);
 }
 
 export const getUUID = function() {
