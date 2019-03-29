@@ -186,7 +186,11 @@ export default {
       return this.$i18n.locale;
     }
   },
-  beforeDestory() {
+  // deactivated() {
+  //   debugger;
+  //   clearInterval(this.timer);
+  // },
+  beforeRouteLeave(to, from, next) {
     clearInterval(this.timer);
   },
   methods: {

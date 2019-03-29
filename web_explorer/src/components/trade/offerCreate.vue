@@ -36,10 +36,9 @@
                    <span style="color:#18c9dd;">{{divided(transnumkList.takerGetsValue,transnumkList.takerPaysValue)}}</span>
                    <span>{{transnumkList.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="transnumkList.judgeTrade === 2">
+               <span v-else>
                  <span>{{divided(transnumkList.takerPaysValue,transnumkList.takerGetsValue)}}</span>
                  <span>{{transnumkList.takerPaysCurrency}}</span></span>
-              <span v-else>---</span>
           </div>
            <!-- <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div> -->
            <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
@@ -65,11 +64,10 @@
                    <span style="color:#18c9dd;">{{divided(transnumkList.matchGetsValue,transnumkList.matchPaysValue)}}</span>
                    <span>{{transnumkList.matchGetsCurrency}}</span>
               </span>
-               <span v-else-if="transnumkList.judgeTrade === 2">
+               <span v-else>
                  <span style="color:#18c9dd;">{{divided(transnumkList.matchPaysValue,transnumkList.matchGetsValue)}}</span>
                  <span>{{transnumkList.matchPaysCurrency}}</span>
               </span>
-              <span v-else style="color:#fff;">---</span>
           </div>
            <div><span>{{$t('message.trade.note')}}</span><span style="display: inline-block;width: 380px;text-align:right;">{{transnumkList.memos[0].Memo.MemoData}}</span></div>
         </li>
@@ -102,7 +100,7 @@ export default {
       } else if (num1 === "0" || num2 === "0") {
         return "0";
       } else {
-        return "---";
+        return "";
       }
     }
   }

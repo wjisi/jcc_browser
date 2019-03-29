@@ -1,4 +1,4 @@
-export const bin2hex = function (b) {
+export const bin2hex = function(b) {
   var i = 0
   var l = 0
   var o = ''
@@ -11,7 +11,21 @@ export const bin2hex = function (b) {
   return o
 }
 
-export const getUUID = function () {
+export const hex2str = function(hex) {
+  let str = "";
+  let len = hex.length;
+  let i = 0;
+  if (hex.length % 2 !== 0) {
+    return "";
+  }
+  for (; i < len; i += 2) {
+    let s = hex.substr(i, 2);
+    str += "%" + s;
+  }
+  return decodeURI(str);
+}
+
+export const getUUID = function() {
   var canvas = document.createElement('canvas')
   var ctx = canvas.getContext('2d')
   var txt = 'http://security.tencent.com/'
@@ -30,7 +44,7 @@ export const getUUID = function () {
 }
 
 export const browser = {
-  versions: (function () {
+  versions: (function() {
     let u = navigator.userAgent;
     return {
       trident: u.indexOf('Trident') > -1, // IE内核

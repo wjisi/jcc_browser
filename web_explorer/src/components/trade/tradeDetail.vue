@@ -159,17 +159,18 @@ export default {
               res[i].final.takerGets
             ).currency,
             finalTradeGetValue: this.judgeFinalTradePrice(
-              this.displayDefaultValues(res[i].previous.takerPays).value,
+              this.displayDefaultValues(
+                this.displayDefaultTakerPays(res[i].previous).takerPays
+              ).value,
               this.displayDefaultValues(res[i].final.takerPays).value
             ),
             finalTradePayValue: this.judgeFinalTradePrice(
-              this.displayDefaultValues(res[i].previous.takerGets).value,
+              this.displayDefaultValues(
+                this.displayDefaultTakerPays(res[i].previous).takerGets
+              ).value,
               this.displayDefaultValues(res[i].final.takerGets).value
             ),
-            flag:
-              this.$t(getTransactionMode(res[i].flag)) ||
-              this.$t(getTransactionMode(res[i].type)) ||
-              "---"
+            flag: this.$t(getTransactionMode(res[i].flag)) || "---"
           });
         }
       }
@@ -193,17 +194,17 @@ export default {
           amountValue: this.displayDefaultValues(res.amount).value,
           time: this.handleHashtime(res.time),
           matchFlag: res.matchFlag || "---",
-          matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
-            .currency,
+          matchPaysCurrency:
+            this.displayDefaultCurrency(res.matchPays).currency || "---",
           matchPaysValue: this.displayDefaultValues(res.matchPays).value,
-          matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
-            .currency,
+          matchGetsCurrency:
+            this.displayDefaultCurrency(res.matchGets).currency || "---",
           matchGetsValue: this.displayDefaultValues(res.matchGets).value,
-          takerPaysCurrency: this.displayDefaultCurrency(res.takerPays)
-            .currency,
+          takerPaysCurrency:
+            this.displayDefaultCurrency(res.takerPays).currency || "---",
           takerPaysValue: this.displayDefaultValues(res.takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res.takerGets)
-            .currency,
+          takerGetsCurrency:
+            this.displayDefaultCurrency(res.takerGets).currency || "---",
           takerGetsValue: this.displayDefaultValues(res.takerGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
           flag:
@@ -263,6 +264,13 @@ export default {
         return value;
       } else {
         return { currency: undefined };
+      }
+    },
+    displayDefaultTakerPays(value) {
+      if (value) {
+        return value;
+      } else {
+        return { takerPays: undefined };
       }
     },
     handleHashtime(time) {

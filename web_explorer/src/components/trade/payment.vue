@@ -31,7 +31,7 @@
              <span>{{$t('message.blockDetailList.transactionmode')}}</span><span>{{transnumkList.flag}}</span></div>
            <div>
              <span>{{$t('message.trade.note')}}</span>
-             <span style="display: inline-block;width: 380px;text-align:right;">{{this.asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span>
+             <span style="display: inline-block;width: 380px;text-align:right;">{{asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span>
              </div>
         </li>
       </Ul>
@@ -39,6 +39,7 @@
   </div>
 </template>
 <script>
+import { hex2str } from "@/js/utils";
 export default {
   name: "payment",
   props: {
@@ -48,25 +49,13 @@ export default {
     return {};
   },
   methods: {
-    asciiConverString(value) {
-      let dd = "";
-      if (value && value !== "---") {
-        for (var i = 0; i < value.length; i++) {
-          dd += String.fromCharCode(value.charCodeAt(i));
-        }
+    asciiConverString(content) {
+      if (content && content !== "---") {
+        return hex2str(content);
+      } else {
+        return "---";
       }
-      // console.log(value, "12");
-      return dd;
     }
-    // AsciiToUnicode(content) {
-    //   let result = "";
-    //   if (content && content !== "---") {
-    //     for (var i = 0; i < content.length; i++) {
-    //       result += "&#" + content.charCodeAt(i) + ";";
-    //     }
-    //   }
-    //   return result;
-    // }
   }
 };
 </script>
