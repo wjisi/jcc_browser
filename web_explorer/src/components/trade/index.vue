@@ -30,27 +30,28 @@
               <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
-           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="8%" align="center">
                <template slot-scope="scope">
                   <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
           </el-table-column>
-          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="47%">
+          <el-table-column prop="_id"  :label="$t('message.home.dealhash')"  id="ellipsis" align="center" header-align="center" min-width="37%">
             <template slot-scope="scope">
               <span class="hashSpan" @click="jumpDetail(scope.row._id)">{{handleData(scope.row._id)}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="center"  min-width="14%" >
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="right" header-align="right"  min-width="27%" >
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue" class="pays">
-                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span style="color: #18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span style="color: #18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
-                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                      <span style="color: #18c9dd;">{{scope.row.takerValue}}</span>
+                      <span>{{scope.row.takerCurreny}}</span>
                 </span>
             </template>
           </el-table-column>
@@ -150,12 +151,12 @@ export default {
           takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
             .currency,
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
-            .currency,
-          takerGetsValue:
-            this.displayDefaultValues(res[i].takerGets).value || "----",
-          takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
-          takerValue: this.displayDefaultValues(res[i].amount).value || "----",
+          takerGetsCurrency:
+            this.displayDefaultCurrency(res[i].takerGets).currency || "---",
+          takerGetsValue: this.displayDefaultValues(res[i].takerGets).value,
+          takerCurreny:
+            this.displayDefaultCurrency(res[i].amount).currency || "---",
+          takerValue: this.displayDefaultValues(res[i].amount).value,
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
           // displayDifferentCircles: getType(res.data.list[i].flag) || "",
           // transNum: this.handleData(res[i].transNum, 1),

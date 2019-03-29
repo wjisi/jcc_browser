@@ -17,11 +17,13 @@
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div style="margin:100px 0;"  v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
-          <el-table-column  width="30px"></el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
-            <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+          <el-table-column  width="30px" align="center">
+              <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
+          </el-table-column>
+          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+            <template slot-scope="scope">{{scope.row.seq}}</template>
           </el-table-column>
           <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
             <template slot-scope="scope">
@@ -31,24 +33,25 @@
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue">
-                    <span>{{scope.row.takerPaysValue}}</span>
+                    <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                    <span>{{scope.row.takerGetsValue}}</span>
+                    <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
-                      <span>{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                      <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
+                      <span>{{scope.row.takerCurreny}}</span>
                 </span>
             </template>
           </el-table-column>
             <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
                <span v-if="scope.row.judgeTrade === 1">
-                   <span>{{parseInt(scope.row.takerGetsValue)/parseInt(scope.row.takerPaysValue)}}</span>
+                   <span>{{divided(scope.row.takerGetsValue,scope.row.takerPaysValue)}}</span>
                    <span>{{scope.row.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="scope.row.judgeTrade === 2"><span>{{parseInt(scope.row.takerPaysValue)/parseInt(scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+               <span v-else-if="scope.row.judgeTrade === 2"><span>{{divided(scope.row.takerPaysValue,scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
               <span v-else>---</span>
             </template>
           </el-table-column>
@@ -76,6 +79,7 @@ import {
   getTransactionMode,
   SelectTypeComponents
 } from "@/js/utils";
+import { BigNumber } from "bignumber.js";
 export default {
   name: "transnumDetail",
   components: { offerCancel, offerCreate, payment },
@@ -102,7 +106,9 @@ export default {
       //   return;
       // }
       this.loading = true;
-      this.hash = this.$route.params.hash;
+      this.hash =
+        this.$route.params.hash ||
+        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
       let res = await getBlockDetail(this.hash);
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         console.log(res, "99999999");
@@ -121,6 +127,18 @@ export default {
     // },
     handleData(value) {
       return value;
+    },
+    divided(num1, num2) {
+      if (num1 > 0 && num2 > 0) {
+        return new BigNumber(num1)
+          .dividedBy(new BigNumber(num2))
+          .decimalPlaces(10)
+          .toNumber();
+      } else if (num1 === "0" || num2 === "0") {
+        return "0";
+      } else {
+        return "---";
+      }
     },
     handelTradeDetailList(res) {
       let list = [];
@@ -199,15 +217,6 @@ export default {
       // this.defaultValue = "---";
       return list;
     },
-    // jumpSizeChange() {
-    //   this.currentPage = this.gopage;
-    //   this.loading = false;
-    //   this.getTransnumDetail();
-    // },
-    // judge(value) {
-    //   console.log(value);
-    //   return value;
-    // },
     judgeDealSuccess(value) {
       if (value && value === "tesSUCCESS") {
         return this.$t("message.trade.successtrade");
@@ -215,33 +224,12 @@ export default {
         return undefined;
       }
     },
-    // isDefaultObject(obj) {
-    //   if (obj === { memos: [{ Memo: { MemoData: "" } }] }) {
-    //     console.log("1111", obj);
-    //     return true;
-    //   } else {
-    //     console.log("22222", obj);
-    //     return false;
+    // judgeTransferFailure(value) {
+    //   if (!value) {
+    //     console.log(value);
+    //     return "zhuanzhangshiba";
     //   }
     // },
-    asciiConverString(value) {
-      let dd = "";
-      if (value && value !== "---") {
-        for (var i = 0; i < value.length; i++) {
-          dd += String.fromCharCode(value.charCodeAt(i));
-        }
-      }
-      // console.log(value, "12");
-      return dd || "---";
-    },
-
-    judgeObject(value) {
-      // let value = [].slice.call([{ Memo: { MemoData: "---" } }])[0];
-      // return typeof value;
-      // return value;
-      console.log(value instanceof Array);
-      return value[0];
-    },
     judgeIsMatch(value) {
       if (value) {
         return this.$t("message.trade.ismatch");

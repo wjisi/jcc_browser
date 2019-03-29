@@ -205,7 +205,8 @@ export const getMatchFlag = (key) => {
     [3, "icon-sanfang"],
     [4, "icon-sifang"],
     [5, "icon-Group1"],
-    [6, "icon-Group"]
+    [6, "icon-Group"],
+    ["zhuanzhangshiba", "icon-zhuanzhangshibai"]
   ])
   return map.get(key);
 }
