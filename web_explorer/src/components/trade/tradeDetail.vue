@@ -149,10 +149,7 @@ export default {
             seq: res[i].seq || "---",
             account: res[i].account || "---",
             judgeTrade: res[i].flag,
-            matchFlag:
-              getMatchFlag(res[i].matchFlag) ||
-              getMatchFlag(this.judgeTransferFailure(res[i].succ)) ||
-              "",
+            matchFlag: getMatchFlag(res[i].matchFlag) || "",
             // amountCurrency: this.displayDefaultCurrency(res[i].amount).currency,
             // amountValue:
             //   this.displayDefaultValues(res[i].amount).value || "---",
@@ -213,7 +210,7 @@ export default {
             this.$t(getTransactionMode(res.type)) ||
             "----",
           dest: res.dest || "----",
-          succ: this.judgeDealSuccess(res.success) || "---",
+          succ: this.judgeDealSuccess(res.succ) || "---",
           judgeTrade: res.flag
         };
       }
@@ -227,11 +224,12 @@ export default {
         return undefined;
       }
     },
-    judgeTransferFailure(value) {
-      if (!value) {
-        return "zhuanzhangshiba";
-      }
-    },
+    // judgeTransferFailure(value) {
+    //   if (!value) {
+    //     console.log(value);
+    //     return "zhuanzhangshiba";
+    //   }
+    // },
     judgeIsMatch(value) {
       if (value) {
         return this.$t("message.trade.ismatch");

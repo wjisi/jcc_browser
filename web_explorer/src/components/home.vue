@@ -122,7 +122,8 @@
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
-                      <span style="color:#18c9dd;">{{scope.row.takerValue}}</span><span>{{scope.row.takerCurreny}}</span>
+                      <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
+                      <span>{{scope.row.takerCurreny}}</span>
                 </span>
             </template>
           </el-table-column>

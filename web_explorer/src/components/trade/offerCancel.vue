@@ -30,10 +30,13 @@
             <div>
              <span>{{$t('message.trade.entrustprice')}}</span>
                <span v-if="transnumkList.judgeTrade === 1">
-                   <span>{{divided(transnumkList.takerGetsValue,transnumkList.takerPaysValue)}}</span>
+                   <span style="color:#18c9dd;">{{divided(transnumkList.takerGetsValue,transnumkList.takerPaysValue)}}</span>
                    <span>{{transnumkList.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="transnumkList.judgeTrade === 2"><span>{{divided(transnumkList.takerPaysValue,transnumkList.takerGetsValue)}}</span><span>{{transnumkList.takerGetsCurrency}}</span></span>
+               <span v-else-if="transnumkList.judgeTrade === 2">
+                 <span style="color:#18c9dd;">{{divided(transnumkList.takerPaysValue,transnumkList.takerGetsValue)}}</span>
+                 <span>{{transnumkList.takerGetsCurrency}}</span>
+              </span>
               <span v-else>---</span>
           </div>
            <!-- <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div> -->
