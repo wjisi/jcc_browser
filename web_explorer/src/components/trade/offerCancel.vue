@@ -13,13 +13,14 @@
          <li>
            <div>
                <span>{{$t('message.trade.entrustAmount')}}</span>
-               <span>
-                 <span style="color:#18c9dd;">{{transnumkList.takerPaysValue}}</span>
-                 <span>{{transnumkList.takerPaysCurrency}}</span>
-                  <i class="iconfont icon-jiaoyijineshuliangzhuanhuan"></i>
+               <span v-show="transnumkList.takerPaysValue">
                  <span style="color:#18c9dd;">{{transnumkList.takerGetsValue}}</span>
                  <span>{{transnumkList.takerGetsCurrency}}</span>
+                  <i class="iconfont icon-jiaoyijineshuliangzhuanhuan"></i>
+                 <span style="color:#18c9dd;">{{transnumkList.takerPaysValue}}</span>
+                 <span>{{transnumkList.PaysCurrency}}</span>
                </span>
+               <span v-show="!transnumkList.takerPaysValue">---</span>
           </div>
            <div class="note">
              <span>{{$t('message.home.time')}}</span>
@@ -35,7 +36,7 @@
               </span>
                <span v-else-if="transnumkList.judgeTrade === 2">
                  <span style="color:#18c9dd;">{{divided(transnumkList.takerPaysValue,transnumkList.takerGetsValue)}}</span>
-                 <span>{{transnumkList.takerGetsCurrency}}</span>
+                 <span>{{transnumkList.takerPaysCurrency}}</span>
               </span>
               <span v-else>---</span>
           </div>
@@ -45,7 +46,7 @@
          <li>
            <div>
              <span>{{$t('message.blockDetailList.transactionmode')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.note')}}</span><span>{{transnumkList.memos[0].Memo.MemoData}}</span></div>
+           <div><span>{{$t('message.trade.note')}}</span><span style="display: inline-block;width: 380px;text-align:right;">{{transnumkList.memos[0].Memo.MemoData}}</span></div>
         </li>
       </Ul>
       </div>

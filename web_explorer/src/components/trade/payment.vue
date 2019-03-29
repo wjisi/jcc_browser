@@ -29,7 +29,10 @@
          <li>
            <div>
              <span>{{$t('message.blockDetailList.transactionmode')}}</span><span>{{transnumkList.flag}}</span></div>
-           <div><span>{{$t('message.trade.note')}}</span><span>{{this.asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span></div>
+           <div>
+             <span>{{$t('message.trade.note')}}</span>
+             <span style="display: inline-block;width: 380px;text-align:right;">{{this.asciiConverString(transnumkList.memos[0].Memo.MemoData)}}</span>
+             </div>
         </li>
       </Ul>
       </div>
