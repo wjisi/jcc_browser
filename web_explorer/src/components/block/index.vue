@@ -104,13 +104,15 @@ export default {
       this.gopage = "";
     },
     jumpSizeChange() {
-      this.currentPage = this.gopage;
-      let data = {
-        size: 20,
-        page: this.gopage || 100
-      };
-      this.loading = false;
-      this.getAllList(data);
+      if (this.currentPage !== parseInt(this.gopage)) {
+        this.currentPage = this.gopage;
+        let data = {
+          size: 20,
+          page: this.gopage || 100
+        };
+        this.loading = false;
+        this.getAllList(data);
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;

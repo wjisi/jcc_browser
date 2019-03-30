@@ -199,9 +199,11 @@ export default {
       }
     },
     jumpSizeChange() {
-      this.currentPage = this.gopage;
-      this.loading = false;
-      this.getTranstionListByHash();
+      if (this.currentPage !== parseInt(this.gopage)) {
+        this.currentPage = this.gopage;
+        this.loading = false;
+        this.getTranstionListByHash();
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;

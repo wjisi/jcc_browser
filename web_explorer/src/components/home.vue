@@ -192,6 +192,7 @@ export default {
   // },
   beforeRouteLeave(to, from, next) {
     clearInterval(this.timer);
+    next();
   },
   methods: {
     async getlastBlocklists() {
@@ -226,6 +227,7 @@ export default {
       this.loadingTrade = false;
     },
     searchAll(to) {
+      console.log("111");
       this.$store.dispatch("updateCurrentNav", to);
       this.$router.push(`/${to}`);
     },

@@ -300,9 +300,11 @@ export default {
       this.gopage = "";
     },
     jumpSizeChange() {
-      this.currentPage = this.gopage;
-      this.loading = false;
-      this.getHistoricalList();
+      if (this.currentPage !== parseInt(this.gopage)) {
+        this.currentPage = this.gopage;
+        this.loading = false;
+        this.getHistoricalList();
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -344,7 +346,7 @@ export default {
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.walletBalance = this.getWalletBalanceData(res);
       } else {
-        this.walletBalance = [];
+        this.walletBalance = {};
       }
     },
     getWalletBalanceData(res) {
