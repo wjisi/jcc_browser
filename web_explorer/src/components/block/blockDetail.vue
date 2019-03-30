@@ -9,7 +9,7 @@
       <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
       <Ul v-show="!isEmptyObject(bash)">
         <li><span>{{$t('message.blockDetailList.closetime')}}</span><span>{{handleHashtime(bash.time)}}</span></li><li><span>{{$t('message.blockDetailList.lasthash')}}</span><span class="lasthash">{{bash.parentHash}}</span></li><li>
-          <span>{{$t('message.blockDetailList.Transactionvolume')}}</span><span>{{bash.transNum}}</span></li><li><span>SWTC{{$t('message.blockDetailList.total')}}</span><span>{{bash.hashType}}</span></li>
+          <span>{{$t('message.blockDetailList.Transactionvolume')}}</span><span>{{bash.transNum}}</span></li><li><span>SWTC{{$t('message.blockDetailList.total')}}</span><span>{{bash.totalCoins/10000}}</span></li>
       </Ul>
       <Ul v-show="isEmptyObject(bash)">
         <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
@@ -29,8 +29,7 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
           </el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
-             <template slot-scope="scope">{{scope.row.seq}}</template>
+          <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
@@ -101,7 +100,7 @@ export default {
       blockList: [],
       hashtime: {},
       bash: {},
-      hash: "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713",
+      hash: "",
       loading: false,
       total: 0,
       currentPage: 1,
@@ -140,9 +139,7 @@ export default {
         return;
       }
       this.loading = true;
-      this.hash =
-        this.$route.params.hash ||
-        "CB3FD2D5A8513DBA74705F022A7E8A0415116B497612FD3DCB8CB0B7AEF76713";
+      this.hash = this.$route.params.hash;
       let res = await getBlockDetail(this.hash);
       console.log(res, "blockdata2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
@@ -169,7 +166,7 @@ export default {
             matchFlag:
               getMatchFlag(res.data.list[i].matchFlag) ||
               getMatchFlag(this.judgeTransferFailure(res.data.list[i].succ)),
-            seq: res.data.list[i].seq || "----",
+            sort: (this.currentPage - 1) * 20 + i + 1,
             type: this.$t(getTransactionType(res.data.list[i].type)) || "---",
             flag: this.$t(getTransactionMode(res.data.list[i].flag)) || "----",
             displayDifferentBg: getTypeBg(res.data.list[i].type) || "",

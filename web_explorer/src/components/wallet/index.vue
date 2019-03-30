@@ -58,8 +58,8 @@
         <el-option v-for="item in  transactionCounterType" :key="item.selectCurrencyCounterValue" :label="item.label" :value="item.selectCurrencyCounterValue"></el-option>
       </el-select>
       <span class="selctionData">{{$t('message.wallet.dateRange')}}
-        <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')" style="width:100px"></el-date-picker>至
-        <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')" style="width:100px"></el-date-picker>
+        <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')" style="width:120px"></el-date-picker>至
+        <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')" style="width:120px"></el-date-picker>
         <span class="sure" @click="selectTimerange">确认</span>
       </span>
     </div>
@@ -103,18 +103,21 @@
                    <span>{{divided(scope.row.takerGetsValue,scope.row.takerPaysValue)}}</span>
                    <span>{{scope.row.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="scope.row.judgeTrade === 2"><span>{{divided(scope.row.takerPaysValue,scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
+               <span v-else-if="scope.row.judgeTrade === 2">
+                 <span>{{divided(scope.row.takerPaysValue,scope.row.takerGetsValue)}}</span>
+                 <span>{{scope.row.takerPaysCurrency}}</span>
+                </span>
               <span v-else>---</span>
             </template>
           </el-table-column>
            <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"   align="right" header-align="right"  min-width="14%" >
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue" class="pays">
+                    <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
+                    <span>{{scope.row.takerGetssCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                    <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
@@ -226,7 +229,7 @@ export default {
       currentPage: 1,
       loading: false,
       walletBalance: {},
-      wallet: "jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe",
+      wallet: "",
       transactionPairs: {},
       defaultTransactionCurrency: {},
       type: "",
@@ -243,7 +246,7 @@ export default {
     }, 500);
   },
   created() {
-    // this.wallet = this.$route.params.wallet;
+    this.wallet = this.$route.params.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
     this.getHistoricalList();
   },
@@ -317,9 +320,9 @@ export default {
         size: 20,
         begin: this.startTime || "",
         end: this.endTime || "",
-        type: this.type || this.selectTypeValue || "",
-        buyOrSell: this.buyOrSell || this.selectModeValue || "",
-        pair: this.pair,
+        type: this.type || "",
+        buyOrSell: this.buyOrSell || "",
+        pair: this.pair || "",
         wallet: this.wallet || ""
       };
       console.log(data);
@@ -400,32 +403,24 @@ export default {
       return list;
     },
     changeTransactionMode() {
-      if (this.selectTypeValue === "Send,Receive") {
-        this.type = this.selectModeValue;
-      } else {
-        this.type = this.selectTypeValue;
-      }
       if (
+        this.selectTypeValue === "Send,Receive" ||
         this.selectModeValue === "Send" ||
         this.selectModeValue === "Receive"
       ) {
-        this.buyOrSell = "1";
+        this.type = this.selectModeValue;
+        this.buyOrSell = "";
+      } else {
+        this.buyOrSell = this.selectModeValue;
       }
     },
     changeTransactionCurrency() {
-      if (this.selectTypeValue === "Send,Receive") {
-        this.pair = this.base;
-      } else {
-        this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
-        if (this.pair === "-") {
-          this.pair = "";
-        }
-      }
+      this.judgePairIsTranter();
     },
     changeTransactionCounterType() {
       this.bash = "";
       // this.transactionCurrency = localStorage.getItem("transactionCurrency");
-      this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
+      this.judgePairIsTranter();
       if (this.selectCurrencyCounterValue === "ETH") {
         this.transactionCurrency = this.transactionPairs.JETH;
       } else if (this.selectCurrencyCounterValue === "CNY") {
@@ -440,7 +435,7 @@ export default {
       this.selectModeValue = "";
       this.selectCurrencyCounterValue = "";
       this.base = "";
-      this.pair = "";
+      this.type = this.selectTypeValue;
       if (this.selectTypeValue === "Send,Receive") {
         this.transactionCurrency = this.defaultTransactionCurrency;
         this.transactionMode = [
@@ -463,6 +458,16 @@ export default {
           },
           { selectModeValue: 2, label: this.$t("message.wallet.Sale") }
         ];
+      }
+    },
+    judgePairIsTranter() {
+      if (this.selectTypeValue === "Send,Receive") {
+        this.pair = this.base;
+      } else {
+        this.pair = `${this.base}-${this.selectCurrencyCounterValue}`;
+        if (this.pair === "-") {
+          this.pair = "";
+        }
       }
     },
     isEmptyObject(obj) {
@@ -885,7 +890,7 @@ export default {
     line-height: 40px;
     margin: 0 6px 0 6px;
     text-align: left;
-    bottom: 1.8px;
+    // bottom: 1.8px;
   }
 }
 .el-input__prefix {

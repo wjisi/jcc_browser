@@ -43,11 +43,11 @@
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="right" header-align="right"  min-width="27%" >
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue" class="pays">
-                    <span style="color: #18c9dd;">{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color: #18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                    <span style="color: #18c9dd;">{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPayssCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color: #18c9dd;">{{scope.row.takerValue}}</span>

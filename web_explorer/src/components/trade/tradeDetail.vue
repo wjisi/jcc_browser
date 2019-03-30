@@ -22,37 +22,35 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
           </el-table-column>
-          <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
-            <template slot-scope="scope">{{scope.row.seq}}</template>
+          <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
           </el-table-column>
           <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
             <template slot-scope="scope">
-                 <i class="iconfont"  :class="scope.row.displayDifferentCircles" style="font-size:8px;color: #18c9dd;margin-right:3px;"></i>{{scope.row.flag}}
+                 <span   :style="{ color:displayDifferentColor }">{{scope.row.default}}{{transnumkList.flag}}</span>
           </template>
           </el-table-column>
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue">
-                    <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
+                <span v-show="scope.row.takerPaysCurrency">
+                    <span style="color:#18c9dd;">{{scope.row.finalTradePayValue}}</span>
                     <span>{{scope.row.takerPaysCurrency}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                    <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
+                    <span style="color:#18c9dd;">{{scope.row.finalTradeGetValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysValue">
-                      <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
-                      <span>{{scope.row.takerCurreny}}</span>
-                </span>
+                <span v-show="!scope.row.takerPaysCurrency">---</span>
             </template>
           </el-table-column>
             <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-               <span v-if="scope.row.judgeTrade === 1">
-                   <span>{{divided(scope.row.takerGetsValue,scope.row.takerPaysValue)}}</span>
+               <span v-if="isBuyOrSell=1">
+                   <span>{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
                    <span>{{scope.row.takerGetsCurrency}}</span>
               </span>
-               <span v-else-if="scope.row.judgeTrade === 2"><span>{{divided(scope.row.takerPaysValue,scope.row.takerGetsValue)}}</span><span>{{scope.row.takerGetsCurrency}}</span></span>
-              <span v-else>---</span>
+               <span v-else>
+                 <span>{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
+                 <span>{{scope.row.takerGetsCurrency}}</span>
+              </span>
             </template>
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
@@ -71,7 +69,7 @@ import { getBlockDetail } from "../../js/fetch";
 import offerCancel from "./offerCancel";
 import offerCreate from "./offerCreate";
 import payment from "./payment";
-import { getMatchFlag } from "../../js/utils";
+import { getMatchFlag, getFlagColor } from "../../js/utils";
 // queryDelegateWallet,
 // queryWalletIncome,
 import {
@@ -85,14 +83,15 @@ export default {
   components: { offerCancel, offerCreate, payment },
   data() {
     return {
-      transactionNumber:
-        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55",
+      transactionNumber: "",
       loading: false,
       currentView: "",
       transnumkList: { memos: [{ Memo: { MemoData: "" } }] },
       tradeDetailList: [],
       index: 0,
-      defaultSign: false
+      defaultSign: false,
+      displayDifferentColor: "",
+      isBuyOrSell: ""
     };
   },
   created() {
@@ -110,11 +109,14 @@ export default {
         this.$route.params.hash ||
         "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
       let res = await getBlockDetail(this.hash);
+      console.log(res, "123");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        console.log(res, "99999999");
+        this.isBuyOrSell = res.data.flag;
+        this.displayDifferentColor = getFlagColor(res.data.flag) || "";
         this.transnumkList = this.handelDealHashData(res);
-        this.tradeDetailList =
-          this.handelTradeDetailList(res.data.affectedNodes) || [];
+        this.tradeDetailList = this.handelTradeDetailList(
+          res.data.affectedNodes
+        );
         this.defaultSign = true;
       } else {
         this.transnumkList = { memos: [{ Memo: { MemoData: "" } }] };
@@ -132,7 +134,7 @@ export default {
       if (num1 > 0 && num2 > 0) {
         return new BigNumber(num1)
           .dividedBy(new BigNumber(num2))
-          .decimalPlaces(10)
+          .decimalPlaces(7)
           .toNumber();
       } else if (num1 === "0" || num2 === "0") {
         return "0";
@@ -146,34 +148,33 @@ export default {
         let i = 0;
         for (; i < res.length; i++) {
           list.push({
-            seq: res[i].seq || "---",
+            sort: i + 1,
             account: res[i].account || "---",
             judgeTrade: res[i].flag,
             matchFlag: getMatchFlag(res[i].matchFlag) || "",
-            // amountCurrency: this.displayDefaultCurrency(res[i].amount).currency,
-            // amountValue:
-            //   this.displayDefaultValues(res[i].amount).value || "---",
-            // realPaysCurrency: this.displayDefaultCurrency(res[i].realPays).currency,
-            // realPaysValue: this.displayDefaultValues(res[i].realPays).value,
-            // realGetsCurrency: this.displayDefaultCurrency(res[i].realGets).currency,
-            // realGetsValue: this.displayDefaultValues(res[i].realGets).value,
-            takerPaysCurrency:
-              this.displayDefaultCurrency(res[i].final.takerPays).currency ||
-              "---",
-            takerPaysValue: this.displayDefaultValues(res[i].final.takerPays)
-              .value,
+            takerPaysCurrency: this.displayDefaultCurrency(
+              res[i].final.takerPays
+            ).currency,
             takerGetsCurrency: this.displayDefaultCurrency(
               res[i].final.takerGets
             ).currency,
-            takerGetsValue: this.displayDefaultValues(res[i].final.takerGets)
-              .value,
-            flag:
-              this.$t(getTransactionMode(res[i].flag)) ||
-              this.$t(getTransactionMode(res[i].type)) ||
-              "----"
+            finalTradeGetValue: this.judgeFinalTradePrice(
+              this.displayDefaultValues(
+                this.displayDefaultTakerPays(res[i].previous).takerPays
+              ).value,
+              this.displayDefaultValues(res[i].final.takerPays).value
+            ),
+            finalTradePayValue: this.judgeFinalTradePrice(
+              this.displayDefaultValues(
+                this.displayDefaultTakerPays(res[i].previous).takerGets
+              ).value,
+              this.displayDefaultValues(res[i].final.takerGets).value
+            ),
+            flag: this.$t(getTransactionMode(res[i].flag)) || "---"
           });
         }
       }
+      console.log(list);
       return list;
     },
     handelDealHashData(res) {
@@ -188,30 +189,32 @@ export default {
           block: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
-          amountCurrency: this.displayDefaultCurrency(res.amount).currency,
-          amountValue: this.displayDefaultValues(res.amount).value || "---",
-          time: this.handleHashtime(res.time) || "---",
+          amountCurrency:
+            this.displayDefaultCurrency(res.amount).currency || "---",
+          amountValue: this.displayDefaultValues(res.amount).value,
+          time: this.handleHashtime(res.time),
           matchFlag: res.matchFlag || "---",
-          matchPaysCurrency: this.displayDefaultCurrency(res.matchPays)
-            .currency,
+          matchPaysCurrency:
+            this.displayDefaultCurrency(res.matchPays).currency || "---",
           matchPaysValue: this.displayDefaultValues(res.matchPays).value,
-          matchGetsCurrency: this.displayDefaultCurrency(res.matchGets)
-            .currency,
+          matchGetsCurrency:
+            this.displayDefaultCurrency(res.matchGets).currency || "---",
           matchGetsValue: this.displayDefaultValues(res.matchGets).value,
           takerPaysCurrency:
             this.displayDefaultCurrency(res.takerPays).currency || "---",
           takerPaysValue: this.displayDefaultValues(res.takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res.takerGets)
-            .currency,
+          takerGetsCurrency:
+            this.displayDefaultCurrency(res.takerGets).currency || "---",
           takerGetsValue: this.displayDefaultValues(res.takerGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
           flag:
             this.$t(getTransactionMode(res.flag)) ||
             this.$t(getTransactionMode(res.type)) ||
             "----",
-          dest: res.dest || "----",
+          dest: res.dest || "---",
           succ: this.judgeDealSuccess(res.succ) || "---",
-          judgeTrade: res.flag
+          judgeTrade: res.flag,
+          default: ""
         };
       }
       // this.defaultValue = "---";
@@ -224,12 +227,17 @@ export default {
         return undefined;
       }
     },
-    // judgeTransferFailure(value) {
-    //   if (!value) {
-    //     console.log(value);
-    //     return "zhuanzhangshiba";
-    //   }
-    // },
+    judgeFinalTradePrice(value1, value2) {
+      console.log(value1, value2, "12");
+      if (value1) {
+        return new BigNumber(value1)
+          .minus(new BigNumber(value2))
+          .decimalPlaces(10)
+          .toNumber();
+      } else {
+        return value2;
+      }
+    },
     judgeIsMatch(value) {
       if (value) {
         return this.$t("message.trade.ismatch");
@@ -256,6 +264,13 @@ export default {
         return value;
       } else {
         return { currency: undefined };
+      }
+    },
+    displayDefaultTakerPays(value) {
+      if (value) {
+        return value;
+      } else {
+        return { takerPays: undefined };
       }
     },
     handleHashtime(time) {

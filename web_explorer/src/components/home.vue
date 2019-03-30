@@ -115,11 +115,11 @@
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="right" header-align="right"  min-width="22%" >
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue">
-                    <span style="color: #18c9dd;">{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
-                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
-                    <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
+                    <span style="color: #18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{scope.row.takerGetsCurrency}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                    <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
+                    <span>{{scope.row.takerPaysCurrency}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
@@ -186,12 +186,16 @@ export default {
       return this.$i18n.locale;
     }
   },
-  beforeDestory() {
+  // deactivated() {
+  //   debugger;
+  //   clearInterval(this.timer);
+  // },
+  beforeRouteLeave(to, from, next) {
     clearInterval(this.timer);
   },
   methods: {
     async getlastBlocklists() {
-      this.listnum = [];
+      // this.listnum = [];
       if (this.loadingBlock) {
         return;
       }
@@ -207,7 +211,7 @@ export default {
       this.loadingBlock = false;
     },
     async getLatestDeals() {
-      this.latestdeal = [];
+      // this.latestdeal = [];
       if (this.loadingTrade) {
         return;
       }
@@ -265,19 +269,19 @@ export default {
           // seq: res[i].seq || "----",
           _id: res[i]._id,
           type: this.$t(getTransactionType(res[i].type)) || "---",
-          flag: this.$t(getTransactionMode(res[i].flag)) || "----",
+          flag: this.$t(getTransactionMode(res[i].flag)) || "---",
           displayDifferentBg: getTypeBg(res[i].type) || "---",
           displayDifferentColor:
             getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "---",
           takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
             .currency,
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
-          takerGetsCurrency:
-            this.displayDefaultCurrency(res[i].takerGets).currency || "---",
+          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
+            .currency,
           takerGetsValue:
             this.displayDefaultValues(res[i].takerGets).value || "---",
           takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
-          takerValue: this.displayDefaultValues(res[i].amount).value || "----",
+          takerValue: this.displayDefaultValues(res[i].amount).value,
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
           // displayDifferentCircles: getType(res.data.list[i].flag) || "",
           // transNum: this.handleData(res[i].transNum, 1),
