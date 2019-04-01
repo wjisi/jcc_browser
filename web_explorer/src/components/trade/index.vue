@@ -44,10 +44,10 @@
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue" class="pays">
                     <span style="color: #18c9dd;">{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color: #18c9dd;">{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPayssCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color: #18c9dd;">{{scope.row.takerValue}}</span>
@@ -179,6 +179,11 @@ export default {
         return value;
       } else {
         return { currency: undefined };
+      }
+    },
+    cnyTransformCNT(value) {
+      if (value === "CNT") {
+        return "CNT";
       }
     },
     handleHashtime(time) {

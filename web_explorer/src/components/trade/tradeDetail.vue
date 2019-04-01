@@ -160,15 +160,15 @@ export default {
             ).currency,
             finalTradeGetValue: this.judgeFinalTradePrice(
               this.displayDefaultValues(
-                this.displayDefaultTakerPays(res[i].previous).takerPays
-              ).value,
-              this.displayDefaultValues(res[i].final.takerPays).value
-            ),
-            finalTradePayValue: this.judgeFinalTradePrice(
-              this.displayDefaultValues(
                 this.displayDefaultTakerPays(res[i].previous).takerGets
               ).value,
               this.displayDefaultValues(res[i].final.takerGets).value
+            ),
+            finalTradePayValue: this.judgeFinalTradePrice(
+              this.displayDefaultValues(
+                this.displayDefaultTakerPays(res[i].previous).takerPays
+              ).value,
+              this.displayDefaultValues(res[i].final.takerPays).value
             ),
             flag: this.$t(getTransactionMode(res[i].flag)) || "---"
           });
@@ -193,7 +193,7 @@ export default {
             this.displayDefaultCurrency(res.amount).currency || "---",
           amountValue: this.displayDefaultValues(res.amount).value,
           time: this.handleHashtime(res.time),
-          matchFlag: res.matchFlag || "---",
+          matchFlag: res.matchFlag,
           matchPaysCurrency:
             this.displayDefaultCurrency(res.matchPays).currency || "---",
           matchPaysValue: this.displayDefaultValues(res.matchPays).value,

@@ -54,6 +54,7 @@
     "booknumber": "账本号",
     "fuelCosts": "燃料费用",
     "note": "交易备注",
+    "howManyMatch": "方撮合",
     "results": "交易结果",
     "effect": "交易效果",
     "successtrade": "交易成功",

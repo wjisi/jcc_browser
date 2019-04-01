@@ -55,7 +55,11 @@
               </span>
               <span v-show="!transnumkList.matchPaysValue">---</span>
           </div>
-           <div><span>{{$t('message.trade.multipartymatch')}}</span><span>{{transnumkList.matchFlag}}</span></div>
+           <div><span>{{$t('message.trade.multipartymatch')}}</span>
+                 <span>{{transnumkList.matchFlag}}
+                   <span v-show="transnumkList.matchFlag">{{$t('message.trade.howManyMatch')}}</span><span v-show="!transnumkList.matchFlag">---</span>
+                 </span>
+          </div>
         </li>
         <li>
            <div>
@@ -69,7 +73,9 @@
                  <span>{{transnumkList.matchPaysCurrency}}</span>
               </span>
           </div>
-           <div><span>{{$t('message.trade.note')}}</span><span style="display: inline-block;width: 380px;text-align:right;">{{transnumkList.memos[0].Memo.MemoData}}</span></div>
+           <div><span>{{$t('message.trade.note')}}</span>
+           <span style="display: inline-block;width: 380px;text-align:right;">{{transnumkList.memos[0].Memo.MemoData}}</span>
+          </div>
         </li>
         <li>
            <div>

@@ -54,6 +54,7 @@
     "booknumber": "Book number",
     "fuelCosts": "fuelCosts",
     "note": "Tradnsaction Note",
+    "howManyMatch": "how many match",
     "results": "Transaction Results",
     "effect": "Transaction Effect",
     "successtrade": "success trade",
