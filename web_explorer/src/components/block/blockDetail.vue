@@ -33,7 +33,7 @@
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
-              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg" style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
            <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">

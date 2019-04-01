@@ -2,7 +2,7 @@
   <div id="wallet" class="blo">
      <div class="blockDetailTitle">
       <div class="walletHeader">
-        <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">#{{wallet}}</span></div>
+        <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">{{wallet}}</span></div>
         <div class="tille" >{{$t('message.wallet.remainingSum')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
       <Ul v-show="!isEmptyObject(walletBalance)">
@@ -79,7 +79,7 @@
           </el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
-              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"  style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
@@ -101,11 +101,11 @@
             <template slot-scope="scope">
                <span v-if="scope.row.judgeTrade === 1">
                    <span>{{divided(scope.row.takerGetsValue,scope.row.takerPaysValue)}}</span>
-                   <span>{{scope.row.takerGetsCurrency}}</span>
+                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
               </span>
                <span v-else-if="scope.row.judgeTrade === 2">
                  <span>{{divided(scope.row.takerPaysValue,scope.row.takerGetsValue)}}</span>
-                 <span>{{scope.row.takerPaysCurrency}}</span>
+                 <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
               <span v-else>---</span>
             </template>
@@ -266,7 +266,7 @@ export default {
               selectCurrencyCounterValue: "",
               label: this.$t("message.wallet.tradeArea")
             },
-            { selectCurrencyCounterValue: "CNT", label: "CNT" },
+            { selectCurrencyCounterValue: "CNY", label: "CNT" },
             { selectCurrencyCounterValue: "ETH", label: "ETH" }
           ];
         } else {
@@ -276,7 +276,7 @@ export default {
               label: this.$t("message.wallet.tradeArea")
             },
             { selectCurrencyCounterValue: "SWTC", label: "SWTC" },
-            { selectCurrencyCounterValue: "CNT", label: "CNT" },
+            { selectCurrencyCounterValue: "CNY", label: "CNT" },
             { selectCurrencyCounterValue: "ETH", label: "ETH" }
           ];
         }
@@ -566,6 +566,13 @@ export default {
         value = "0" + value;
       }
       return value;
+    },
+    cnyTransformCNT(value) {
+      if (value === "CNY") {
+        return "CNT";
+      } else {
+        return value;
+      }
     },
     handleHashtime(time) {
       let { fillZero } = this;

@@ -27,7 +27,7 @@
           </el-table-column> -->
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
-              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg" style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
            <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="8%" align="center">
@@ -182,8 +182,10 @@ export default {
       }
     },
     cnyTransformCNT(value) {
-      if (value === "CNT") {
+      if (value === "CNY") {
         return "CNT";
+      } else {
+        return value;
       }
     },
     handleHashtime(time) {
@@ -224,7 +226,6 @@ export default {
       }
     },
     handleCurrentChange(val) {
-      debugger;
       this.currentPage = val;
       let data = {
         page: val,
@@ -361,14 +362,15 @@ export default {
     line-height: 60px;
     display: flex;
     img {
-      width: 50px;
+      width: 60px;
+      height: 60px;
     }
     span {
       display: inline-block;
       width: 120px;
       height: 40px;
       line-height: 40px;
-      border-radius: 21px;
+      border-radius: 20px;
       margin: 10px 0 0 20px;
       color: #fff;
       font-size: 18px;

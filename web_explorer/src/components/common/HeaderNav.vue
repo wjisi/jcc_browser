@@ -228,6 +228,11 @@ export default {
   background-color: #fff;
   .el-dropdown-menu__item {
     padding: 0 22px;
+    color: #6f6868;
+  }
+  .el-dropdown-menu__item:hover {
+    font-weight: bold;
+    color: #06aaf9;
   }
 }
 </style>

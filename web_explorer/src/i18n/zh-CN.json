@@ -40,6 +40,7 @@
     "time": "交易时间",
     "nodata": "暂无数据",
     "notransaction": "暂无交易",
+    "notradedetail": "无交易明细",
     "Update": "实时更新"
   },
   "trade": {

@@ -9,11 +9,18 @@
         <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;">{{$t('message.home.notransaction')}}</div>
       </div>
       <component  v-show="defaultSign" :transnumkList="transnumkList"  :is="currentView"></component>
-    <div class="bockList">
+     <div style="font-size:18px;color:#909399" v-if="currentView!=='offerCreate'">
+       <div class="title">{{$t('message.trade.detail')}}</div>
+      <div style="margin:100px 0;">
+              <div><i class="iconfont icon-zanwuxiaoguo" style="font-size:200px;"></i></div>
+              <div>{{$t('message.home.notradedetail')}}</div>
+      </div>
+     </div>
+    <div class="bockList" v-else>
       <div class="bockListData">
         <div class="title">{{$t('message.trade.detail')}}</div>
         <el-table :data="tradeDetailList" style="width:100%"  row-class-name="transnumDetailrowClass" header-row-class-name="transnumDetailHeaderRowclass">
-           <div slot="empty" style="font-size:18px;">
+           <div slot="empty" style="font-size:18px;" >
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div style="margin:100px 0;"  v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
@@ -24,36 +31,42 @@
           </el-table-column>
           <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
           </el-table-column>
-          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="14%">
             <template slot-scope="scope">
-                 <span   :style="{ color:displayDifferentColor }">{{scope.row.default}}{{transnumkList.flag}}</span>
+                 <span   :style="{ color:displayDifferentColor }">{{scope.row.isOffercancer}}</span>
           </template>
           </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="34%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysCurrency">
+                <span v-show="scope.row.previous">
                     <span style="color:#18c9dd;">{{scope.row.finalTradePayValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.finalTradeGetValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysCurrency">---</span>
+                <span v-show="!scope.row.previous">
+                    <span style="color:#18c9dd;">{{scope.row.finalTradeGetValue}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                    <span style="color:#18c9dd;">{{scope.row.finalTradePayValue}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
+                </span>
             </template>
           </el-table-column>
-            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="19%">
             <template slot-scope="scope">
-               <span v-if="isBuyOrSell=1">
-                   <span>{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
-                   <span>{{scope.row.takerGetsCurrency}}</span>
+               <span v-if="scope.row.flag=1">
+                   <span style="color:#18c9dd;">{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
+                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
               </span>
                <span v-else>
-                 <span>{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
-                 <span>{{scope.row.takerGetsCurrency}}</span>
+                 <span style="color:#18c9dd;">{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
+                 <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="24%">
             <template slot-scope="scope">
               <span class="hashSpan">{{scope.row.account}}</span>
             </template>
@@ -170,11 +183,16 @@ export default {
               ).value,
               this.displayDefaultValues(res[i].final.takerPays).value
             ),
-            flag: this.$t(getTransactionMode(res[i].flag)) || "---"
+            flag: this.$t(getTransactionMode(res[i].flag)) || "---",
+            previous: res[i].previous || "",
+            isOffercancer: this.judgeIsOfferCaner(
+              res[i].previous,
+              this.isBuyOrSell
+            )
           });
         }
       }
-      console.log(list);
+      console.log(list, "fanhui");
       return list;
     },
     handelDealHashData(res) {
@@ -213,12 +231,26 @@ export default {
             "----",
           dest: res.dest || "---",
           succ: this.judgeDealSuccess(res.succ) || "---",
-          judgeTrade: res.flag,
-          default: ""
+          judgeTrade: res.flag
         };
       }
       // this.defaultValue = "---";
       return list;
+    },
+    cnyTransformCNT(value) {
+      if (value === "CNY") {
+        return "CNT";
+      } else {
+        return value;
+      }
+    },
+    judgeIsOfferCaner(value, value2) {
+      if (value) {
+        return this.$t(getTransactionMode(value2));
+      } else {
+        console.log(value, "443");
+        return this.$t("message.wallet.offerAffect");
+      }
     },
     judgeDealSuccess(value) {
       if (value && value === "tesSUCCESS") {
@@ -334,7 +366,7 @@ export default {
     font-size: 14px;
   }
   .tilleIcon {
-    font-size: 14px;
+    font-size: 10px;
     float: right;
     padding: 4px 0 0 10px;
     color: #18c9dd;

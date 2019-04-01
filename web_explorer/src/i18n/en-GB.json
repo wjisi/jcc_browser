@@ -19,7 +19,7 @@
   "screendate": "Screendate",
   "search": "Search",
   "home": {
-    "height": "Heigth",
+    "height": "High",
     "basedon": "Based on ",
     "decentralized": " Internet trading network ",
     "providefunction": "Jingchang blockchain browser provides real-time browsing, ",
@@ -40,6 +40,7 @@
     "time": "deal time",
     "nodata": "No Data",
     "notransaction": "No Transaction",
+    "notradedetail": "no trade detail",
     "Update": "Update"
   },
   "trade": {
