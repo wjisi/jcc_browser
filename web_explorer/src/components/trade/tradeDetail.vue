@@ -9,7 +9,7 @@
         <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;">{{$t('message.home.notransaction')}}</div>
       </div>
       <component  v-show="defaultSign" :transnumkList="transnumkList"  :is="currentView"></component>
-     <div style="font-size:18px;color:#909399" v-if="currentView!=='offerCreate'">
+     <div style="font-size:18px;color:#909399;background:#fff;padding-bottom:100px;" v-if="currentView!=='offerCreate'">
        <div class="title">{{$t('message.trade.detail')}}</div>
       <div style="margin:100px 0;">
               <div><i class="iconfont icon-zanwuxiaoguo" style="font-size:200px;"></i></div>
@@ -199,9 +199,7 @@ export default {
         res = res.data;
         this.currentView = SelectTypeComponents(res.type);
         list = {
-          type:
-            this.$t(getTransactionType(res.type)) ||
-            this.$t("message.wallet.unknown"),
+          type: this.$t(getTransactionType(res.type)) || "---",
           block: res.seq || "---",
           account: res.account || "---",
           fee: res.fee || "---",
@@ -246,7 +244,6 @@ export default {
       if (value) {
         return this.$t(getTransactionMode(value2));
       } else {
-        console.log(value, "443");
         return this.$t("message.wallet.offerCancel");
       }
     },
@@ -258,7 +255,6 @@ export default {
       }
     },
     judgeFinalTradePrice(value1, value2) {
-      console.log(value1, value2, "12");
       if (value1) {
         return new BigNumber(value1)
           .minus(new BigNumber(value2))

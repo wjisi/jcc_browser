@@ -60,7 +60,7 @@
       <span class="selctionData">{{$t('message.wallet.dateRange')}}
         <el-date-picker v-model="startTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.startTime')" style="width:120px"></el-date-picker>至
         <el-date-picker v-model="endTime" type="date" value-format="yyyy-MM-dd" :placeholder="$t('message.wallet.endTime')" style="width:120px"></el-date-picker>
-        <span class="sure" @click="selectTimerange">确认</span>
+        <span class="sure" @click="selectTimerange">{{$t('message.blockList.confirm')}}</span>
       </span>
     </div>
     <div class="bockList">
@@ -112,14 +112,14 @@
           </el-table-column>
            <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"   align="right" header-align="right"  min-width="14%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
+                <span v-show="scope.row.takerPaysCurrency" class="pays">
                     <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysValue">
+                <span v-show="!scope.row.takerPaysCurrency">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
                       <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
@@ -791,45 +791,7 @@ export default {
     padding: 0 10px 0;
   }
 }
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #ffffff;
-  font-size: 14px;
-  padding-top: 20px;
-  padding-bottom: 110px;
-  .sortButton {
-    border: 1px solid #959595;
-    border-radius: 6px;
-    height: 36px;
-    line-height: 36px;
-    width: 50px;
-    margin-left: 20px;
-    background: #f2f8fc;
-    padding: 0 3px;
-  }
-  li .inputDiv {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #959595;
-    display: inline-block;
-    margin: 0 10px;
-    border-radius: 6px;
-    input[type="text"],
-    input[type="password"],
-    textarea {
-      text-indent: 0px;
-      text-align: center;
-    }
-  }
-  li div input {
-    border-radius: 6px;
-    width: 36px;
-    height: 36px;
-    border: 0;
-  }
-}
+
 .el-select-dropdown__item {
   font-size: 14px;
   color: #565a65;
@@ -881,6 +843,49 @@ export default {
   // td:nth-child(n + 8) {
   //   border-right: 0px;
   // }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  padding-top: 20px;
+  padding-bottom: 110px;
+  .sortButton {
+    border: 1px solid #959595;
+    border-radius: 6px;
+    height: 36px;
+    line-height: 36px;
+    width: 50px;
+    margin-left: 20px;
+    background: #f2f8fc;
+    padding: 0 3px;
+  }
+  .sortButton:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
+    cursor: pointer;
+  }
+  li .inputDiv {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #959595;
+    display: inline-block;
+    margin: 0 10px;
+    border-radius: 6px;
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      text-indent: 0px;
+      text-align: center;
+    }
+  }
+  li div input {
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+  }
 }
 .el-picker-panel {
   width: 330px;

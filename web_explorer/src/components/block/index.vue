@@ -242,6 +242,11 @@ export default {
     padding: 0 3px;
     cursor: pointer;
   }
+  .sortButton:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
+    cursor: pointer;
+  }
   li .inputDiv {
     width: 36px;
     height: 36px;

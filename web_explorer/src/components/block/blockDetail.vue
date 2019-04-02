@@ -400,6 +400,11 @@ export default {
     background: #f2f8fc;
     padding: 0 3px;
   }
+  .sortButton:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
+    cursor: pointer;
+  }
   li .inputDiv {
     width: 36px;
     height: 36px;

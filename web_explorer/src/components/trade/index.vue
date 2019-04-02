@@ -332,6 +332,11 @@ export default {
     background: #f2f8fc;
     padding: 0 3px;
   }
+  .sortButton:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
+    cursor: pointer;
+  }
   li .inputDiv {
     width: 36px;
     height: 36px;
@@ -352,10 +357,6 @@ export default {
     height: 36px;
     border: 0;
   }
-}
-.demonstration {
-  font-weight: bold;
-  font-size: 18px;
 }
 .selectionDate {
   padding: 30px 0 20px 0px;
