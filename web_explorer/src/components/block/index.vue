@@ -151,7 +151,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     jumpDetail(hash) {
@@ -180,7 +182,7 @@ export default {
   background-color: #f2f8fc;
   text-align: center;
   padding: 0 70px;
-  min-width: 768px;
+  min-width: 980px;
 }
 .demonstration {
   font-weight: bold;

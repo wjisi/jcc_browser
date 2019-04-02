@@ -202,7 +202,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     fillZero(value) {
@@ -237,7 +239,7 @@ export default {
     jumpDetail(hash) {
       const { href } = this.$router.resolve({
         name: "tradeDetail",
-        params: { hash: hash }
+        query: { hash: hash }
       });
       window.open(href, "_blank");
       // window.open("#/trade/tradeDetail" + "?hash=" + hash, "_blank");
@@ -268,7 +270,7 @@ export default {
   background-color: #f2f8fc;
   text-align: center;
   padding: 0 70px;
-  min-width: 768px;
+  min-width: 980px;
   .offerAffectBg {
     height: 15.5px;
     width: 15.5px;

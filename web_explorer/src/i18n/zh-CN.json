@@ -95,7 +95,7 @@
     "transactiontype": "交易类型",
     "transactionmode": "交易方式",
     "transactiontime": "交易时间",
-    "sender": "发送发",
+    "sender": "发起方",
     "servicecharge": "手续费",
     "currentblock": "当前区块",
     "blockhashnumber": "区块哈希值",

@@ -18,7 +18,7 @@
                  <span>{{cnyTransformCNT(transnumkList.takerGetsCurrency)}}</span>
                   <i class="iconfont icon-jiaoyijineshuliangzhuanhuan"></i>
                  <span style="color:#18c9dd;">{{transnumkList.takerPaysValue}}</span>
-                 <span>{{cnyTransformCNT(transnumkList.PaysCurrency)}}</span>
+                 <span>{{cnyTransformCNT(transnumkList.takerPaysCurrency)}}</span>
                </span>
                <span v-show="!transnumkList.takerPaysValue">---</span>
           </div>
@@ -77,10 +77,11 @@ export default {
     },
     jumpWalletPage(value) {
       if (value && value !== "---") {
-        this.$router.push({
+        const { href } = this.$router.resolve({
           name: "wallet",
-          params: { wallet: value }
+          query: { wallet: value }
         });
+        window.open(href, "_blank");
       }
     },
     cnyTransformCNT(value) {

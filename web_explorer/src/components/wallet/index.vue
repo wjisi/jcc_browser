@@ -89,7 +89,7 @@
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
             <template slot-scope="scope">
-              <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.account}}</span>
+              <span class="hashSpan"  @click="jumpWalletPage(scope.row.account)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="hash" :label="$t('message.home.dealhash')" id="ellipsis" align="center" min-width="13%">
@@ -114,7 +114,7 @@
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue" class="pays">
                     <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
@@ -125,14 +125,13 @@
                 </span>
             </template>
           </el-table-column>
-          <el-table-column type="expand" width="35" align="left">
+          <!-- <el-table-column type="expand" width="35" align="left">
             <template slot-scope="props">
               <el-form label-position="right" inline class="demo-table-expand">
-                <el-form-item :label="$t('message.trade.amount')"><span>{{ props.row.account }}</span></el-form-item>
-                <!-- <el-form-item :label="$t('message.home.dealhash')"><span>{{ props.row.hash }}</span></el-form-item> -->
+                <el-form-item :label="$t('message.wallet.TransactionToHome')"><span>{{ props.row.account }}</span></el-form-item>
               </el-form>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column  width="30px"></el-table-column>
         </el-table>
       </div>
@@ -254,7 +253,7 @@ export default {
     }, 500);
   },
   created() {
-    this.wallet = this.$route.params.wallet;
+    this.wallet = this.$route.query.wallet;
     this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
     this.getHistoricalList();
   },
@@ -318,6 +317,15 @@ export default {
       this.currentPage = val;
       this.loading = false;
       this.getHistoricalList();
+    },
+    jumpWalletPage(value) {
+      if (value && value !== "---") {
+        const { href } = this.$router.resolve({
+          name: "wallet",
+          query: { wallet: value }
+        });
+        window.open(href, "_blank");
+      }
     },
     async getHistoricalList() {
       this.historicalList = [];
@@ -566,7 +574,7 @@ export default {
     jumpDetail(hash) {
       const { href } = this.$router.resolve({
         name: "tradeDetail",
-        params: { hash: hash }
+        query: { hash: hash }
       });
       window.open(href, "_blank");
       // window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
@@ -613,7 +621,7 @@ export default {
 <style lang="scss" scoped>
 #wallet {
   text-align: center;
-  min-width: 768px;
+  min-width: 1000px;
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
@@ -836,23 +844,23 @@ export default {
 .el-icon-arrow-right {
   font-size: 16px;
 }
-.el-table__expanded-cell {
-  padding: 0px 20px !important;
-  padding-top: 16px !important;
-  background: #f8f8f8;
-  width: 80px !important;
-  font-size: 12px;
-  .el-form-item:nth-child(odd) {
-    width: 60%;
-    color: #383a4b;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .el-form-item:nth-child(even) {
-    width: 32%;
-    color: #383a4b;
-  }
-}
+// .el-table__expanded-cell {
+//   padding: 0px 20px !important;
+//   padding-top: 16px !important;
+//   background: #f8f8f8;
+//   width: 80px !important;
+//   font-size: 12px;
+//   .el-form-item {
+//     width: 320px;
+//     color: #383a4b;
+//     overflow: hidden;
+//     display: flex;
+//     justify-content: flex-start;
+//     align-items: center;
+//     white-space: nowrap;
+//     margin-left: 10px;
+//   }
+// }
 .walletHeaderRowclass {
   color: #383a4b;
   font-size: 14px;

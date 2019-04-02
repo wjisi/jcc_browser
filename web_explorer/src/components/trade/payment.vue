@@ -58,10 +58,11 @@ export default {
     },
     jumpWalletPage(value) {
       if (value && value !== "---") {
-        this.$router.push({
+        const { href } = this.$router.resolve({
           name: "wallet",
-          params: { wallet: value }
+          query: { wallet: value }
         });
+        window.open(href, "_blank");
       }
     }
   }

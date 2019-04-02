@@ -141,9 +141,9 @@
           <span>{{$t("message.home.anhui")}}</span>
         </div>
         <div class="endEndRignt">
-          <span>{{$t("message.home.officialwebsite")}}</span>
-          <div></div>
-          <span>{{$t("message.home.Contactus")}}</span>
+          <span @click="jumpWellcomePage">{{$t("message.home.officialwebsite")}}</span>
+          <!-- <div></div>
+          <span>{{$t("message.home.Contactus")}}</span> -->
         </div>
       </div>
      </section>
@@ -320,6 +320,9 @@ export default {
         return "CNT";
       }
     },
+    jumpWellcomePage() {
+      window.open("https://jccdex.cn/#page1");
+    },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -334,7 +337,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     fillZero(value) {
@@ -343,13 +348,18 @@ export default {
       }
       return value;
     },
-    // jumpDetail(name, hash) {
-    //   // this.$router.push({
-    //   //   name: name,
-    //   //   params: { hash: hash }
-    //   // });
-    //   window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
-    // },
+    jumpDetail(name, hash) {
+      // this.$router.push({
+      //   name: name,
+      //   query: { hash: hash }
+      // });
+      // window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
+      const { href } = this.$router.resolve({
+        name: name,
+        query: { hash: hash }
+      });
+      window.open(href, "_blank");
+    },
     displayDefaultHashType(value) {
       if (value) {
         return value;
@@ -370,15 +380,15 @@ export default {
           this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
           this.getHashType(res.data.info.hashType);
         console.log(hashType, 1);
-        // const { href } = this.$router.resolve({
-        //   name: hashType,
-        //   query: { hash: value }
-        // });
-        // window.open(href, "_blank");
-        this.$router.push({
+        const { href } = this.$router.resolve({
           name: hashType,
-          params: { hash: value }
+          query: { hash: value }
         });
+        window.open(href, "_blank");
+        // this.$router.push({
+        //   name: hashType,
+        //   params: { hash: value }
+        // });
       } else {
         this.$message({
           type: "error",
@@ -398,10 +408,15 @@ export default {
         });
       } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
         if (jtWallet.isValidAddress(this.searchContent)) {
-          this.$router.push({
+          // this.$router.push({
+          //   name: "wallet",
+          //   params: { wallet: this.searchContent }
+          // });
+          const { href } = this.$router.resolve({
             name: "wallet",
-            params: { wallet: this.searchContent }
+            query: { wallet: this.searchContent }
           });
+          window.open(href, "_blank");
         } else {
           this.$message({
             type: "error",
@@ -430,6 +445,7 @@ export default {
   background: #f2f8fc;
   display: flex;
   flex-direction: column;
+  min-width: 1124px;
   .el-dropdown-link {
     cursor: pointer;
     // color: #06aaf9;

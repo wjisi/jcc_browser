@@ -56,7 +56,7 @@
           </el-table-column>
             <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="40%">
             <template slot-scope="scope">
-               <span v-if="scope.row.flag=1">
+               <span v-if="scope.row.judgeTrade=1">
                    <span style="color:#18c9dd;">{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
               </span>
@@ -109,15 +109,14 @@ export default {
   },
   created() {
     console.log(this.$route.query, "1213");
-    this.transactionNumber = this.$route.params.hash;
+    this.transactionNumber = this.$route.query.hash;
     this.getData();
   },
   methods: {
     async getData() {
-      // if (this.loading) {
-      //   return;
-      // }
-      debugger;
+      if (this.loading) {
+        return;
+      }
       this.loading = true;
       this.hash = this.transactionNumber;
       let res = await getBlockDetail(this.hash);
@@ -248,7 +247,7 @@ export default {
         return this.$t(getTransactionMode(value2));
       } else {
         console.log(value, "443");
-        return this.$t("message.wallet.offerAffect");
+        return this.$t("message.wallet.offerCancel");
       }
     },
     judgeDealSuccess(value) {
@@ -318,7 +317,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     fillZero(value) {
@@ -333,7 +334,7 @@ export default {
 <style lang="scss" scoped>
 #transnumDetail {
   text-align: center;
-  min-width: 768px;
+  min-width: 980px;
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;

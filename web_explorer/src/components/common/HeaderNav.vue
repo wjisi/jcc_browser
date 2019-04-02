@@ -83,7 +83,7 @@ export default {
         console.log(hashType, 1);
         const { href } = this.$router.resolve({
           name: hashType,
-          params: { hash: value }
+          query: { hash: value }
         });
         window.open(href, "_blank");
       } else {
@@ -105,10 +105,11 @@ export default {
         });
       } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
         if (jtWallet.isValidAddress(this.searchContent)) {
-          this.$router.push({
+          const { href } = this.$router.resolve({
             name: "wallet",
-            params: { wallet: this.searchContent }
+            query: { wallet: this.searchContent }
           });
+          window.open(href, "_blank");
         } else {
           this.$message({
             type: "error",
