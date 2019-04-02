@@ -109,6 +109,8 @@ export default {
   },
   created() {
     this.getData();
+    console.log(this.$route);
+    console.log(this.$route.params.hash);
   },
   methods: {
     async getTranstionListByHash() {
@@ -140,8 +142,8 @@ export default {
       }
       this.loading = true;
       this.hash = this.$route.params.hash;
+      console.log(this.hash);
       let res = await getBlockDetail(this.hash);
-      console.log(res, "blockdata2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.blockList = this.handleHistoryData(res);
@@ -224,10 +226,16 @@ export default {
       return list;
     },
     jumpDetail(hash) {
-      this.$router.push({
+      // window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
+      const { href } = this.$router.resolve({
         name: "tradeDetail",
         params: { hash: hash }
       });
+      window.open(href, "_blank");
+      // this.$router.push({
+      //   name: "tradeDetail",
+      //   params: { hash: hash }
+      // });
     },
     judgeTransferFailure(value) {
       if (!value) {

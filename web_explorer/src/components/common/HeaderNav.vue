@@ -81,10 +81,11 @@ export default {
           this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
           this.getHashType(res.data.info.hashType);
         console.log(hashType, 1);
-        this.$router.push({
+        const { href } = this.$router.resolve({
           name: hashType,
           params: { hash: value }
         });
+        window.open(href, "_blank");
       } else {
         this.$message({
           type: "error",

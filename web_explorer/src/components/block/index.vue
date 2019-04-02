@@ -155,10 +155,16 @@ export default {
       return hashTime;
     },
     jumpDetail(hash) {
-      this.$router.push({
+      const { href } = this.$router.resolve({
         name: "blockDetail",
-        params: { hash: hash }
+        query: { hash: hash }
       });
+      window.open(href, "_blank");
+      // window.open("#/block/blockDetail/" + "?hash=" + hash, "_blank");
+      // this.$router.push({
+      //   name: "blockDetail",
+      //   query: { hash: hash }
+      // });
     },
     fillZero(value) {
       if (value < 10) {

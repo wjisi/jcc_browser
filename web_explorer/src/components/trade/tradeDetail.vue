@@ -29,14 +29,14 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
           </el-table-column>
-          <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+          <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" width="50px">
           </el-table-column>
-          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="14%">
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  width="100px">
             <template slot-scope="scope">
                  <span   :style="{ color:displayDifferentColor }">{{scope.row.isOffercancer}}</span>
           </template>
           </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="34%" >
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="60%" >
             <template slot-scope="scope">
                 <span v-show="scope.row.previous">
                     <span style="color:#18c9dd;">{{scope.row.finalTradePayValue}}</span>
@@ -54,7 +54,7 @@
                 </span>
             </template>
           </el-table-column>
-            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="19%">
+            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="40%">
             <template slot-scope="scope">
                <span v-if="scope.row.flag=1">
                    <span style="color:#18c9dd;">{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
@@ -66,7 +66,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="24%">
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" width="320px">
             <template slot-scope="scope">
               <span class="hashSpan">{{scope.row.account}}</span>
             </template>
@@ -108,8 +108,8 @@ export default {
     };
   },
   created() {
+    console.log(this.$route.query, "1213");
     this.transactionNumber = this.$route.params.hash;
-    // this.getTransnumDetail();
     this.getData();
   },
   methods: {
@@ -117,10 +117,9 @@ export default {
       // if (this.loading) {
       //   return;
       // }
+      debugger;
       this.loading = true;
-      this.hash =
-        this.$route.params.hash ||
-        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
+      this.hash = this.transactionNumber;
       let res = await getBlockDetail(this.hash);
       console.log(res, "123");
       if (res.result === true && (res.code === 0 || res.code === "0")) {

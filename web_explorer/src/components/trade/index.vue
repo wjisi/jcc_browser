@@ -235,14 +235,17 @@ export default {
       this.getAllList(data);
     },
     jumpDetail(hash) {
-      this.$router.push({
+      const { href } = this.$router.resolve({
         name: "tradeDetail",
         params: { hash: hash }
       });
+      window.open(href, "_blank");
+      // window.open("#/trade/tradeDetail" + "?hash=" + hash, "_blank");
+      // this.$router.push({
+      //   name: "tradeDetail",
+      //   params: { hash: hash }
+      // });
     },
-    // setDatetiem(val) {
-    //   this.selectedDate = val;
-    // },
     rowStyle({ row, rowIndex }) {
       return "height:40px";
     },

@@ -29,7 +29,7 @@
           <div class="state">
              <span>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</span>
           </div>
-          <div id="index_net"><img src="../images/index_net.png" style="width:80%;height:80%"></div>
+          <div id="index_net"><img src="../images/index_net.png" style="width:70%;height:70%"></div>
          </div>
         </div>
         <div style="position:absolute;top:95%;right:5%;display:flex;align-items:center;">
@@ -343,12 +343,13 @@ export default {
       }
       return value;
     },
-    jumpDetail(name, hash) {
-      this.$router.push({
-        name: name,
-        params: { hash: hash }
-      });
-    },
+    // jumpDetail(name, hash) {
+    //   // this.$router.push({
+    //   //   name: name,
+    //   //   params: { hash: hash }
+    //   // });
+    //   window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
+    // },
     displayDefaultHashType(value) {
       if (value) {
         return value;
@@ -369,6 +370,11 @@ export default {
           this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
           this.getHashType(res.data.info.hashType);
         console.log(hashType, 1);
+        // const { href } = this.$router.resolve({
+        //   name: hashType,
+        //   query: { hash: value }
+        // });
+        // window.open(href, "_blank");
         this.$router.push({
           name: hashType,
           params: { hash: value }
@@ -527,8 +533,8 @@ export default {
       margin-top: 60px;
     }
     img {
-      height: 70%;
-      width: 70%;
+      height: 50%;
+      width: 50%;
     }
   }
 }

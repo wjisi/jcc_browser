@@ -75,14 +75,14 @@
              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
            </el-table-column>
-           <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" min-width="15%">
+           <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" width="150px">
           </el-table-column>
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" width="110px" align="left" header-align="left">
              <template slot-scope="scope">
               <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"  style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="13%" align="center">
+          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" width="100px" align="center">
                <template slot-scope="scope">
                   <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
@@ -97,7 +97,7 @@
               <span class="hashSpan" @click="jumpDetail(scope.row.hash)">{{scope.row.hash}}</span>
             </template>
           </el-table-column>
-           <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+           <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="6%">
             <template slot-scope="scope">
                <span v-if="scope.row.judgeTrade === 1">
                    <span>{{divided(scope.row.takerGetsValue,scope.row.takerPaysValue)}}</span>
@@ -114,15 +114,23 @@
             <template slot-scope="scope">
                 <span v-show="scope.row.takerPaysValue" class="pays">
                     <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetssCurrency}}</span>
+                    <span>{{scope.row.takerGetsCurrency}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
-                      <span>{{scope.row.takerCurreny}}</span>
+                      <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
+            </template>
+          </el-table-column>
+          <el-table-column type="expand" width="35" align="left">
+            <template slot-scope="props">
+              <el-form label-position="right" inline class="demo-table-expand">
+                <el-form-item :label="$t('message.trade.amount')"><span>{{ props.row.account }}</span></el-form-item>
+                <!-- <el-form-item :label="$t('message.home.dealhash')"><span>{{ props.row.hash }}</span></el-form-item> -->
+              </el-form>
             </template>
           </el-table-column>
           <el-table-column  width="30px"></el-table-column>
@@ -556,10 +564,16 @@ export default {
       }
     },
     jumpDetail(hash) {
-      this.$router.push({
+      const { href } = this.$router.resolve({
         name: "tradeDetail",
         params: { hash: hash }
       });
+      window.open(href, "_blank");
+      // window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
+      // this.$router.push({
+      //   name: "tradeDetail",
+      //   params: { hash: hash }
+      // });
     },
     fillZero(value) {
       if (value < 10) {
@@ -588,7 +602,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     }
   }

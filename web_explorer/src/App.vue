@@ -1,7 +1,9 @@
 <template>
   <div id="app">
+   <!-- <keep-alive> -->
     <HeaderNav v-show="isIndex"></HeaderNav>
     <BodyContainer></BodyContainer>
+  <!-- </keep-alive> -->
   </div>
 </template>
 
