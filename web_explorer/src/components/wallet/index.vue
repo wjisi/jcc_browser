@@ -5,14 +5,21 @@
         <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">{{wallet}}</span></div>
         <div class="tille" >{{$t('message.wallet.remainingSum')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
-      <Ul v-show="!isEmptyObject(walletBalance)">
+      <Ul v-show="!isEmptyObject(walletBalance)" v-for="(item,key,index) in walletBalance" :key="index">
         <li>
-          <div><span>SWTC<span>{{walletBalance.SWTC_value}}</span></span> <span>{{$t('message.wallet.frozen')}}:<span>{{walletBalance.SWTC_frozen}}</span></span></div>
-          <div><span>JDBT<span>{{walletBalance.JDBT_value}}</span></span> <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+          <div>
+               <span><span>{{key}}</span></span>
+               <span><span>{{item.value}}</span></span>
+          </div>
         </li>
-         <li>
-           <div><span>UST<span>{{walletBalance.UST_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JJCC<span>{{walletBalance.JJCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
+         <!-- <li>
+           <div>
+               <span>UST<span>{{walletBalance.UST_value}}</span></span>
+               <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span>
+          </div>
+           <div>
+               <span>JJCC<span>{{walletBalance.JJCC_value}}</span></span>
+               <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
         </li>
         <li>
            <div><span>CNT<span>{{walletBalance.CNT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
@@ -29,7 +36,7 @@
          <li>
           <div><span>VCC<span>{{walletBalance.VCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
            <div><span>JSTM<span>{{walletBalance.JSTM_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-        </li>
+        </li> -->
       </Ul>
       <Ul v-show="isEmptyObject(walletBalance)">
         <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
@@ -112,17 +119,18 @@
           </el-table-column>
            <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"   align="right" header-align="right"  min-width="14%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysCurrency" class="pays">
+                <span v-if="scope.row.takerPaysCurrency">
                     <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysCurrency">
+                <span v-else-if="scope.row.takerCurreny">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
                       <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
+                 <span v-else>---</span>
             </template>
           </el-table-column>
           <!-- <el-table-column type="expand" width="35" align="left">
@@ -254,7 +262,7 @@ export default {
   },
   created() {
     this.wallet = this.$route.query.wallet;
-    this.getBalanceList("jGVTKPD7xxQhzG9C3DMyKW9x8mNz4PjSoe");
+    this.getBalanceList(this.wallet);
     this.getHistoricalList();
   },
   computed: {
@@ -360,66 +368,66 @@ export default {
       let res = await querySpecifiedWallet(wallet);
       console.log(res, "walletTail");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
-        this.walletBalance = this.getWalletBalanceData(res);
+        this.walletBalance = res.data;
       } else {
         this.walletBalance = {};
       }
     },
-    getWalletBalanceData(res) {
-      let list = {};
-      if (res && res.data) {
-        res = res.data;
-        list = {
-          SWTC_value: this.displayDefaultValues(res.SWTC.value) || "0.0000",
-          SWTC_frozen: this.displayDefaultValues(res.SWTC.frozen) || "0.0000",
-          JDBT_value:
-            this.displayDefaultValues(
-              res.JDBT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          UST_value:
-            this.displayDefaultValues(
-              res.UST_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          JJCC_value:
-            this.displayDefaultValues(
-              res.JJCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          CNT_value:
-            this.displayDefaultValues(
-              res.CNT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          JCALL_value:
-            this.displayDefaultValues(
-              res.JCALL_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          ECP_value:
-            this.displayDefaultValues(
-              res.ECP_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          JEKT_value:
-            this.displayDefaultValues(
-              res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          JETH_value:
-            this.displayDefaultValues(
-              res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          JMOAC_value:
-            this.displayDefaultValues(
-              res.JMOAC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          VCC_value:
-            this.displayDefaultValues(
-              res.VCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000",
-          JSTM_value:
-            this.displayDefaultValues(
-              res.JSTM_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-            ).value || "0.0000"
-        };
-      }
-      return list;
-    },
+    // getWalletBalanceData(res) {
+    //   let list = {};
+    //   if (res && res.data) {
+    //     res = res.data;
+    //     list = {
+    //       SWTC_value: this.displayDefaultValues(res.SWTC.value) || "0.0000",
+    //       SWTC_frozen: this.displayDefaultValues(res.SWTC.frozen) || "0.0000",
+    //       JDBT_value:
+    //         this.displayDefaultValues(
+    //           res.JDBT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       UST_value:
+    //         this.displayDefaultValues(
+    //           res.UST_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       JJCC_value:
+    //         this.displayDefaultValues(
+    //           res.JJCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       CNT_value:
+    //         this.displayDefaultValues(
+    //           res.CNT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       JCALL_value:
+    //         this.displayDefaultValues(
+    //           res.JCALL_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       ECP_value:
+    //         this.displayDefaultValues(
+    //           res.ECP_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       JEKT_value:
+    //         this.displayDefaultValues(
+    //           res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       JETH_value:
+    //         this.displayDefaultValues(
+    //           res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       JMOAC_value:
+    //         this.displayDefaultValues(
+    //           res.JMOAC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       VCC_value:
+    //         this.displayDefaultValues(
+    //           res.VCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000",
+    //       JSTM_value:
+    //         this.displayDefaultValues(
+    //           res.JSTM_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
+    //         ).value || "0.0000"
+    //     };
+    //   }
+    //   return list;
+    // },
     changeTransactionMode() {
       if (
         this.selectTypeValue === "Send,Receive" ||
@@ -515,8 +523,8 @@ export default {
             flag:
               this.$t(getTransactionMode(res.data.list[i].flag)) ||
               this.$t(getTransactionMode(res.data.list[i].type)) ||
-              "----",
-            time: this.handleHashtime(res.data.list[i].time) || "----",
+              "---",
+            time: this.handleHashtime(res.data.list[i].time) || "---",
             displayDifferentColor:
               getFlagColor(res.data.list[i].flag) ||
               getFlagColor(res.data.list[i].type) ||
@@ -531,16 +539,15 @@ export default {
             takerGetsCurrency: this.displayDefaultCurrency(
               res.data.list[i].takerGets
             ).currency,
-            takerGetsValue:
-              this.displayDefaultValues(res.data.list[i].takerGets).value ||
-              "----",
+            takerGetsValue: this.displayDefaultValues(
+              res.data.list[i].takerGets
+            ).value,
             takerCurreny: this.displayDefaultCurrency(res.data.list[i].amount)
               .currency,
-            takerValue:
-              this.displayDefaultValues(res.data.list[i].amount).value ||
-              "----",
-            account: res.data.list[i].account || "----",
-            hash: res.data.list[i].hash || "----",
+            takerValue: this.displayDefaultValues(res.data.list[i].amount)
+              .value,
+            account: res.data.list[i].account || "---",
+            hash: res.data.list[i].hash || "---",
             matchFlag:
               getMatchFlag(res.data.list[i].matchFlag) ||
               getMatchFlag(this.judgeTransferFailure(res.data.list[i].success)),
@@ -568,7 +575,7 @@ export default {
       if (value) {
         return value;
       } else {
-        return { currency: "undefined" };
+        return { currency: undefined };
       }
     },
     jumpDetail(hash) {
@@ -592,6 +599,10 @@ export default {
     cnyTransformCNT(value) {
       if (value === "CNY") {
         return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        debugger;
+        return value.substr(1);
       } else {
         return value;
       }

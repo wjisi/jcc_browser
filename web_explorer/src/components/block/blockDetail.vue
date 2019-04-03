@@ -185,14 +185,14 @@ export default {
               getMatchFlag(this.judgeTransferFailure(res.data.list[i].succ)),
             sort: (this.currentPage - 1) * 20 + i + 1,
             type: this.$t(getTransactionType(res.data.list[i].type)) || "---",
-            flag: this.$t(getTransactionMode(res.data.list[i].flag)) || "----",
+            flag: this.$t(getTransactionMode(res.data.list[i].flag)) || "---",
             displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
             displayDifferentColor:
               getFlagColor(res.data.list[i].flag) ||
               getFlagColor(res.data.list[i].type) ||
               "",
             // displayDifferentCircles: getType(res.data.list[i].flag) || "",
-            // time: this.handleHashtime(res.data.list[i].time) || "----",
+            // time: this.handleHashtime(res.data.list[i].time) || "---",
             takerPaysCurrency: this.displayDefaultCurrency(
               res.data.list[i].takerPays
             ).currency,
@@ -204,12 +204,11 @@ export default {
             ).currency,
             takerGetsValue:
               this.displayDefaultValues(res.data.list[i].takerGets).value ||
-              "----",
+              "---",
             takerCurreny: this.displayDefaultCurrency(res.data.list[i].amount)
               .currency,
             takerValue:
-              this.displayDefaultValues(res.data.list[i].amount).value ||
-              "----",
+              this.displayDefaultValues(res.data.list[i].amount).value || "---",
             fee: res.data.list[i].fee || "---",
             account: res.data.list[i].account || "---",
             _id: res.data.list[i]._id || "---"
@@ -235,6 +234,9 @@ export default {
     cnyTransformCNT(value) {
       if (value === "CNY") {
         return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
       } else {
         return value;
       }
@@ -250,7 +252,7 @@ export default {
       if (value) {
         return value;
       } else {
-        return { currency: "undefined" };
+        return { currency: undefined };
       }
     },
     jumpSizeChange() {

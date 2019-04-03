@@ -87,6 +87,9 @@ export default {
     cnyTransformCNT(value) {
       if (value === "CNY") {
         return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
       } else {
         return value;
       }

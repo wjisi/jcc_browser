@@ -123,7 +123,7 @@
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
-                      <span>{{scope.row.takerCurreny}}</span>
+                      <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
             </template>
           </el-table-column>
@@ -238,13 +238,6 @@ export default {
         return "color:#3b3f4c;font-size:14px;";
       }
     },
-    cnyTransformCNT(value) {
-      if (value === "CNY") {
-        return "CNT";
-      } else {
-        return value;
-      }
-    },
     headerRowStyle() {
       return "font-size:14px;color:#3b3f4c;";
     },
@@ -275,7 +268,7 @@ export default {
       for (; i < res.length; i++) {
         list.push({
           sort: i + 1,
-          // seq: res[i].seq || "----",
+          // seq: res[i].seq || "---",
           _id: res[i]._id,
           type: this.$t(getTransactionType(res[i].type)) || "---",
           flag: this.$t(getTransactionMode(res[i].flag)) || "---",
@@ -285,11 +278,12 @@ export default {
           takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
             .currency,
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
-            .currency,
+          takerGetsCurrency:
+            this.displayDefaultCurrency(res[i].takerGets).currency || "---",
           takerGetsValue:
             this.displayDefaultValues(res[i].takerGets).value || "---",
-          takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
+          takerCurreny:
+            this.displayDefaultCurrency(res[i].amount).currency || "---",
           takerValue: this.displayDefaultValues(res[i].amount).value,
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
           // displayDifferentCircles: getType(res.data.list[i].flag) || "",
@@ -315,9 +309,14 @@ export default {
         return { currency: undefined };
       }
     },
-    cnyransformCNT(value) {
+    cnyTransformCNT(value) {
       if (value === "CNY") {
         return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
+      } else {
+        return value;
       }
     },
     jumpWellcomePage() {

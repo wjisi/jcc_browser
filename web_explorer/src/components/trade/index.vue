@@ -51,7 +51,7 @@
                 </span>
                 <span v-show="!scope.row.takerPaysValue">
                       <span style="color: #18c9dd;">{{scope.row.takerValue}}</span>
-                      <span>{{scope.row.takerCurreny}}</span>
+                      <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
             </template>
           </el-table-column>
@@ -136,7 +136,7 @@ export default {
       for (; i < res.length; i++) {
         list.push({
           sort: (this.currentPage - 1) * 20 + i + 1,
-          // seq: res[i].seq || "----",
+          // seq: res[i].seq || "---",
           _id: res[i]._id,
           type:
             this.$t(getTransactionType(res[i].type)) ||
@@ -144,7 +144,7 @@ export default {
           flag:
             this.$t(getTransactionMode(res[i].flag)) ||
             this.$t(getTransactionMode(res[i].type)) ||
-            "----",
+            "---",
           displayDifferentBg: getTypeBg(res[i].type) || "",
           displayDifferentColor:
             getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
@@ -184,6 +184,9 @@ export default {
     cnyTransformCNT(value) {
       if (value === "CNY") {
         return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
       } else {
         return value;
       }

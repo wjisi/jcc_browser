@@ -56,19 +56,19 @@
           </el-table-column>
             <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="40%">
             <template slot-scope="scope">
-               <span v-if="scope.row.judgeTrade=1">
+               <span v-if="scope.row.buySellb=1">
                    <span style="color:#18c9dd;">{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
-                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
+                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}123</span>
               </span>
                <span v-else>
                  <span style="color:#18c9dd;">{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
-                 <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
+                 <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}456</span>
               </span>
             </template>
           </el-table-column>
           <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" width="320px">
             <template slot-scope="scope">
-              <span class="hashSpan">{{scope.row.account}}</span>
+              <span class="hashSpan" @click="jumpWalletPage(scope.row.account)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
           <el-table-column  width="30px"></el-table-column>
@@ -108,7 +108,6 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.query, "1213");
     this.transactionNumber = this.$route.query.hash;
     this.getData();
   },
@@ -155,13 +154,14 @@ export default {
     },
     handelTradeDetailList(res) {
       let list = [];
+      console.log(res[0].flag, "567");
       if (res && res.length > 0) {
         let i = 0;
         for (; i < res.length; i++) {
           list.push({
             sort: i + 1,
             account: res[i].account || "---",
-            judgeTrade: res[i].flag,
+            buySellb: res[0].flag,
             matchFlag: getMatchFlag(res[i].matchFlag) || "",
             takerPaysCurrency: this.displayDefaultCurrency(
               res[i].final.takerPays
@@ -224,7 +224,7 @@ export default {
           flag:
             this.$t(getTransactionMode(res.flag)) ||
             this.$t(getTransactionMode(res.type)) ||
-            "----",
+            "---",
           dest: res.dest || "---",
           succ: this.judgeDealSuccess(res.succ) || "---",
           judgeTrade: res.flag
@@ -236,8 +236,20 @@ export default {
     cnyTransformCNT(value) {
       if (value === "CNY") {
         return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
       } else {
         return value;
+      }
+    },
+    jumpWalletPage(value) {
+      if (value && value !== "---") {
+        const { href } = this.$router.resolve({
+          name: "wallet",
+          query: { wallet: value }
+        });
+        window.open(href, "_blank");
       }
     },
     judgeIsOfferCaner(value, value2) {
@@ -351,10 +363,10 @@ export default {
     color: #3b3f4c;
     font-size: 14px;
   }
-  // // .hashSpan:hover {
-  // //   color: #06aaf9;
-  // //   cursor: pointer;
-  // }
+  .hashSpan:hover {
+    color: #06aaf9;
+    cursor: pointer;
+  }
   .tille {
     display: flex;
     align-items: center;
