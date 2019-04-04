@@ -104,13 +104,15 @@ export default {
       this.gopage = "";
     },
     jumpSizeChange() {
-      this.currentPage = this.gopage;
-      let data = {
-        size: 20,
-        page: this.gopage || 100
-      };
-      this.loading = false;
-      this.getAllList(data);
+      if (this.currentPage !== parseInt(this.gopage)) {
+        this.currentPage = this.gopage;
+        let data = {
+          size: 20,
+          page: this.gopage || 100
+        };
+        this.loading = false;
+        this.getAllList(data);
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -149,14 +151,22 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     jumpDetail(hash) {
-      this.$router.push({
+      const { href } = this.$router.resolve({
         name: "blockDetail",
-        params: { hash: hash }
+        query: { hash: hash }
       });
+      window.open(href, "_blank");
+      // window.open("#/block/blockDetail/" + "?hash=" + hash, "_blank");
+      // this.$router.push({
+      //   name: "blockDetail",
+      //   query: { hash: hash }
+      // });
     },
     fillZero(value) {
       if (value < 10) {
@@ -172,7 +182,7 @@ export default {
   background-color: #f2f8fc;
   text-align: center;
   padding: 0 70px;
-  min-width: 768px;
+  min-width: 980px;
 }
 .demonstration {
   font-weight: bold;
@@ -230,6 +240,11 @@ export default {
     margin-left: 20px;
     background: #f2f8fc;
     padding: 0 3px;
+    cursor: pointer;
+  }
+  .sortButton:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
     cursor: pointer;
   }
   li .inputDiv {

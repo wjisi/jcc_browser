@@ -7,7 +7,7 @@
            <div><span>{{$t('message.trade.booknumber')}}</span>  <span>{{transnumkList.block}}</span></div>
         </li>
           <li>
-           <div><span>{{$t('message.trade.initiator')}}</span>  <span>{{transnumkList.account}}</span></div>
+           <div><span>{{$t('message.trade.initiator')}}</span>  <span  class="hashSpan" @click="jumpWalletPage(transnumkList.account)">{{transnumkList.account}}</span></div>
            <div><span>{{$t('message.trade.fuelCosts')}}</span>  <span>{{transnumkList.fee}}</span></div>
         </li>
          <li>
@@ -23,7 +23,7 @@
              </div>
         </li>
         <li>
-             <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div>
+             <div><span>{{$t('message.trade.to')}}</span>  <span class="hashSpan" @click="jumpWalletPage(transnumkList.dest)">{{transnumkList.dest}}</span></div>
            <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
         </li>
          <li>
@@ -55,11 +55,31 @@ export default {
       } else {
         return "---";
       }
+    },
+    jumpWalletPage(value) {
+      if (value && value !== "---") {
+        const { href } = this.$router.resolve({
+          name: "wallet",
+          query: { wallet: value }
+        });
+        window.open(href, "_blank");
+      }
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.hashSpan {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #3b3f4c;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hashSpan:hover {
+  color: #06aaf9;
+}
 #payment {
   text-align: center;
   min-width: 768px;

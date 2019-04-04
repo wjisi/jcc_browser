@@ -17,17 +17,15 @@
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
            <div v-else style="margin:100px 0;"><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
-          <el-table-column  width="30px"></el-table-column>
-          <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
-           <el-table-column prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
-          <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
-            <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+          <el-table-column  width="30px">
+             <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
-          </el-table-column> -->
+          </el-table-column>
+           <el-table-column prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
-              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg" style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
            <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="8%" align="center">
@@ -42,17 +40,18 @@
           </el-table-column>
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="right" header-align="right"  min-width="27%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
+                <span v-if="scope.row.takerPaysValue" class="pays">
                     <span style="color: #18c9dd;">{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color: #18c9dd;">{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPayssCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysValue">
+                <span v-else-if="scope.row.takerValue">
                       <span style="color: #18c9dd;">{{scope.row.takerValue}}</span>
-                      <span>{{scope.row.takerCurreny}}</span>
+                      <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
+                <span v-else>---</span>
             </template>
           </el-table-column>
           <el-table-column width="30px"></el-table-column>
@@ -79,7 +78,9 @@ import {
   getTransactionType,
   getTransactionMode,
   getFlagColor,
-  getTypeBg
+  getTypeBg,
+  interceptStringByEllipsis,
+  getMatchFlag
 } from "@/js/utils";
 export default {
   name: "trade",
@@ -136,26 +137,34 @@ export default {
       for (; i < res.length; i++) {
         list.push({
           sort: (this.currentPage - 1) * 20 + i + 1,
-          // seq: res[i].seq || "----",
+          // seq: res[i].seq || "---",
           _id: res[i]._id,
+          matchFlag:
+            getMatchFlag(res[i].matchFlag) ||
+            getMatchFlag(this.judgeTransferFailure(res[i].succ)),
           type:
             this.$t(getTransactionType(res[i].type)) ||
             this.$t("message.wallet.unknown"),
           flag:
             this.$t(getTransactionMode(res[i].flag)) ||
             this.$t(getTransactionMode(res[i].type)) ||
-            "----",
+            "---",
           displayDifferentBg: getTypeBg(res[i].type) || "",
           displayDifferentColor:
             getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "",
-          takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
-            .currency,
+          takerPaysCurrency: interceptStringByEllipsis(
+            this.displayDefaultCurrency(res[i].takerPays).currency
+          ),
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
           takerGetsCurrency:
-            this.displayDefaultCurrency(res[i].takerGets).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res[i].takerGets).currency
+            ) || "---",
           takerGetsValue: this.displayDefaultValues(res[i].takerGets).value,
           takerCurreny:
-            this.displayDefaultCurrency(res[i].amount).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res[i].amount).currency
+            ) || "---",
           takerValue: this.displayDefaultValues(res[i].amount).value,
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
           // displayDifferentCircles: getType(res.data.list[i].flag) || "",
@@ -181,6 +190,21 @@ export default {
         return { currency: undefined };
       }
     },
+    cnyTransformCNT(value) {
+      if (value === "CNY") {
+        return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
+      } else {
+        return value;
+      }
+    },
+    judgeTransferFailure(value) {
+      if (value !== "tesSUCCESS") {
+        return "zhuanzhangshiba";
+      }
+    },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -195,7 +219,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     fillZero(value) {
@@ -208,13 +234,15 @@ export default {
       this.gopage = "";
     },
     jumpSizeChange() {
-      this.currentPage = this.gopage;
-      let data = {
-        size: 20,
-        page: this.gopage || 100
-      };
-      this.loading = false;
-      this.getAllList(data);
+      if (this.currentPage !== parseInt(this.gopage)) {
+        this.currentPage = this.gopage;
+        let data = {
+          size: 20,
+          page: this.gopage || 1
+        };
+        this.loading = false;
+        this.getAllList(data);
+      }
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -226,14 +254,17 @@ export default {
       this.getAllList(data);
     },
     jumpDetail(hash) {
-      this.$router.push({
+      const { href } = this.$router.resolve({
         name: "tradeDetail",
-        params: { hash: hash }
+        query: { hash: hash }
       });
+      window.open(href, "_blank");
+      // window.open("#/trade/tradeDetail" + "?hash=" + hash, "_blank");
+      // this.$router.push({
+      //   name: "tradeDetail",
+      //   params: { hash: hash }
+      // });
     },
-    // setDatetiem(val) {
-    //   this.selectedDate = val;
-    // },
     rowStyle({ row, rowIndex }) {
       return "height:40px";
     },
@@ -256,7 +287,7 @@ export default {
   background-color: #f2f8fc;
   text-align: center;
   padding: 0 70px;
-  min-width: 768px;
+  min-width: 980px;
   .offerAffectBg {
     height: 15.5px;
     width: 15.5px;
@@ -318,6 +349,11 @@ export default {
     background: #f2f8fc;
     padding: 0 3px;
   }
+  .sortButton:hover {
+    color: #289ef5;
+    border: 1px solid #289ef5;
+    cursor: pointer;
+  }
   li .inputDiv {
     width: 36px;
     height: 36px;
@@ -339,10 +375,6 @@ export default {
     border: 0;
   }
 }
-.demonstration {
-  font-weight: bold;
-  font-size: 18px;
-}
 .selectionDate {
   padding: 30px 0 20px 0px;
   display: flex;
@@ -353,14 +385,15 @@ export default {
     line-height: 60px;
     display: flex;
     img {
-      width: 50px;
+      width: 60px;
+      height: 60px;
     }
     span {
       display: inline-block;
       width: 120px;
       height: 40px;
       line-height: 40px;
-      border-radius: 21px;
+      border-radius: 20px;
       margin: 10px 0 0 20px;
       color: #fff;
       font-size: 18px;

@@ -9,11 +9,18 @@
         <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;">{{$t('message.home.notransaction')}}</div>
       </div>
       <component  v-show="defaultSign" :transnumkList="transnumkList"  :is="currentView"></component>
-    <div class="bockList">
+     <div style="font-size:18px;color:#909399;background:#fff;padding-bottom:100px;" v-if="currentView!=='offerCreate'">
+       <div class="title">{{$t('message.trade.detail')}}</div>
+      <div style="margin:100px 0;">
+              <div><i class="iconfont icon-zanwuxiaoguo" style="font-size:200px;"></i></div>
+              <div>{{$t('message.home.notradedetail')}}</div>
+      </div>
+     </div>
+    <div class="bockList" v-else>
       <div class="bockListData">
         <div class="title">{{$t('message.trade.detail')}}</div>
         <el-table :data="tradeDetailList" style="width:100%"  row-class-name="transnumDetailrowClass" header-row-class-name="transnumDetailHeaderRowclass">
-           <div slot="empty" style="font-size:18px;">
+           <div slot="empty" style="font-size:18px;" >
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div style="margin:100px 0;"  v-else ><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
@@ -22,40 +29,46 @@
               <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
           </el-table-column>
-          <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="9%">
+          <el-table-column prop="sort"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" width="50px">
           </el-table-column>
-          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  min-width="9%">
+          <el-table-column prop="flag"  :label="$t('message.blockDetailList.transactionmode')"  id="ellipsis" align="center"  width="100px">
             <template slot-scope="scope">
-                 <span   :style="{ color:displayDifferentColor }">{{scope.row.default}}{{transnumkList.flag}}</span>
+                 <span   :style="{ color:displayDifferentColor }">{{scope.row.isOffercancer}}</span>
           </template>
           </el-table-column>
-          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="14%" >
+          <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"  align="center"  min-width="60%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysCurrency">
+                <span v-show="scope.row.previous">
                     <span style="color:#18c9dd;">{{scope.row.finalTradePayValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.finalTradeGetValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysCurrency">---</span>
+                <span v-show="!scope.row.previous">
+                    <span style="color:#18c9dd;">{{scope.row.finalTradeGetValue}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
+                    <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
+                    <span style="color:#18c9dd;">{{scope.row.finalTradePayValue}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
+                </span>
             </template>
           </el-table-column>
-            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="10%">
+            <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="40%">
             <template slot-scope="scope">
-               <span v-if="isBuyOrSell=1">
-                   <span>{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
-                   <span>{{scope.row.takerGetsCurrency}}</span>
+               <span v-if="scope.row.isBuySell===1">
+                   <span style="color:#18c9dd;">{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
+                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
               </span>
                <span v-else>
-                 <span>{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
-                 <span>{{scope.row.takerGetsCurrency}}</span>
+                 <span style="color:#18c9dd;">{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
+                 <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
               </span>
             </template>
           </el-table-column>
-          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" min-width="10%">
+          <el-table-column prop="account" :label="$t('message.wallet.TransactionToHome')" id="ellipsis" align="center" width="320px">
             <template slot-scope="scope">
-              <span class="hashSpan">{{scope.row.account}}</span>
+              <span class="hashSpan" @click="jumpWalletPage(scope.row.account)">{{scope.row.account}}</span>
             </template>
           </el-table-column>
           <el-table-column  width="30px"></el-table-column>
@@ -75,7 +88,8 @@ import { getMatchFlag, getFlagColor } from "../../js/utils";
 import {
   getTransactionType,
   getTransactionMode,
-  SelectTypeComponents
+  SelectTypeComponents,
+  interceptStringByEllipsis
 } from "@/js/utils";
 import { BigNumber } from "bignumber.js";
 export default {
@@ -95,19 +109,16 @@ export default {
     };
   },
   created() {
-    this.transactionNumber = this.$route.params.hash;
-    // this.getTransnumDetail();
+    this.transactionNumber = this.$route.query.hash;
     this.getData();
   },
   methods: {
     async getData() {
-      // if (this.loading) {
-      //   return;
-      // }
+      if (this.loading) {
+        return;
+      }
       this.loading = true;
-      this.hash =
-        this.$route.params.hash ||
-        "E2CF127D9AB7B2E92BE5533F61E270D7094DF079281DD84C1EEAB33ED0AF5C55";
+      this.hash = this.transactionNumber;
       let res = await getBlockDetail(this.hash);
       console.log(res, "123");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
@@ -150,31 +161,36 @@ export default {
           list.push({
             sort: i + 1,
             account: res[i].account || "---",
-            judgeTrade: res[i].flag,
             matchFlag: getMatchFlag(res[i].matchFlag) || "",
-            takerPaysCurrency: this.displayDefaultCurrency(
-              res[i].final.takerPays
-            ).currency,
-            takerGetsCurrency: this.displayDefaultCurrency(
-              res[i].final.takerGets
-            ).currency,
-            finalTradeGetValue: this.judgeFinalTradePrice(
-              this.displayDefaultValues(
-                this.displayDefaultTakerPays(res[i].previous).takerPays
-              ).value,
-              this.displayDefaultValues(res[i].final.takerPays).value
+            takerPaysCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res[i].final.takerPays).currency
             ),
-            finalTradePayValue: this.judgeFinalTradePrice(
+            takerGetsCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res[i].final.takerGets).currency
+            ),
+            finalTradeGetValue: this.judgeFinalTradePrice(
               this.displayDefaultValues(
                 this.displayDefaultTakerPays(res[i].previous).takerGets
               ).value,
               this.displayDefaultValues(res[i].final.takerGets).value
             ),
-            flag: this.$t(getTransactionMode(res[i].flag)) || "---"
+            finalTradePayValue: this.judgeFinalTradePrice(
+              this.displayDefaultValues(
+                this.displayDefaultTakerPays(res[i].previous).takerPays
+              ).value,
+              this.displayDefaultValues(res[i].final.takerPays).value
+            ),
+            flag: this.$t(getTransactionMode(res[i].flag)) || "---",
+            isBuySell: res[i].flag,
+            previous: res[i].previous || "",
+            isOffercancer: this.judgeIsOfferCaner(
+              res[i].previous,
+              this.isBuyOrSell
+            )
           });
         }
       }
-      console.log(list);
+      console.log(list, "fanhui");
       return list;
     },
     handelDealHashData(res) {
@@ -183,52 +199,82 @@ export default {
         res = res.data;
         this.currentView = SelectTypeComponents(res.type);
         list = {
-          type:
-            this.$t(getTransactionType(res.type)) ||
-            this.$t("message.wallet.unknown"),
-          block: res.seq || "---",
+          type: this.$t(getTransactionType(res.type)) || "---",
+          block: res.block || "---",
           account: res.account || "---",
           fee: res.fee || "---",
           amountCurrency:
             this.displayDefaultCurrency(res.amount).currency || "---",
           amountValue: this.displayDefaultValues(res.amount).value,
           time: this.handleHashtime(res.time),
-          matchFlag: res.matchFlag || "---",
+          matchFlag: res.matchFlag,
           matchPaysCurrency:
-            this.displayDefaultCurrency(res.matchPays).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.matchPays).currency
+            ) || "---",
           matchPaysValue: this.displayDefaultValues(res.matchPays).value,
           matchGetsCurrency:
-            this.displayDefaultCurrency(res.matchGets).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.matchGets).currency
+            ) || "---",
           matchGetsValue: this.displayDefaultValues(res.matchGets).value,
           takerPaysCurrency:
-            this.displayDefaultCurrency(res.takerPays).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.takerPays).currency
+            ) || "---",
           takerPaysValue: this.displayDefaultValues(res.takerPays).value,
           takerGetsCurrency:
-            this.displayDefaultCurrency(res.takerGets).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.takerGets).currency
+            ) || "---",
           takerGetsValue: this.displayDefaultValues(res.takerGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
           flag:
             this.$t(getTransactionMode(res.flag)) ||
             this.$t(getTransactionMode(res.type)) ||
-            "----",
+            "---",
           dest: res.dest || "---",
           succ: this.judgeDealSuccess(res.succ) || "---",
-          judgeTrade: res.flag,
-          default: ""
+          judgeTrade: res.flag
         };
       }
       // this.defaultValue = "---";
       return list;
     },
+    cnyTransformCNT(value) {
+      if (value === "CNY") {
+        return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
+      } else {
+        return value;
+      }
+    },
+    jumpWalletPage(value) {
+      if (value && value !== "---") {
+        const { href } = this.$router.resolve({
+          name: "wallet",
+          query: { wallet: value }
+        });
+        window.open(href, "_blank");
+      }
+    },
+    judgeIsOfferCaner(value, value2) {
+      if (value) {
+        return this.$t(getTransactionMode(value2));
+      } else {
+        return this.$t("message.wallet.offerCancel");
+      }
+    },
     judgeDealSuccess(value) {
       if (value && value === "tesSUCCESS") {
         return this.$t("message.trade.successtrade");
       } else {
-        return undefined;
+        return this.$t("message.trade.failtrade") + " " + "(" + value + ")";
       }
     },
     judgeFinalTradePrice(value1, value2) {
-      console.log(value1, value2, "12");
       if (value1) {
         return new BigNumber(value1)
           .minus(new BigNumber(value2))
@@ -287,7 +333,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     fillZero(value) {
@@ -302,7 +350,7 @@ export default {
 <style lang="scss" scoped>
 #transnumDetail {
   text-align: center;
-  min-width: 768px;
+  min-width: 980px;
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
@@ -323,10 +371,10 @@ export default {
     color: #3b3f4c;
     font-size: 14px;
   }
-  // // .hashSpan:hover {
-  // //   color: #06aaf9;
-  // //   cursor: pointer;
-  // }
+  .hashSpan:hover {
+    color: #06aaf9;
+    cursor: pointer;
+  }
   .tille {
     display: flex;
     align-items: center;
@@ -334,7 +382,7 @@ export default {
     font-size: 14px;
   }
   .tilleIcon {
-    font-size: 14px;
+    font-size: 10px;
     float: right;
     padding: 4px 0 0 10px;
     color: #18c9dd;

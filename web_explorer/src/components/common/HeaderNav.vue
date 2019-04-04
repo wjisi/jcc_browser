@@ -81,10 +81,11 @@ export default {
           this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
           this.getHashType(res.data.info.hashType);
         console.log(hashType, 1);
-        this.$router.push({
+        const { href } = this.$router.resolve({
           name: hashType,
-          params: { hash: value }
+          query: { hash: value }
         });
+        window.open(href, "_blank");
       } else {
         this.$message({
           type: "error",
@@ -104,10 +105,11 @@ export default {
         });
       } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
         if (jtWallet.isValidAddress(this.searchContent)) {
-          this.$router.push({
+          const { href } = this.$router.resolve({
             name: "wallet",
-            params: { wallet: this.searchContent }
+            query: { wallet: this.searchContent }
           });
+          window.open(href, "_blank");
         } else {
           this.$message({
             type: "error",
@@ -228,6 +230,11 @@ export default {
   background-color: #fff;
   .el-dropdown-menu__item {
     padding: 0 22px;
+    color: #6f6868;
+  }
+  .el-dropdown-menu__item:hover {
+    font-weight: bold;
+    color: #06aaf9;
   }
 }
 </style>

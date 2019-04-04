@@ -7,7 +7,7 @@
            <div><span>{{$t('message.trade.booknumber')}}</span>  <span>{{transnumkList.block}}</span></div>
         </li>
           <li>
-           <div><span>{{$t('message.trade.initiator')}}</span>  <span>{{transnumkList.account}}</span></div>
+           <div><span>{{$t('message.trade.initiator')}}</span>  <span class="hashSpan" @click="jumpWalletPage(transnumkList.account)">{{transnumkList.account}}</span></div>
            <div><span>{{$t('message.trade.fuelCosts')}}</span>  <span>{{transnumkList.fee}}</span></div>
         </li>
          <li>
@@ -15,10 +15,10 @@
                <span>{{$t('message.trade.entrustAmount')}}</span>
                <span v-show="transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
                  <span style="color:#18c9dd;">{{transnumkList.takerGetsValue}}</span>
-                 <span>{{transnumkList.takerGetsCurrency}}</span>
+                 <span>{{cnyTransformCNT(transnumkList.takerGetsCurrency)}}</span>
                   <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                  <span style="color:#18c9dd;">{{transnumkList.takerPaysValue}}</span>
-                 <span>{{transnumkList.takerPaysCurrency}}</span>
+                 <span>{{cnyTransformCNT(transnumkList.takerPaysCurrency)}}</span>
                </span>
                <span v-show="!transnumkList.takerPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
                   <span>---</span>
@@ -34,11 +34,11 @@
              <span>{{$t('message.trade.entrustprice')}}</span>
               <span v-if="transnumkList.judgeTrade === 1">
                    <span style="color:#18c9dd;">{{divided(transnumkList.takerGetsValue,transnumkList.takerPaysValue)}}</span>
-                   <span>{{transnumkList.takerGetsCurrency}}</span>
+                   <span>{{cnyTransformCNT(transnumkList.takerGetsCurrency)}}</span>
               </span>
                <span v-else>
                  <span>{{divided(transnumkList.takerPaysValue,transnumkList.takerGetsValue)}}</span>
-                 <span>{{transnumkList.takerPaysCurrency}}</span></span>
+                 <span>{{cnyTransformCNT(transnumkList.takerPaysCurrency)}}</span></span>
           </div>
            <!-- <div><span>{{$t('message.trade.to')}}</span>  <span>{{transnumkList.dest}}</span></div> -->
            <div><span>{{$t('message.trade.results')}}</span>  <span>{{transnumkList.succ}}</span></div>
@@ -48,28 +48,34 @@
              <span>{{$t('message.trade.turnoveramount')}}</span>
               <span v-show="transnumkList.matchPaysValue" style="display:flex;align-items: center;justify-content: flex-end;">
                  <span style="color:#18c9dd;">{{transnumkList.matchGetsValue}}</span>
-                 <span>{{transnumkList.matchGetsCurrency}}</span>
+                 <span>{{cnyTransformCNT(transnumkList.matchGetsCurrency)}}</span>
                   <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                  <span style="color:#18c9dd;">{{transnumkList.matchPaysValue}}</span>
-                 <span>{{transnumkList.matchPaysCurrency}}</span>
+                 <span>{{cnyTransformCNT(transnumkList.matchPaysCurrency)}}</span>
               </span>
               <span v-show="!transnumkList.matchPaysValue">---</span>
           </div>
-           <div><span>{{$t('message.trade.multipartymatch')}}</span><span>{{transnumkList.matchFlag}}</span></div>
+           <div><span>{{$t('message.trade.multipartymatch')}}</span>
+                 <span>{{transnumkList.matchFlag}}
+                   <span v-show="transnumkList.matchFlag">{{$t('message.trade.howManyMatch')}}</span><span v-show="!transnumkList.matchFlag">---</span>
+                 </span>
+          </div>
         </li>
         <li>
            <div>
              <span>{{$t('message.trade.turnoverprice')}}</span>
               <span v-if="transnumkList.judgeTrade === 1">
                    <span style="color:#18c9dd;">{{divided(transnumkList.matchGetsValue,transnumkList.matchPaysValue)}}</span>
-                   <span>{{transnumkList.matchGetsCurrency}}</span>
+                   <span>{{cnyTransformCNT(transnumkList.matchGetsCurrency)}}</span>
               </span>
                <span v-else>
                  <span style="color:#18c9dd;">{{divided(transnumkList.matchPaysValue,transnumkList.matchGetsValue)}}</span>
-                 <span>{{transnumkList.matchPaysCurrency}}</span>
+                 <span>{{cnyTransformCNT(transnumkList.matchPaysCurrency)}}</span>
               </span>
           </div>
-           <div><span>{{$t('message.trade.note')}}</span><span style="display: inline-block;width: 380px;text-align:right;">{{transnumkList.memos[0].Memo.MemoData}}</span></div>
+           <div><span>{{$t('message.trade.note')}}</span>
+           <span style="display: inline-block;width: 380px;text-align:right;">{{transnumkList.memos[0].Memo.MemoData}}</span>
+          </div>
         </li>
         <li>
            <div>
@@ -102,11 +108,41 @@ export default {
       } else {
         return "";
       }
+    },
+    jumpWalletPage(value) {
+      if (value && value !== "---") {
+        const { href } = this.$router.resolve({
+          name: "wallet",
+          query: { wallet: value }
+        });
+        window.open(href, "_blank");
+      }
+    },
+    cnyTransformCNT(value) {
+      if (value === "CNY") {
+        return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
+      } else {
+        return value;
+      }
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.hashSpan {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #3b3f4c;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hashSpan:hover {
+  color: #06aaf9;
+}
 #offerCreate {
   text-align: center;
   min-width: 768px;

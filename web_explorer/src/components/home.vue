@@ -1,7 +1,7 @@
 <template>
    <div id="home" >
      <section>
-       <span style="height:24.3%;bottom:50px;padding:0;margin:0;"><img src="../images/index_top.png" style="width:100%height:100%;"></span>
+       <span style="height:24%;padding:0;margin:0;"><img src="../images/index_top.png" style="width:100%height:100%;"></span>
      </section>
      <section class="init">
        <div class="top">
@@ -29,10 +29,10 @@
           <div class="state">
              <span>{{$t("message.home.basedon")}}<br>{{$t("message.home.decentralized ")}}</span>
           </div>
-          <span id="index_net"><img src="../images/index_net.png" style="width:100%height:100%"></span>
+          <div id="index_net"><img src="../images/index_net.png" style="width:70%;height:70%"></div>
          </div>
         </div>
-        <div style="position:absolute;top:100%;right:5%;display:flex;align-items:center;">
+        <div style="position:absolute;top:95%;right:5%;display:flex;align-items:center;">
           <span  style="color:#828f90;font-size:16px;">{{$t('message.home.Update')}}</span>
           <el-switch style="width:42px;height:42px;margin-left:10px" v-model="showSwitch" active-color="#18c79e" inactive-color="#cbd1d2"  @change="isrefreshData"></el-switch>
         </div>
@@ -84,7 +84,7 @@
             {{$t("message.viewall")}}</span>
         </div>
         <div class="endMidder">
-           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle">
+           <el-table :data="latestdeal" style="width:100%" :row-style="rowStyle" header-row-class-name="homeHeaderRowclass">
            <ul slot="empty" style="font-size:18px;">
             <div v-if="loadingTrade" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
             <div v-else ><div>{{$t('message.home.notransaction')}}</div></div>
@@ -99,7 +99,7 @@
            <el-table-column  prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%" align="left" header-align="left"></el-table-column>
            <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="13%" align="left" header-align="left">
              <template slot-scope="scope">
-              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"></span>{{scope.row.type}}</div>
+              <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg" style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
            <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" min-width="10%" align="center">
@@ -114,17 +114,18 @@
           </el-table-column>
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.tradeVolume')"  id="ellipsis"  align="right" header-align="right"  min-width="22%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue">
+                <span v-if="scope.row.takerPaysValue">
                     <span style="color: #18c9dd;">{{scope.row.takerGetsValue}}</span>
-                    <span>{{scope.row.takerGetsCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
-                    <span>{{scope.row.takerPaysCurrency}}</span>
+                    <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysValue">
+                <span v-else-if="scope.row.takerValue">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
-                      <span>{{scope.row.takerCurreny}}</span>
+                      <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
+                <span v-else>---</span>
             </template>
           </el-table-column>
           <el-table-column width="30px"></el-table-column>
@@ -141,9 +142,9 @@
           <span>{{$t("message.home.anhui")}}</span>
         </div>
         <div class="endEndRignt">
-          <span>{{$t("message.home.officialwebsite")}}</span>
-          <div></div>
-          <span>{{$t("message.home.Contactus")}}</span>
+          <span @click="jumpWellcomePage">{{$t("message.home.officialwebsite")}}</span>
+          <!-- <div></div>
+          <span>{{$t("message.home.Contactus")}}</span> -->
         </div>
       </div>
      </section>
@@ -155,7 +156,8 @@ import {
   getTransactionType,
   getTransactionMode,
   getFlagColor,
-  getTypeBg
+  getTypeBg,
+  interceptStringByEllipsis
 } from "@/js/utils";
 import { jtWallet } from "jcc_wallet";
 var homeTitle = document.getElementById("homepage_title");
@@ -192,6 +194,7 @@ export default {
   // },
   beforeRouteLeave(to, from, next) {
     clearInterval(this.timer);
+    next();
   },
   methods: {
     async getlastBlocklists() {
@@ -226,12 +229,13 @@ export default {
       this.loadingTrade = false;
     },
     searchAll(to) {
+      console.log("111");
       this.$store.dispatch("updateCurrentNav", to);
       this.$router.push(`/${to}`);
     },
     rowStyle({ row, rowIndex }) {
       if (rowIndex % 2 === 0) {
-        return "background:#f2f8fc;color:#3b3f4c;font-size:14px;";
+        return "background:#EDF5FA;color:#3b3f4c;font-size:14px;";
       } else {
         return "color:#3b3f4c;font-size:14px;";
       }
@@ -266,21 +270,25 @@ export default {
       for (; i < res.length; i++) {
         list.push({
           sort: i + 1,
-          // seq: res[i].seq || "----",
+          // seq: res[i].seq || "---",
           _id: res[i]._id,
           type: this.$t(getTransactionType(res[i].type)) || "---",
           flag: this.$t(getTransactionMode(res[i].flag)) || "---",
           displayDifferentBg: getTypeBg(res[i].type) || "---",
           displayDifferentColor:
             getFlagColor(res[i].flag) || getFlagColor(res[i].type) || "---",
-          takerPaysCurrency: this.displayDefaultCurrency(res[i].takerPays)
-            .currency,
+          takerPaysCurrency: interceptStringByEllipsis(
+            this.displayDefaultCurrency(res[i].takerPays).currency
+          ),
           takerPaysValue: this.displayDefaultValues(res[i].takerPays).value,
-          takerGetsCurrency: this.displayDefaultCurrency(res[i].takerGets)
-            .currency,
+          takerGetsCurrency: interceptStringByEllipsis(
+            this.displayDefaultCurrency(res[i].takerGets).currency
+          ),
           takerGetsValue:
             this.displayDefaultValues(res[i].takerGets).value || "---",
-          takerCurreny: this.displayDefaultCurrency(res[i].amount).currency,
+          takerCurreny: interceptStringByEllipsis(
+            this.displayDefaultCurrency(res[i].amount).currency
+          ),
           takerValue: this.displayDefaultValues(res[i].amount).value,
           // takerFlag: this.judgeIsMatch(res[i].takerFlag) || "---",
           // displayDifferentCircles: getType(res.data.list[i].flag) || "",
@@ -306,6 +314,19 @@ export default {
         return { currency: undefined };
       }
     },
+    cnyTransformCNT(value) {
+      if (value === "CNY") {
+        return "CNT";
+      }
+      if (value && value !== "---" && value.charAt(0) === "J") {
+        return value.substr(1);
+      } else {
+        return value;
+      }
+    },
+    jumpWellcomePage() {
+      window.open("https://jccdex.cn/#page1");
+    },
     handleHashtime(time) {
       let { fillZero } = this;
       let dateIn = new Date((time + 946684800) * 1000);
@@ -320,7 +341,9 @@ export default {
         " " +
         fillZero(dateIn.getHours()) +
         ":" +
-        fillZero(dateIn.getMinutes());
+        fillZero(dateIn.getMinutes()) +
+        ":" +
+        fillZero(dateIn.getSeconds());
       return hashTime;
     },
     fillZero(value) {
@@ -330,10 +353,16 @@ export default {
       return value;
     },
     jumpDetail(name, hash) {
-      this.$router.push({
+      // this.$router.push({
+      //   name: name,
+      //   query: { hash: hash }
+      // });
+      // window.open("#/trade/tradeDetail/" + "?hash=" + hash, "_blank");
+      const { href } = this.$router.resolve({
         name: name,
-        params: { hash: hash }
+        query: { hash: hash }
       });
+      window.open(href, "_blank");
     },
     displayDefaultHashType(value) {
       if (value) {
@@ -355,10 +384,15 @@ export default {
           this.getHashType(this.displayDefaultHashType(res.data).hashType) ||
           this.getHashType(res.data.info.hashType);
         console.log(hashType, 1);
-        this.$router.push({
+        const { href } = this.$router.resolve({
           name: hashType,
-          params: { hash: value }
+          query: { hash: value }
         });
+        window.open(href, "_blank");
+        // this.$router.push({
+        //   name: hashType,
+        //   params: { hash: value }
+        // });
       } else {
         this.$message({
           type: "error",
@@ -378,10 +412,15 @@ export default {
         });
       } else if (/^[0-9A-Za-z]{34}$/.test(this.searchContent)) {
         if (jtWallet.isValidAddress(this.searchContent)) {
-          this.$router.push({
+          // this.$router.push({
+          //   name: "wallet",
+          //   params: { wallet: this.searchContent }
+          // });
+          const { href } = this.$router.resolve({
             name: "wallet",
-            params: { wallet: this.searchContent }
+            query: { wallet: this.searchContent }
           });
+          window.open(href, "_blank");
         } else {
           this.$message({
             type: "error",
@@ -410,6 +449,17 @@ export default {
   background: #f2f8fc;
   display: flex;
   flex-direction: column;
+  min-width: 1124px;
+  .el-dropdown-link {
+    cursor: pointer;
+    // color: #06aaf9;
+    // color: red;
+  }
+  .el-icon-arrow-down {
+    font-size: 14px;
+    color: brown;
+    font-weight: bold;
+  }
   .offerAffectBg {
     height: 15.5px;
     width: 15.5px;
@@ -450,13 +500,13 @@ export default {
     justify-content: center;
     align-items: center;
   }
-  span > span {
-    position: relative;
-  }
-  span > div {
-    height: 850px;
-    background: #1850d7;
-  }
+  // span > span {
+  //   position: relative;
+  // }
+  // span > div {
+  //   height: 850px;
+  //   background: #1850d7;
+  // }
   span > img {
     width: 100%;
     height: 100%;
@@ -469,6 +519,8 @@ export default {
 .top {
   width: 100%;
   height: 25%;
+  max-height: 400px;
+  // background: red;
   display: flex;
   .topLeft {
     width: 50%;
@@ -480,44 +532,42 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     #changelan {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 6%;
-      margin-bottom: 5px;
-      margin-right: 5%;
+      position: absolute;
+      right: 70px;
+      height: 40px;
+      margin-top: 40px;
     }
     .state {
       color: #cee5ff;
       font-weight: bold;
+      // background: red;
       position: absolute;
-      top: 26%;
-      right: 35%;
+      top: 50px;
+      right: 278px;
       font-size: 14px;
     }
     #index_net {
       width: 82%;
-      height: 81.3%;
+      height: 60%;
+      margin-top: 60px;
     }
     img {
-      height: 100%;
-      width: 100%;
-      margin-left: 12%;
+      height: 50%;
+      width: 50%;
     }
   }
 }
 .el-dropdown-link {
   display: inline-block;
   white-space: nowrap;
-  height: 36px;
+  height: 38px;
   border: 1px solid #18c9dd;
   border-radius: 6px;
   line-height: 38px;
-  padding: 0 10px;
+  padding: 0 6px 0 6px;
   color: #fff;
   cursor: pointer;
-  margin-right: 4%;
   i {
     font-size: 8px;
     margin-left: 8px;
@@ -527,8 +577,14 @@ export default {
 }
 .el-dropdown-menu {
   background-color: #fff;
+  font-size: 14px;
   .el-dropdown-menu__item {
     padding: 0 22px;
+    color: #6f6868;
+  }
+  .el-dropdown-menu__item:hover {
+    font-weight: bold;
+    color: #06aaf9;
   }
 }
 .show {
@@ -666,13 +722,13 @@ export default {
 #list {
   display: flex;
   width: 91.25%;
-  height: 85px;
   margin-left: 4%;
-  margin-top: 1.5%;
+  margin-top: 20px;
+  padding-bottom: 16px;
   li {
     background-color: #fff;
     width: 16.6%;
-    height: 190px;
+    // height: 160px;
     list-style-type: none;
     border-right: 1px solid;
     border-right-color: #e8e8e8;
@@ -691,6 +747,7 @@ export default {
         width: 60%;
         text-align: left;
         margin-top: 22%;
+        white-space: nowrap;
       }
       span {
         width: 30%;
@@ -740,21 +797,22 @@ export default {
   color: #8a8d90;
   font-size: 12px;
   text-align: left;
+  margin-bottom: 10px;
 }
 .pilot {
   padding: 0 5%;
   height: 22%;
   display: flex;
   align-items: center;
-  margin-top: 6%;
-  margin-bottom: 1%;
+  // margin-top: 6%;
+  margin-bottom: 20px;
   justify-content: space-between;
 }
 .endTop {
   height: 22%;
+  margin-top: 40px;
   display: flex;
   align-items: center;
-  margin-top: 11%;
   justify-content: space-between;
 }
 .endEnd {
@@ -815,7 +873,7 @@ export default {
   background: #e8e8e8;
   border-radius: 8px;
   margin-top: 9%;
-  margin-left: 7%;
+  margin-left: 14px;
 }
 .className0,
 .className1,
@@ -864,5 +922,16 @@ export default {
 }
 .hashSpan:hover {
   color: #06aaf9;
+  font-weight: bold;
+}
+</style>
+<style>
+#home .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: rgba(255, 255, 255, 0);
+}
+#home .homeHeaderRowclass {
+  color: #3b3f4c;
+  font-size: 14px;
+  height: 40px;
 }
 </style>
