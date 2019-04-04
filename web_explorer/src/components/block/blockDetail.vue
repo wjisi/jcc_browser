@@ -452,12 +452,13 @@ export default {
     font-size: 14px;
     white-space: nowrap;
     width: calc(50% - 20px);
+    text-align: right;
   }
   .tilleIcon {
     width: 20px;
-    font-size: 14px;
+    font-size: 10px;
     float: right;
-    padding: 16px 0;
+    padding: 19px 0;
     color: #18c9dd;
   }
   .header {
