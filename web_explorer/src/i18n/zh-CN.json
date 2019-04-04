@@ -59,6 +59,7 @@
     "results": "交易结果",
     "effect": "交易效果",
     "successtrade": "交易成功",
+    "failtrade": "交易失败",
     "ismatch": "多方撮合",
     "tradeVolume": "交易数额",
     "tradeRecord": "交易记录",

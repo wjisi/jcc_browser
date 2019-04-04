@@ -143,7 +143,8 @@ export default {
         hash: this.hash || ""
       };
       let res = await getTransListByHash(data);
-      console.log(res, "blockdata1");
+      debugger;
+      console.log(res, "blockdata2");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.blockList = this.handleHistoryData(res);
       } else {
@@ -159,8 +160,8 @@ export default {
       }
       this.loading = true;
       this.hash = this.$route.query.hash;
-      console.log(this.hash);
       let res = await getBlockDetail(this.hash);
+      console.log(res, "blockdata1");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
         this.total = res.data.count;
         this.blockList = this.handleHistoryData(res);
@@ -306,7 +307,7 @@ export default {
       }
     },
     judgeTransferFailure(value) {
-      if (!value) {
+      if (value !== "tesSUCCESS") {
         return "zhuanzhangshiba";
       }
     },

@@ -69,14 +69,14 @@
              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
            </el-table-column>
-           <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" width="150px">
+           <el-table-column prop="time" :label="$t('message.blockDetailList.transactiontime')" align="left" header-align="left" width="160px">
           </el-table-column>
-          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" width="110px" align="left" header-align="left">
+          <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" width="150px" align="left" header-align="left">
              <template slot-scope="scope">
               <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg"  style="margin-right:6px;"></span>{{scope.row.type}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" width="100px" align="center">
+          <el-table-column prop="flag" :label="$t('message.blockDetailList.transactionmode')" id="ellipsis" width="160px" align="center">
                <template slot-scope="scope">
                   <span :style="{ color:scope.row.displayDifferentColor }">{{scope.row.flag}}</span>
               </template>
@@ -125,7 +125,7 @@
               <el-form label-position="right" inline class="demo-table-expand">
                 <el-form-item :label="$t('message.wallet.TransactionToHome')"><span>{{ props.row.account }}</span></el-form-item>
               </el-form>
-            </template>
+            </template>xcc
           </el-table-column> -->
           <el-table-column  width="30px"></el-table-column>
         </el-table>
@@ -466,7 +466,7 @@ export default {
       this.getHistoricalList();
     },
     judgeTransferFailure(value) {
-      if (!value) {
+      if (value !== "tesSUCCESS") {
         return "zhuanzhangshiba";
       }
     },

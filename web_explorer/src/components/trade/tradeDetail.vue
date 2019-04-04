@@ -271,7 +271,7 @@ export default {
       if (value && value === "tesSUCCESS") {
         return this.$t("message.trade.successtrade");
       } else {
-        return undefined;
+        return this.$t("message.trade.failtrade") + " " + "(" + value + ")";
       }
     },
     judgeFinalTradePrice(value1, value2) {

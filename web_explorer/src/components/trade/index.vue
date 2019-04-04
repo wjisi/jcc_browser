@@ -17,14 +17,12 @@
             <div v-if="loading" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
            <div v-else style="margin:100px 0;"><img src='../../images/not _found_list.png' /><div>{{$t('message.home.notransaction')}}</div></div>
           </div>
-          <el-table-column  width="30px"></el-table-column>
-          <!-- <el-table-column prop="sort" :label="$t('message.hashList.sort')" min-width="8%"></el-table-column> -->
-           <el-table-column prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
-          <!-- <el-table-column prop="seq"  :label="$t('message.blockDetailList.serialnumber')"  id="ellipsis" min-width="12%">
-            <template slot-scope="scope">
-              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>{{scope.row.seq}}
+          <el-table-column  width="30px">
+             <template slot-scope="scope">
+              <i class="iconfont"  :class="scope.row.matchFlag" style="font-size:15px;color: #18c9dd;"></i>
             </template>
-          </el-table-column> -->
+          </el-table-column>
+           <el-table-column prop="sort" :label="$t('message.blockDetailList.serialnumber')" min-width="8%"></el-table-column>
           <el-table-column prop="type" :label="$t('message.blockDetailList.transactiontype')" id="ellipsis" min-width="10%" align="left" header-align="left">
              <template slot-scope="scope">
               <div style="display: flex;align-items: center;"><span :class="scope.row.displayDifferentBg" style="margin-right:6px;"></span>{{scope.row.type}}</div>
@@ -81,7 +79,8 @@ import {
   getTransactionMode,
   getFlagColor,
   getTypeBg,
-  interceptStringByEllipsis
+  interceptStringByEllipsis,
+  getMatchFlag
 } from "@/js/utils";
 export default {
   name: "trade",
@@ -140,6 +139,9 @@ export default {
           sort: (this.currentPage - 1) * 20 + i + 1,
           // seq: res[i].seq || "---",
           _id: res[i]._id,
+          matchFlag:
+            getMatchFlag(res[i].matchFlag) ||
+            getMatchFlag(this.judgeTransferFailure(res[i].succ)),
           type:
             this.$t(getTransactionType(res[i].type)) ||
             this.$t("message.wallet.unknown"),
@@ -196,6 +198,11 @@ export default {
         return value.substr(1);
       } else {
         return value;
+      }
+    },
+    judgeTransferFailure(value) {
+      if (value !== "tesSUCCESS") {
+        return "zhuanzhangshiba";
       }
     },
     handleHashtime(time) {

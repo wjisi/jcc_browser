@@ -59,6 +59,7 @@
     "results": "Transaction Results",
     "effect": "Transaction Effect",
     "successtrade": "success trade",
+    "failtrade": "fail trade",
     "ismatch": "is match",
     "tradeVolume": "trade volume",
     "tradeRecord": "trade record",
