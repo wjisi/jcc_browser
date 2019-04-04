@@ -1,43 +1,30 @@
 <template>
   <div id="wallet" class="blo">
-     <div class="blockDetailTitle">
+     <div>
       <div class="walletHeader">
         <div>{{$t('message.wallet.currentWalletAddress')}}:<span style="color:#06aaf9;padding-left:10px;">{{wallet}}</span></div>
         <div class="tille" >{{$t('message.wallet.remainingSum')}} <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i></div>
       </div>
-      <Ul v-show="!isEmptyObject(walletBalance)" v-for="(item,key,index) in walletBalance" :key="index">
-        <li>
-          <div>
-               <span><span>{{key}}</span></span>
-               <span><span>{{item.value}}</span></span>
-          </div>
-        </li>
-         <!-- <li>
-           <div>
-               <span>UST<span>{{walletBalance.UST_value}}</span></span>
-               <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span>
-          </div>
-           <div>
-               <span>JJCC<span>{{walletBalance.JJCC_value}}</span></span>
-               <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-        </li>
-        <li>
-           <div><span>CNT<span>{{walletBalance.CNT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JCALL<span>{{walletBalance.JCALL_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-        </li>
-       <li>
-          <div><span>ECP<span>{{walletBalance.ECP_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JEKT<span>{{walletBalance.JEKT_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-        </li>
-         <li>
-          <div><span>JETH<span>{{walletBalance.JETH_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JMOAC<span>{{walletBalance.JMOAC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-        </li>
-         <li>
-          <div><span>VCC<span>{{walletBalance.VCC_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-           <div><span>JSTM<span>{{walletBalance.JSTM_value}}</span></span>  <span>{{$t('message.wallet.Issuer')}}:<span>jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or</span></span></div>
-        </li> -->
-      </Ul>
+      <el-row  v-show="!isEmptyObject(walletBalance)">
+        <el-col :span="12">
+            <div class="headerElCol" flex="main:center cross:center" >
+               <div><span>SWTC</span><span>{{displayDefaultValues(walletBalance.SWTC).value}}</span></div><div><span>{{$t('message.wallet.frozen')}}:</span><span>{{displayDefaultFrozen(walletBalance.SWTC).frozen}}</span></div>
+            </div>
+       </el-col>
+       <el-col :span="12"  v-for="(item,key,index) in walletBalance" :key="index"  flex="main:center cross:center">
+            <div :class="{'hide': key==='_id' ||key==='SWTC'}" class="headerElCol">
+            <!-- <div v-if="key!=='_id'||key!=='SWTC'" class="headerElCol"> -->
+               <div>
+                  <span>{{interceptHeaderKey(key)}}</span>
+                  <span>{{item.value}}</span>
+              </div>
+              <div>
+                <span style="font-size:16.5px;">{{$t('message.wallet.Issuer')}}:</span>
+                <span>{{interceptHeaderKey(key,2)}}</span>
+              </div>
+            </div>
+       </el-col>
+      </el-row>
       <Ul v-show="isEmptyObject(walletBalance)">
         <div v-if="loading"  style="height:80px;width:100%" v-loading="true" element-loading-spinner="el-icon-loading" element-loading-text="拼命加载中"></div>
         <div v-else  style="height:80px;width:100%;text-align:center;line-height:80px;color: #909399;">{{$t('message.home.notransaction')}}</div>
@@ -170,7 +157,8 @@ import {
   getTransactionMode,
   getMatchFlag,
   getFlagColor,
-  getTypeBg
+  getTypeBg,
+  interceptStringByEllipsis
 } from "@/js/utils";
 import { BigNumber } from "bignumber.js";
 export default {
@@ -321,6 +309,13 @@ export default {
         this.getHistoricalList();
       }
     },
+    judgeIsExist(value) {
+      if (value) {
+        return value;
+      } else {
+        return "";
+      }
+    },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.loading = false;
@@ -366,68 +361,32 @@ export default {
     },
     async getBalanceList(wallet) {
       let res = await querySpecifiedWallet(wallet);
-      console.log(res, "walletTail");
       if (res.result === true && (res.code === 0 || res.code === "0")) {
+        console.log(res, "walletTail");
         this.walletBalance = res.data;
       } else {
         this.walletBalance = {};
       }
     },
-    // getWalletBalanceData(res) {
-    //   let list = {};
-    //   if (res && res.data) {
-    //     res = res.data;
-    //     list = {
-    //       SWTC_value: this.displayDefaultValues(res.SWTC.value) || "0.0000",
-    //       SWTC_frozen: this.displayDefaultValues(res.SWTC.frozen) || "0.0000",
-    //       JDBT_value:
-    //         this.displayDefaultValues(
-    //           res.JDBT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       UST_value:
-    //         this.displayDefaultValues(
-    //           res.UST_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       JJCC_value:
-    //         this.displayDefaultValues(
-    //           res.JJCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       CNT_value:
-    //         this.displayDefaultValues(
-    //           res.CNT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       JCALL_value:
-    //         this.displayDefaultValues(
-    //           res.JCALL_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       ECP_value:
-    //         this.displayDefaultValues(
-    //           res.ECP_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       JEKT_value:
-    //         this.displayDefaultValues(
-    //           res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       JETH_value:
-    //         this.displayDefaultValues(
-    //           res.JEKT_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       JMOAC_value:
-    //         this.displayDefaultValues(
-    //           res.JMOAC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       VCC_value:
-    //         this.displayDefaultValues(
-    //           res.VCC_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000",
-    //       JSTM_value:
-    //         this.displayDefaultValues(
-    //           res.JSTM_jGa9J9TkqtBcUoHe2zqhVFFbgUVED6o9or
-    //         ).value || "0.0000"
-    //     };
-    //   }
-    //   return list;
-    // },
+    interceptHeaderKey(key, index = 1) {
+      if (key) {
+        let keys = key.split("_");
+        if (index === 2) {
+          return keys[1];
+        } else {
+          // return this.cnyTransformCNT(keys[0]);
+          if (keys[0].length > 12) {
+            return (
+              keys[0].substr(0, 5) +
+              "..." +
+              keys[0].substr(keys[0].length - 5, 10)
+            );
+          } else {
+            return this.cnyTransformCNT(keys[0]);
+          }
+        }
+      }
+    },
     changeTransactionMode() {
       if (
         this.selectTypeValue === "Send,Receive" ||
@@ -530,20 +489,21 @@ export default {
               getFlagColor(res.data.list[i].type) ||
               "",
             displayDifferentBg: getTypeBg(res.data.list[i].type) || "",
-            takerPaysCurrency: this.displayDefaultCurrency(
-              res.data.list[i].takerPays
-            ).currency,
+            takerPaysCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.data.list[i].takerPays).currency
+            ),
             takerPaysValue: this.displayDefaultValues(
               res.data.list[i].takerPays
             ).value,
-            takerGetsCurrency: this.displayDefaultCurrency(
-              res.data.list[i].takerGets
-            ).currency,
+            takerGetsCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.data.list[i].takerGets).currency
+            ),
             takerGetsValue: this.displayDefaultValues(
               res.data.list[i].takerGets
             ).value,
-            takerCurreny: this.displayDefaultCurrency(res.data.list[i].amount)
-              .currency,
+            takerCurreny: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.data.list[i].amount).currency
+            ),
             takerValue: this.displayDefaultValues(res.data.list[i].amount)
               .value,
             account: res.data.list[i].account || "---",
@@ -578,6 +538,13 @@ export default {
         return { currency: undefined };
       }
     },
+    displayDefaultFrozen(value) {
+      if (value) {
+        return value;
+      } else {
+        return { frozen: undefined };
+      }
+    },
     jumpDetail(hash) {
       const { href } = this.$router.resolve({
         name: "tradeDetail",
@@ -601,7 +568,6 @@ export default {
         return "CNT";
       }
       if (value && value !== "---" && value.charAt(0) === "J") {
-        debugger;
         return value.substr(1);
       } else {
         return value;
@@ -636,6 +602,9 @@ export default {
   padding: 0 70px;
   padding-bottom: 110px;
   background: #f2f8fc;
+  .hide {
+    display: none;
+  }
   .offerAffectBg {
     height: 15.5px;
     width: 15.5px;
@@ -685,11 +654,11 @@ export default {
   }
 }
 
-.blockDetailTitle {
-  text-align: left;
-  div {
-    display: inline-block;
-  }
+.walletHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
   .tille {
     display: flex;
     align-items: center;
@@ -711,56 +680,12 @@ export default {
     padding: 10px 0;
   }
 
-  ul {
+  .ul {
     width: 100%;
-    display: flex;
-    flex-flow: column;
     border: 2px solid #c1e9f1;
     border-radius: 8px;
     background: #ffffff;
     margin-bottom: 20px;
-    li {
-      display: flex;
-      justify-content: space-between;
-      height: 40px;
-      line-height: 40px;
-      padding: 0 20px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: #5f5d5d;
-      font-size: 14px;
-      min-width: 330px;
-      border-bottom: 1px solid #e0e8ed;
-      div {
-        // min-width: 280px;
-        display: flex;
-        justify-content: space-between;
-        flex: 1;
-        span span {
-          margin-left: 10px;
-        }
-        span:nth-child(2) {
-          // min-width: 290px;
-          // display: inline-block;
-          white-space: nowrap;
-          overflow: hidden;
-          // margin-left: 20px;
-          // background: red;
-          text-overflow: ellipsis;
-          text-align: right;
-        }
-      }
-      div:nth-child(1) {
-        padding-right: 20px;
-      }
-      div:nth-child(2) {
-        border-left: 1px solid #e0e8ed;
-        padding-left: 20px;
-        //  span:nth-child(1) {
-        //   background: red;
-        // }
-      }
-    }
   }
 }
 .bockList {
@@ -816,6 +741,39 @@ export default {
 <style  lang="scss" >
 .el-icon-arrow-right {
   font-size: 16px;
+}
+.el-row {
+  width: 100%;
+  border: 2px solid #c1e9f1;
+  border-radius: 8px;
+  background: #ffffff;
+  margin-bottom: 20px;
+  .headerElCol {
+    height: 40px;
+    display: flex;
+    white-space: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-right: 1px solid #e0e8ed;
+    border-bottom: 1px solid #e0e8ed;
+    div {
+      display: flex;
+      align-items: center;
+      span {
+        display: flex;
+        align-items: center;
+        color: #5f5d5d;
+        margin-left: 5px;
+        // background: red;
+      }
+    }
+  }
+  // .headerElCol:nth-of-type(0) {
+  //   // border-left: 1px solid #e0e8ed;
+  //   // border-bottom: 1px solid #e0e8ed;
+  //   background: red;
+  // }
 }
 // .el-table__expanded-cell {
 //   padding: 0px 20px !important;

@@ -1,4 +1,4 @@
-export const bin2hex = function(b) {
+export const bin2hex = function (b) {
   var i = 0
   var l = 0
   var o = ''
@@ -11,7 +11,7 @@ export const bin2hex = function(b) {
   return o
 }
 
-export const hex2str = function(hex) {
+export const hex2str = function (hex) {
   let str = "";
   let len = hex.length;
   let i = 0;
@@ -25,7 +25,7 @@ export const hex2str = function(hex) {
   return decodeURI(str);
 }
 
-export const getUUID = function() {
+export const getUUID = function () {
   var canvas = document.createElement('canvas')
   var ctx = canvas.getContext('2d')
   var txt = 'http://security.tencent.com/'
@@ -44,7 +44,7 @@ export const getUUID = function() {
 }
 
 export const browser = {
-  versions: (function() {
+  versions: (function () {
     let u = navigator.userAgent;
     return {
       trident: u.indexOf('Trident') > -1, // IE内核
@@ -232,4 +232,15 @@ export const getType = (key) => {
     ["收入", "icon-shouru"]
   ])
   return map.get(key);
+}
+export const interceptStringByEllipsis = (key) => {
+  if (key && key !== "---") {
+    if (key.length > 12) {
+      return key.substr(0, 6) + "..." + key.substr(key.length - 6, key.length);
+    } else {
+      return key;
+    }
+  } else {
+    return key;
+  }
 }

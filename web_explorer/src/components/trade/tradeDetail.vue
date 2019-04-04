@@ -56,13 +56,13 @@
           </el-table-column>
             <el-table-column prop="tradePrice" :label="$t('message.wallet.tradePrice')" id="ellipsis" align="center" min-width="40%">
             <template slot-scope="scope">
-               <span v-if="scope.row.buySellb=1">
+               <span v-if="scope.row.isBuySell===1">
                    <span style="color:#18c9dd;">{{divided(scope.row.finalTradeGetValue,scope.row.finalTradePayValue)}}</span>
-                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}123</span>
+                   <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
               </span>
                <span v-else>
                  <span style="color:#18c9dd;">{{divided(scope.row.finalTradePayValue,scope.row.finalTradeGetValue)}}</span>
-                 <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}456</span>
+                 <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
               </span>
             </template>
           </el-table-column>
@@ -88,7 +88,8 @@ import { getMatchFlag, getFlagColor } from "../../js/utils";
 import {
   getTransactionType,
   getTransactionMode,
-  SelectTypeComponents
+  SelectTypeComponents,
+  interceptStringByEllipsis
 } from "@/js/utils";
 import { BigNumber } from "bignumber.js";
 export default {
@@ -154,21 +155,19 @@ export default {
     },
     handelTradeDetailList(res) {
       let list = [];
-      console.log(res[0].flag, "567");
       if (res && res.length > 0) {
         let i = 0;
         for (; i < res.length; i++) {
           list.push({
             sort: i + 1,
             account: res[i].account || "---",
-            buySellb: res[0].flag,
             matchFlag: getMatchFlag(res[i].matchFlag) || "",
-            takerPaysCurrency: this.displayDefaultCurrency(
-              res[i].final.takerPays
-            ).currency,
-            takerGetsCurrency: this.displayDefaultCurrency(
-              res[i].final.takerGets
-            ).currency,
+            takerPaysCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res[i].final.takerPays).currency
+            ),
+            takerGetsCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res[i].final.takerGets).currency
+            ),
             finalTradeGetValue: this.judgeFinalTradePrice(
               this.displayDefaultValues(
                 this.displayDefaultTakerPays(res[i].previous).takerGets
@@ -182,6 +181,7 @@ export default {
               this.displayDefaultValues(res[i].final.takerPays).value
             ),
             flag: this.$t(getTransactionMode(res[i].flag)) || "---",
+            isBuySell: res[i].flag,
             previous: res[i].previous || "",
             isOffercancer: this.judgeIsOfferCaner(
               res[i].previous,
@@ -200,7 +200,7 @@ export default {
         this.currentView = SelectTypeComponents(res.type);
         list = {
           type: this.$t(getTransactionType(res.type)) || "---",
-          block: res.seq || "---",
+          block: res.block || "---",
           account: res.account || "---",
           fee: res.fee || "---",
           amountCurrency:
@@ -209,16 +209,24 @@ export default {
           time: this.handleHashtime(res.time),
           matchFlag: res.matchFlag,
           matchPaysCurrency:
-            this.displayDefaultCurrency(res.matchPays).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.matchPays).currency
+            ) || "---",
           matchPaysValue: this.displayDefaultValues(res.matchPays).value,
           matchGetsCurrency:
-            this.displayDefaultCurrency(res.matchGets).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.matchGets).currency
+            ) || "---",
           matchGetsValue: this.displayDefaultValues(res.matchGets).value,
           takerPaysCurrency:
-            this.displayDefaultCurrency(res.takerPays).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.takerPays).currency
+            ) || "---",
           takerPaysValue: this.displayDefaultValues(res.takerPays).value,
           takerGetsCurrency:
-            this.displayDefaultCurrency(res.takerGets).currency || "---",
+            interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.takerGets).currency
+            ) || "---",
           takerGetsValue: this.displayDefaultValues(res.takerGets).value,
           memos: res.memos || [{ Memo: { MemoData: "---" } }],
           flag:

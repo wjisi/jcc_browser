@@ -4,7 +4,7 @@
       <span class="tille">
         {{$t('message.blockDetailList.currentblock')}}:<span style="color:#06aaf9;padding-left:10px;">#{{bash.block}}</span>
       </span>
-      <span class="tille" >{{$t('message.blockDetailList.blockhashnumber')}}:<span style="padding-left:10px;">{{bash._id}}</span>
+      <span class="tille" >{{$t('message.blockDetailList.blockhashnumber')}}:<span style="padding-left:10px;text-align:right;">{{bash._id}}</span>
       </span>
       <i class="iconfont icon-xiangxiaxianshijiantou tilleIcon"></i>
       <Ul v-show="!isEmptyObject(bash)" class="header">
@@ -61,17 +61,18 @@
           </el-table-column>
           <el-table-column prop="transactionAmount"  :label="$t('message.trade.amount')"  id="ellipsis"   align="right" header-align="right"  min-width="30%" >
             <template slot-scope="scope">
-                <span v-show="scope.row.takerPaysValue" class="pays">
+                <span v-if="scope.row.takerPaysValue" class="pays">
                     <span style="color:#18c9dd;">{{scope.row.takerGetsValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerGetsCurrency)}}</span>
                     <i class="iconfont icon-jiaoyijineshuliangzhuanhuan "></i>
                     <span style="color:#18c9dd;">{{scope.row.takerPaysValue}}</span>
                     <span>{{cnyTransformCNT(scope.row.takerPaysCurrency)}}</span>
                 </span>
-                <span v-show="!scope.row.takerPaysValue">
+                <span v-else-if="scope.row.takerValue">
                       <span style="color:#18c9dd;">{{scope.row.takerValue}}</span>
                       <span>{{cnyTransformCNT(scope.row.takerCurreny)}}</span>
                 </span>
+                <span v-else>---</span>
             </template>
           </el-table-column>
           <el-table-column  width="30px"></el-table-column>
@@ -101,7 +102,8 @@ import {
   getMatchFlag,
   getTypeBg,
   getFlagColor,
-  isEmptyObject
+  isEmptyObject,
+  interceptStringByEllipsis
 } from "@/js/utils";
 export default {
   name: "blockdetail",
@@ -193,22 +195,23 @@ export default {
               "",
             // displayDifferentCircles: getType(res.data.list[i].flag) || "",
             // time: this.handleHashtime(res.data.list[i].time) || "---",
-            takerPaysCurrency: this.displayDefaultCurrency(
-              res.data.list[i].takerPays
-            ).currency,
+            takerPaysCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.data.list[i].takerPays).currency
+            ),
             takerPaysValue: this.displayDefaultValues(
               res.data.list[i].takerPays
             ).value,
-            takerGetsCurrency: this.displayDefaultCurrency(
+            takerGetsCurrency: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.data.list[i].takerGets).currency
+            ),
+            takerGetsValue: this.displayDefaultValues(
               res.data.list[i].takerGets
-            ).currency,
-            takerGetsValue:
-              this.displayDefaultValues(res.data.list[i].takerGets).value ||
-              "---",
-            takerCurreny: this.displayDefaultCurrency(res.data.list[i].amount)
-              .currency,
-            takerValue:
-              this.displayDefaultValues(res.data.list[i].amount).value || "---",
+            ).value,
+            takerCurreny: interceptStringByEllipsis(
+              this.displayDefaultCurrency(res.data.list[i].amount).currency
+            ),
+            takerValue: this.displayDefaultValues(res.data.list[i].amount)
+              .value,
             fee: res.data.list[i].fee || "---",
             account: res.data.list[i].account || "---",
             _id: res.data.list[i]._id || "---"
